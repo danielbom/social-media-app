@@ -1,0 +1,21 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "danielbom <daniel.rodrigues.45@hotmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "dotnet run --project SocialMedia.Api",
+    "dev": "dotnet watch run --project SocialMedia.Api",
+    "build": "dotnet build",
+    "format": "dotnet format",
+    "test": "dotnet run --project ApiTests/ApiTests.csproj"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^16.2.1",
+    "@commitlint/config-conventional": "^16.2.1",
+    "git-cz": "^4.8.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.4"
+  }
+}
