@@ -17,8 +17,7 @@ dotnet add SocialMedia.Data package Microsoft.EntityFrameworkCore.Tools
 dotnet add SocialMedia.Api package Microsoft.AspNetCore.Authentication
 dotnet add SocialMedia.Api package Microsoft.AspNetCore.Authentication.JwtBearer
 dotnet add SocialMedia.Api package BCrypt.Net-Next
-
-dotnet ef migrations add Initial
+dotnet add SocialMedia.Api package Microsoft.AspNetCore.OData
 
 dotnet new tool-manifest
 dotnet tool install JetBrains.ReSharper.GlobalTools
@@ -31,5 +30,6 @@ dotnet sln add SocialMedia.Data
 dotnet new tool-manifest -o SocialMedia.Data
 cd SocialMedia.Data
 dotnet tool install dotnet-ef
+dotnet ef migrations add Initial
 
 ```

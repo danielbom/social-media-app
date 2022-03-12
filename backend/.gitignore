@@ -132,6 +132,7 @@ $RECYCLE.BIN/
 
 _NCrunch*
 
+tmp/
 node_modules/
 yarn.lock
 
