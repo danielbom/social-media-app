@@ -4,25 +4,37 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.Authorization;
+using SocialMedia.Api.Repositories;
+using System.ComponentModel.DataAnnotations;
 
 namespace SocialMedia.Api.Controllers;
 
+public class PostCreate
+{
+    [Required]
+    [MaxLength(255)]
+    public string Content { get; set; }
+
+    public PostCreate(string content)
+    {
+        Content = content;
+    }
+}
+
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class PostController : ODataController
 {
-    public class PostCreate
-    {
-        public string? Content { get; set; }
-    }
-
     private readonly AppDbContext DbContext;
-    private readonly ILogger<PostController> Logger;
+    private readonly UserRepository UserRepository;
+    private readonly PostRepository PostRepository;
 
-    public PostController(AppDbContext dbContext, ILogger<PostController> logger)
+    public PostController(AppDbContext dbContext, PostRepository postRepository, UserRepository userRepository)
     {
         DbContext = dbContext;
-        Logger = logger;
+        PostRepository = postRepository;
+        UserRepository = userRepository;
     }
 
     [HttpGet]
@@ -34,30 +46,25 @@ public class PostController : ODataController
 
     [HttpGet("{id}")]
     [EnableQuery]
-    public IActionResult Show([FromODataUri] Guid id)
+    public IActionResult Show(Guid id)
     {
         return Ok(DbContext.Posts.Find(id));
     }
 
     [HttpPost]
-    [Authorize]
-    public async Task<IActionResult> Create([FromBody] PostCreate? body)
+    public async Task<IActionResult> Create([FromBody] PostCreate body)
     {
-        if (body == null || body.Content == null)
-            return BadRequest(new { message = "Invalid body" });
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-        var username = User.Identity?.Name;
-        var user = DbContext.Users.SingleOrDefault(x => x.Username == username);
+        var user = UserRepository.FindByUsername(User.Identity?.Name!);
         if (user == null)
             return NotFound(new { message = "User not found" });
 
-        var post = new Post(Guid.NewGuid(), body.Content)
-        {
-            Author = user
-        };
+        var post = PostRepository.Create(body.Content, user);
         await DbContext.Posts.AddAsync(post);
         await DbContext.SaveChangesAsync();
-        post.Author.Password = "";
+        post.Author = null;
 
         return Ok(post);
     }

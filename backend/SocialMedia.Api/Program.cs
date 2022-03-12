@@ -4,6 +4,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SocialMedia.Api.Configuration;
+using SocialMedia.Api.Repositories;
+using SocialMedia.Api.Services;
 using SocialMedia.Data;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Text;
@@ -13,13 +15,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services
     .AddControllers()
+    .AddNewtonsoftJson()
     .AddOData(opt => opt
-        .Count()
-        .Filter()
-        .Expand()
-        .Select()
-        .OrderBy()
-        .SetMaxTop(50)
+        .EnableQueryFeatures(50)
         .AddRouteComponents("odata.v1", ODataModel.CreateConventionalModel()));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -93,7 +91,12 @@ builder.Services.AddOptions<DatabaseOptions>().Configure<IOptions<DataDirectorie
 });
 
 // Services Register
+builder.Services.AddSingleton<TokenService>();
+builder.Services.AddSingleton<PasswordService>();
 builder.Services.AddSingleton<AppDbContextFactory>();
+builder.Services.AddScoped<CommentRepository>();
+builder.Services.AddScoped<PostRepository>();
+builder.Services.AddScoped<UserRepository>();
 
 var app = builder.Build();
 

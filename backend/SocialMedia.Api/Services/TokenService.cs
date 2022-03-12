@@ -7,9 +7,9 @@ using ApiSettings = SocialMedia.Api.Configuration.Settings;
 
 namespace SocialMedia.Api.Services;
 
-public static class TokenService
+public class TokenService
 {
-    public static Task<string> GenerateToken(User user)
+    public Task<string> GenerateToken(User user)
     {
         return Task.Run(() =>
         {

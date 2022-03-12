@@ -8,7 +8,7 @@ public class User
 {
     public Guid Id { get; set; }
     [Required]
-    [MinLength(5)]
+    [MinLength(3)]
     [MaxLength(30)]
     public string Username { get; set; }
     [Required]

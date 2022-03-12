@@ -18,6 +18,7 @@ dotnet add SocialMedia.Api package Microsoft.AspNetCore.Authentication
 dotnet add SocialMedia.Api package Microsoft.AspNetCore.Authentication.JwtBearer
 dotnet add SocialMedia.Api package BCrypt.Net-Next
 dotnet add SocialMedia.Api package Microsoft.AspNetCore.OData
+dotnet add SocialMedia.Api package Microsoft.AspNetCore.Mvc.NewtonsoftJson
 
 dotnet new tool-manifest
 dotnet tool install JetBrains.ReSharper.GlobalTools
