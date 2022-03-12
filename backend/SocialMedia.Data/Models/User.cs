@@ -1,15 +1,24 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace SocialMedia.Data;
 
+[Index("Username", IsUnique = true)]
 public class User
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
+    [Required]
+    [MinLength(5)]
+    [MaxLength(30)]
     public string Username { get; set; }
+    [Required]
+    [MinLength(8)]
+    [MaxLength(30)]
     public string Password { get; set; }
+    [Required]
     public string Role { get; set; }
 
-    public User(int id, string username, string password, string role)
+    public User(Guid id, string username, string password, string role)
     {
         Id = id;
         Username = username;

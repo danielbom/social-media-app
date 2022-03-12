@@ -16,6 +16,7 @@ dotnet add SocialMedia.Data package Microsoft.EntityFrameworkCore.Tools
 # https://balta.io/artigos/aspnetcore-3-autenticacao-autorizacao-bearer-jwt
 dotnet add SocialMedia.Api package Microsoft.AspNetCore.Authentication
 dotnet add SocialMedia.Api package Microsoft.AspNetCore.Authentication.JwtBearer
+dotnet add SocialMedia.Api package BCrypt.Net-Next
 
 dotnet ef migrations add Initial
 
