@@ -3,8 +3,6 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SocialMedia.Api.Configuration;
 
-// https://stackoverflow.com/questions/41973356/is-there-a-way-to-get-swashbuckle-to-add-odata-parameters-to-web-api-2-iqueryabl
-
 /// <summary>
 /// Help your swagger show OData query options with example pre-fills
 /// </summary>

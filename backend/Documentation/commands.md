@@ -31,5 +31,4 @@ dotnet new tool-manifest -o SocialMedia.Data
 cd SocialMedia.Data
 dotnet tool install dotnet-ef
 dotnet ef migrations add Initial
-
 ```

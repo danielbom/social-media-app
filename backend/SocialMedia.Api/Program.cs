@@ -26,8 +26,6 @@ builder.Services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    // http://www.macoratti.net/21/06/aspnc_tkjwtswag1.htm
-    // https://stackoverflow.com/questions/43447688/setting-up-swagger-asp-net-core-using-the-authorization-headers-bearer
     var jwtSecurityScheme = new OpenApiSecurityScheme()
     {
         Name = "Authorization",
@@ -78,41 +76,24 @@ builder.Services.AddDbContext<AppDbContext>((provider, options) =>
     var factory = provider.GetRequiredService<AppDbContextFactory>();
     factory.ConfigureBuilder(options);
 });
-builder.Services.AddSingleton<AppDbContextFactory>();
 
 // Api Options
 builder.Services.AddOptions<DatabaseOptions>().Configure<IOptions<DataDirectories>>((options, datadirs) =>
 {
-    var postgresConnectionString = builder.Configuration["ConnectionStrings:Postgres"];
-    var mySQLConnectionString = builder.Configuration["ConnectionStrings:MySql"];
-    var sqliteFileName = builder.Configuration["ConnectionStrings:Sqlite"];
-
-    if (!string.IsNullOrEmpty(postgresConnectionString))
+    DatabaseType databaseType;
+    if (Enum.TryParse(builder.Configuration["ConnectionStrings:Type"], out databaseType))
     {
-        options.DatabaseType = DatabaseType.Postgres;
-        options.ConnectionString = postgresConnectionString;
-    }
-    else if (!string.IsNullOrEmpty(mySQLConnectionString))
-    {
-        options.DatabaseType = DatabaseType.MySql;
-        options.ConnectionString = mySQLConnectionString;
-    }
-    else if (!string.IsNullOrEmpty(sqliteFileName))
-    {
-        var connStr = sqliteFileName;
-        if (Path.IsPathRooted(sqliteFileName))
-            connStr = "Data Source=" + connStr;
-        else if (!string.IsNullOrEmpty(datadirs.Value.DataDir))
-            connStr = "Data Source=" + Path.Combine(datadirs.Value.DataDir, sqliteFileName);
-
-        options.DatabaseType = DatabaseType.Sqlite;
-        options.ConnectionString = connStr;
+        options.ConnectionString = builder.Configuration["ConnectionStrings:Url"];
+        options.DatabaseType = databaseType;
     }
     else
     {
         throw new InvalidOperationException("No database option was configured.");
     }
 });
+
+// Services Register
+builder.Services.AddSingleton<AppDbContextFactory>();
 
 var app = builder.Build();
 

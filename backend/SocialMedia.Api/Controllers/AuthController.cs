@@ -20,12 +20,11 @@ public class AuthController : ControllerBase
         public string? Password { get; set; }
     }
 
-    private readonly AppDbContextFactory _AppDbContextFactory;
+    private readonly AppDbContext DbContext;
 
-
-    public AuthController(AppDbContextFactory appDbContextFactory)
+    public AuthController(AppDbContext dbContext)
     {
-        _AppDbContextFactory = appDbContextFactory;
+        DbContext = dbContext;
     }
 
     [HttpPost]
@@ -35,9 +34,7 @@ public class AuthController : ControllerBase
         if (body == null || body.Username == null)
             return BadRequest(new { message = "Invalid body" });
 
-        using var context = _AppDbContextFactory.CreateContext();
-
-        var user = context.Users.SingleOrDefault(x => x.Username == body.Username);
+        var user = DbContext.Users.SingleOrDefault(x => x.Username == body.Username);
         if (user == null)
             return NotFound(new { message = "User not found" });
 
@@ -67,12 +64,10 @@ public class AuthController : ControllerBase
         if (body == null || body.Username == null || body.Password == null)
             return BadRequest(new { message = "Invalid body" });
 
-        using var context = _AppDbContextFactory.CreateContext();
-
         var hash = BCrypt.Net.BCrypt.HashPassword(body.Password);
         var user = new User(Guid.NewGuid(), body.Username, hash, "user");
-        await context.Users.AddAsync(user);
-        await context.SaveChangesAsync();
+        await DbContext.Users.AddAsync(user);
+        await DbContext.SaveChangesAsync();
         user.Password = "";
 
         return new

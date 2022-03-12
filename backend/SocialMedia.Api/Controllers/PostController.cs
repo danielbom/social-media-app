@@ -19,9 +19,9 @@ public class PostController : ODataController
     private readonly AppDbContext DbContext;
     private readonly ILogger<PostController> Logger;
 
-    public PostController(AppDbContext appDbContextFactory, ILogger<PostController> logger)
+    public PostController(AppDbContext dbContext, ILogger<PostController> logger)
     {
-        DbContext = appDbContextFactory;
+        DbContext = dbContext;
         Logger = logger;
     }
 

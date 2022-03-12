@@ -1,2 +1,6 @@
 * [JWT Settings](https://balta.io/artigos/aspnetcore-3-autenticacao-autorizacao-bearer-jwt)
 * [Project Base - BTC Pay](https://github.com/AlexShii/btcpayserver/tree/5187d56ba665d5926305a3cfab2edbadc1ddf58d)
+* [Difference of Singleton, Scoped and Transient](https://stackoverflow.com/questions/38138100/addtransient-addscoped-and-addsingleton-services-differences)
+* [Swagger JWT Base Configuration](http://www.macoratti.net/21/06/aspnc_tkjwtswag1.htm)
+* [Swagger JWT Improve Configuration](https://stackoverflow.com/questions/43447688/setting-up-swagger-asp-net-core-using-the-authorization-headers-bearer)
+* [ODataParametersSwaggerDefinition](https://stackoverflow.com/questions/41973356/is-there-a-way-to-get-swashbuckle-to-add-odata-parameters-to-web-api-2-iqueryabl)
