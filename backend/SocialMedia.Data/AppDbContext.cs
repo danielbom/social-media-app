@@ -17,6 +17,8 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<User> Users => Set<User>();
+    public DbSet<Post> Posts => Set<Post>();
+    public DbSet<Comment> Comments => Set<Comment>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -30,6 +32,8 @@ public class AppDbContext : DbContext
         base.OnModelCreating(builder);
 
         User.OnModelCreating(builder);
+        Post.OnModelCreating(builder);
+        Comment.OnModelCreating(builder);
 
         EnsureDesignTimeBuild(builder);
     }
