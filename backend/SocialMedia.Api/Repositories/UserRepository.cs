@@ -25,8 +25,9 @@ public class UserRepository
         return new User(Guid.NewGuid(), username, hashPassword, "user");
     }
 
-    internal User? FindById(Guid id)
+    internal async Task<User?> FindById(Guid id)
     {
-        return DbContext.Users.Find(id);
+        var user = await DbContext.Users.FindAsync(id);
+        return user;
     }
 }

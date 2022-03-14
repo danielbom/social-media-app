@@ -3,6 +3,8 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
+namespace SocialMedia.Tests.Utilities;
+
 public class Logger : ILogger, IDisposable
 {
     public string Name { get; set; }

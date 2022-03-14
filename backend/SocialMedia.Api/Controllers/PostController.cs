@@ -52,9 +52,9 @@ public class PostController : ODataController
 
     [HttpGet("{userId}")]
     [EnableQuery]
-    public IActionResult Index(Guid userId)
+    public async Task<IActionResult> Index(Guid userId)
     {
-        var user = UserRepository.FindById(userId);
+        var user = await UserRepository.FindById(userId);
         if (user == null)
             return NotFound(new { message = "User not found" });
 

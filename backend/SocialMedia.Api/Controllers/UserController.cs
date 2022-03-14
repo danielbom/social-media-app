@@ -47,13 +47,12 @@ public class UserController : ODataController
     }
 
     [HttpPut("{userId}")]
-    [EnableQuery]
     public async Task<IActionResult> Update(Guid userId, [FromBody] UpdateUser body)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var user = UserRepository.FindById(userId);
+        var user = await UserRepository.FindById(userId);
         if (user == null)
             return NotFound(new { message = "User not found" });
 

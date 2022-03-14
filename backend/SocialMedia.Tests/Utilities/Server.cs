@@ -1,4 +1,3 @@
-using System.IO;
 using System.Net.Http;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -13,15 +12,10 @@ namespace SocialMedia.Tests.Utilities;
 internal class Server
 {
     private Logger Logger;
-    public LoggerProvider LogProvider { get; private set; }
+    private AppDbContextFactory AppDbContextFactory;
+    private LoggerProvider LogProvider;
 
     public Server(ITestOutputHelper helper)
-    {
-        Logger = new("Server", helper);
-        LogProvider = new(helper);
-    }
-
-    public HttpClient CreateClient()
     {
         var DATABASE_OPTIONS = Options.Create(new DatabaseOptions()
         {
@@ -29,13 +23,20 @@ internal class Server
             DatabaseType = DatabaseType.Sqlite
         });
 
+        Logger = new("Server", helper);
+        LogProvider = new(helper);
+        AppDbContextFactory = new AppDbContextFactory(DATABASE_OPTIONS);
+    }
+
+    public HttpClient CreateClient()
+    {
         var application = new WebApplicationFactory<Program>()
             .WithWebHostBuilder(builder =>
             {
                 builder.ConfigureServices((context, services) =>
                 {
                     services.Add(ServiceDescriptor.Transient<ILoggerProvider, LoggerProvider>(provider => LogProvider));
-                    services.Add(ServiceDescriptor.Singleton<AppDbContextFactory>(provider => new AppDbContextFactory(DATABASE_OPTIONS)));
+                    services.Add(ServiceDescriptor.Singleton<AppDbContextFactory>(provider => AppDbContextFactory));
                 });
                 builder.ConfigureAppConfiguration((context, config) =>
                 {
@@ -43,6 +44,11 @@ internal class Server
             });
 
         return application.CreateClient();
+    }
+
+    public AppDbContext CreateContext()
+    {
+        return AppDbContextFactory.CreateContext();
     }
 
     public StringContent CreateBody(string text)
