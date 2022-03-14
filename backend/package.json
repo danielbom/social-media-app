@@ -4,6 +4,7 @@
   "main": "index.js",
   "author": "danielbom <daniel.rodrigues.45@hotmail.com>",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "start": "dotnet run --project SocialMedia.Api",
     "dev": "dotnet watch run --project SocialMedia.Api",
@@ -18,5 +19,8 @@
     "git-cz": "^4.8.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.4"
+  },
+  "dependencies": {
+    "axios": "^0.26.1"
   }
 }

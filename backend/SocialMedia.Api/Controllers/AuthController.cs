@@ -75,11 +75,12 @@ public class AuthController : ControllerBase
 
         var token = await TokenService.GenerateToken(user);
 
-        return new { token };
+        return new { token, user };
     }
 
     [HttpPost]
     [Route("Register")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<ActionResult<dynamic>> Register([FromBody] AuthRegister body)
     {
         if (!ModelState.IsValid)
@@ -87,17 +88,12 @@ public class AuthController : ControllerBase
 
         var userExists = UserRepository.FindByUsername(body.Username);
         if (userExists != null)
-            return NotFound(new { message = "User already exists" });
+            return BadRequest(new { message = "User already exists" });
 
         var user = UserRepository.Create(body.Username, body.Password);
         await DbContext.Users.AddAsync(user);
         await DbContext.SaveChangesAsync();
 
-        return new
-        {
-            id = user.Id,
-            username = user.Username,
-            role = user.Role
-        };
+        return CreatedAtAction(nameof(Register), new { id = user.Id }, user);
     }
 }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace SocialMedia.Data;
@@ -15,6 +16,7 @@ public class Post
     [Required]
     public User? Author { get; set; }
 
+    [IgnoreDataMember]
     public virtual ICollection<Comment> Comments { get; set; }
 
     public Post(Guid id, string content)

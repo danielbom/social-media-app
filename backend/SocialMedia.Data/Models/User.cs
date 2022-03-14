@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace SocialMedia.Data;
@@ -14,6 +15,7 @@ public class User
     [Required]
     [MinLength(8)]
     [MaxLength(30)]
+    [IgnoreDataMember]
     public string Password { get; set; }
     [Required]
     public string Role { get; set; }

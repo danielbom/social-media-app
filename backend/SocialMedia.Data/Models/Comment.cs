@@ -1,5 +1,5 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace SocialMedia.Data;
@@ -16,10 +16,10 @@ public class Comment
     [Required]
     public User? Author { get; set; }
 
+    [IgnoreDataMember]
     public virtual ICollection<Comment> CommentAnswers { get; set; }
     public Comment? CommentParent { get; set; }
 
-    [Required]
     public Post? PostParent { get; set; }
 
     public Comment(Guid id, string content)

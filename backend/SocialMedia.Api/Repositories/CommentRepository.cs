@@ -16,13 +16,21 @@ public class CommentRepository
         return DbContext.Comments.Find(id);
     }
 
-    public Comment Create(string content, Post post, User author, Comment? parent)
+    public Comment Create(string content, Post post, User author)
     {
         return new Comment(Guid.NewGuid(), content)
         {
             Author = author,
             PostParent = post,
-            CommentParent = parent
+        };
+    }
+
+    public Comment CreateAnswer(string content, Comment commentParent, User author)
+    {
+        return new Comment(Guid.NewGuid(), content)
+        {
+            Author = author,
+            CommentParent = commentParent,
         };
     }
 }

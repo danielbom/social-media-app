@@ -24,4 +24,9 @@ public class UserRepository
         var hashPassword = PasswordService.HashPassword(password);
         return new User(Guid.NewGuid(), username, hashPassword, "user");
     }
+
+    internal User? FindById(Guid id)
+    {
+        return DbContext.Users.Find(id);
+    }
 }

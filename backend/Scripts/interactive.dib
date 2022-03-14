@@ -1,0 +1,22 @@
+#!markdown
+
+Utilizando o dotnet interativo com Notebook
+
+* [.NET Interactive Notebooks with C#/F# in VS Code](https://www.youtube.com/watch?v=DMYtIJT1OeU&ab_channel=VisualStudioCode)
+
+#!csharp
+
+System.Guid.NewGuid()
+
+#!csharp
+
+#r "nuget:BCrypt.Net-Next, 4.0.3"
+
+#!csharp
+
+using BCryptNet = BCrypt.Net.BCrypt;
+
+#!csharp
+
+var password = "YOUR_PASSWORD";
+BCryptNet.HashPassword(password)

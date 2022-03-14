@@ -5,27 +5,9 @@ using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.Authorization;
 using SocialMedia.Api.Repositories;
-using System.ComponentModel.DataAnnotations;
 
 namespace SocialMedia.Api.Controllers;
 
-public class CommentCreate
-{
-    [Required]
-    [MaxLength(255)]
-    public string Content { get; set; }
-    [Required]
-    public Guid PostId { get; set; }
-
-    public Guid? CommentId { get; set; }
-
-    public CommentCreate(string content, Guid postId, Guid? commentId = null)
-    {
-        Content = content;
-        PostId = postId;
-        CommentId = commentId;
-    }
-}
 
 [ApiController]
 [Route("[controller]")]
@@ -45,22 +27,15 @@ public class CommentController : ODataController
         CommentRepository = commentRepository;
     }
 
-    [HttpGet]
-    [EnableQuery]
-    public IActionResult Index()
-    {
-        return Ok(DbContext.Comments);
-    }
-
     [HttpGet("{id}")]
     [EnableQuery]
     public IActionResult Show([FromODataUri] Guid id)
     {
-        return Ok(DbContext.Comments.Find(id));
+        return Ok(CommentRepository.FindById(id));
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CommentCreate body)
+    [HttpPost("{commentId}/Answer")]
+    public async Task<IActionResult> Answer(Guid commentId, [FromBody] CommentCreate body)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
@@ -69,19 +44,14 @@ public class CommentController : ODataController
         if (user == null)
             return NotFound(new { message = "User not found" });
 
-        var post = PostRepository.FindById(body.PostId);
-        if (post == null)
-            return NotFound(new { message = "Post not found" });
+        var comment = CommentRepository.FindById(commentId);
+        if (comment == null)
+            return NotFound(new { message = "Comment not found" });
 
-        Comment? commentParent = null;
-        if (body.CommentId.HasValue)
-            commentParent = CommentRepository.FindById(body.CommentId.Value);
-
-        var Comment = CommentRepository.Create(body.Content, post, user, commentParent);
-        await DbContext.Comments.AddAsync(Comment);
+        var answer = CommentRepository.CreateAnswer(body.Content, comment, user);
+        await DbContext.Comments.AddAsync(answer);
         await DbContext.SaveChangesAsync();
-        Comment.Author = null;
 
-        return Ok(Comment);
+        return Ok(answer);
     }
 }
