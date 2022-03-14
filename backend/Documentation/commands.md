@@ -4,6 +4,7 @@ dotnet new sln
 
 dotnet new webapi -o SocialMedia.Api
 dotnet new classlib -o SocialMedia.Data
+dotnet new xunit -o SocialMedia.Tests
 
 dotnet add SocialMedia.Data package Microsoft.AspNetCore.Identity.EntityFrameworkCore
 dotnet add SocialMedia.Data package Npgsql.EntityFrameworkCore.PostgreSQL
@@ -20,6 +21,8 @@ dotnet add SocialMedia.Api package BCrypt.Net-Next
 dotnet add SocialMedia.Api package Microsoft.AspNetCore.OData
 dotnet add SocialMedia.Api package Microsoft.AspNetCore.Mvc.NewtonsoftJson
 
+dotnet add SocialMedia.Tests package Microsoft.AspNetCore.Mvc.Testing
+
 dotnet new tool-manifest
 dotnet tool install JetBrains.ReSharper.GlobalTools
 dotnet tool install ReGitLint
@@ -27,6 +30,12 @@ dotnet tool restore
 
 dotnet sln add SocialMedia.Api
 dotnet sln add SocialMedia.Data
+dotnet sln add SocialMedia.Tests
+
+dotnet add SocialMedia.Api reference SocialMedia.Data
+
+dotnet add SocialMedia.Tests reference SocialMedia.Api
+dotnet add SocialMedia.Tests reference SocialMedia.Data
 
 dotnet new tool-manifest -o SocialMedia.Data
 cd SocialMedia.Data

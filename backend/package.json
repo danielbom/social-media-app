@@ -9,7 +9,8 @@
     "dev": "dotnet watch run --project SocialMedia.Api",
     "build": "dotnet build",
     "format": "dotnet format",
-    "test": "dotnet run --project ApiTests/ApiTests.csproj"
+    "test": "dotnet test",
+    "test:dev": "dotnet watch test --project SocialMedia.sln"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.1",

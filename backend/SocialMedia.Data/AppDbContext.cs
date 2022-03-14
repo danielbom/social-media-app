@@ -16,9 +16,9 @@ public class AppDbContext : DbContext
         _designTime = designTime;
     }
 
-    public DbSet<User> Users => Set<User>();
-    public DbSet<Post> Posts => Set<Post>();
-    public DbSet<Comment> Comments => Set<Comment>();
+    public virtual DbSet<User> Users => Set<User>();
+    public virtual DbSet<Post> Posts => Set<Post>();
+    public virtual DbSet<Comment> Comments => Set<Comment>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
