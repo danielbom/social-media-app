@@ -20,3 +20,17 @@ using BCryptNet = BCrypt.Net.BCrypt;
 
 var password = "YOUR_PASSWORD";
 BCryptNet.HashPassword(password)
+
+#!csharp
+
+using Newtonsoft.Json;
+
+#!csharp
+
+var definition = new { Token = "" };
+result = JsonConvert.DeserializeAnonymousType(@"{ ""token"": ""123"" }", definition);
+"Token: " + result.Token
+
+#!csharp
+
+JsonConvert.SerializeObject(new { Token = "123" })

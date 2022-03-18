@@ -76,7 +76,7 @@ public class PostController : ODataController
         await DbContext.SaveChangesAsync();
         post.Author = null;
 
-        return Ok(post);
+        return CreatedAtAction(nameof(Create), new { Id = post.Id }, post);
     }
 
     [HttpGet("{postId}/Comment")]

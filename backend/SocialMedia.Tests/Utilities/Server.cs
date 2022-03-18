@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using SocialMedia.Data;
 using Xunit.Abstractions;
 
@@ -11,9 +12,11 @@ namespace SocialMedia.Tests.Utilities;
 
 internal class Server
 {
-    private Logger Logger;
+    public Logger Logger { get; private set; }
     private AppDbContextFactory AppDbContextFactory;
     private LoggerProvider LogProvider;
+
+    public string? Token { get; set; }
 
     public Server(ITestOutputHelper helper)
     {
@@ -43,7 +46,14 @@ internal class Server
                 });
             });
 
-        return application.CreateClient();
+        var client = application.CreateClient();
+
+        if (Token != null)
+        {
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {Token}");
+        }
+
+        return client;
     }
 
     public AppDbContext CreateContext()
@@ -54,5 +64,10 @@ internal class Server
     public StringContent CreateBody(string text)
     {
         return new StringContent(text, Encoding.UTF8, "application/json");
+    }
+
+    public StringContent CreateBody<T>(T obj)
+    {
+        return CreateBody(JsonConvert.SerializeObject(obj));
     }
 }
