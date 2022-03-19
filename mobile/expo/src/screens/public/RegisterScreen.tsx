@@ -7,35 +7,33 @@ import { FormikTextInput } from '../../components/formik/FormitTextInput';
 import { TemplateScreen } from './TemplateScreen';
 import { AppLink } from '../../components/app/AppLink';
 import { AppButton } from '../../components/app/AppButton';
+import { useAppNavigation } from '../../hooks/useAppNavigation';
 
 type Values = {
   username: string;
   password: string;
 };
 
-type RegisterScreenServerlessProps = {
+type RegisterScreenFreeProps = {
   onSubmit: (values: Values, formikHelpers: FormikHelpers<Values>) => void;
+  onPressBackButton: () => void;
+  onPressLogin: () => void;
 };
 
-export const RegisterScreenServerless: React.FC<RegisterScreenServerlessProps> = ({
+export const RegisterScreenFree: React.FC<RegisterScreenFreeProps> = ({
   onSubmit,
+  onPressBackButton,
+  onPressLogin,
 }) => {
   const ref2 = useRef<TextInput>(null);
   const initialValues = { username: '', password: '' };
-  const validationSchema = {
+  const validationSchema = Yup.object({
     username: Yup.string().required('Campo obrigatório'),
     password: Yup
       .string()
       .required('Campo obrigatório')
       .min(8, 'Mínimo de 8 caracteres')
-  };
-
-  function onPressBackButton() {
-    console.log("BackButton");
-  }
-  function onPressLogin() {
-    console.log("Login");
-  }
+  });
 
   return (
     <Formik
@@ -101,10 +99,18 @@ const styles = StyleSheet.create({
 });
 
 export const RegisterScreen = () => {
+  const navigation = useAppNavigation();
+
   return (
-    <RegisterScreenServerless
+    <RegisterScreenFree
       onSubmit={(values) => {
         console.log(values)
+      }}
+      onPressBackButton={() => {
+        navigation.replace("Start");
+      }}
+      onPressLogin={() => {
+        navigation.replace("Login");
       }}
     />
   );

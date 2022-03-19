@@ -6,26 +6,25 @@ import { Formik, FormikHelpers } from 'formik';
 import { FormikTextInput } from '../../components/formik/FormitTextInput';
 import { TemplateScreen } from './TemplateScreen';
 import { AppButton } from '../../components/app/AppButton';
+import { useAppNavigation } from '../../hooks/useAppNavigation';
 
 type Values = {
   username: string;
 };
 
-type ResetPasswordScreenServerlessProps = {
+type ResetPasswordScreenFreeProps = {
   onSubmit: (values: Values, formikHelpers: FormikHelpers<Values>) => void;
+  onPressBackButton: () => void;
 };
 
-export const ResetPasswordScreenServerless: React.FC<ResetPasswordScreenServerlessProps> = ({
+export const ResetPasswordScreenFree: React.FC<ResetPasswordScreenFreeProps> = ({
   onSubmit,
+  onPressBackButton
 }) => {
   const initialValues = { username: '' };
-  const validationSchema = {
+  const validationSchema = Yup.object({
     username: Yup.string().required('Campo obrigatório'),
-  };
-
-  function onPressBackButton() {
-    console.log("BackButton");
-  }
+  });
 
   return (
     <Formik
@@ -69,10 +68,15 @@ const styles = StyleSheet.create({
 });
 
 export const ResetPasswordScreen = () => {
+  const navigation = useAppNavigation();
+
   return (
-    <ResetPasswordScreenServerless
+    <ResetPasswordScreenFree
       onSubmit={(values) => {
         console.log(values)
+      }}
+      onPressBackButton={() => {
+        navigation.replace("Start");
       }}
     />
   );

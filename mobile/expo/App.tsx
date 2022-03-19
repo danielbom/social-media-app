@@ -2,22 +2,14 @@ import { StatusBar } from 'expo-status-bar';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { theme } from './src/core/theme';
-import { LoginScreen } from './src/screens/public/LoginScreen';
-import { RegisterScreen } from './src/screens/public/RegisterScreen';
-import { ResetPasswordScreen } from './src/screens/public/ResetPasswordScreen';
-import { StartScreen } from './src/screens/public/StartScreen';
-import { HomeScreen } from './src/screens/private/HomeScreen';
+import { AppRouter } from './src/screens/AppRouter';
 
 export default function App() {
   return (
     <PaperProvider theme={theme}>
       <SafeAreaView style={styles.container}>
         <StatusBar style="auto" />
-        <LoginScreen />
-        {/* <RegisterScreen /> */}
-        {/* <ResetPasswordScreen /> */}
-        {/* <StartScreen /> */}
-        {/* <HomeScreen /> */}
+        <AppRouter />
       </SafeAreaView>
     </PaperProvider>
   );

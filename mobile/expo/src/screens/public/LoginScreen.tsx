@@ -8,32 +8,35 @@ import { AppLink } from '../../components/app/AppLink';
 import { AppButton } from '../../components/app/AppButton';
 import { FormikTextInput } from '../../components/formik/FormitTextInput';
 import { TemplateScreen } from './TemplateScreen';
+import { useAppNavigation } from '../../hooks/useAppNavigation';
 
 type Values = {
   username: string;
   password: string;
 };
 
-type LoginScreenServerlessProps = {
+type LoginScreenFreeProps = {
   onSubmit: (values: Values, formikHelpers: FormikHelpers<Values>) => void;
+  onPressBackButton: () => void;
+  onPressRegister: () => void;
+  onPressResetPassword: () => void;
 };
 
-export const LoginScreenServerless: React.FC<LoginScreenServerlessProps> = ({
+export const LoginScreenFree: React.FC<LoginScreenFreeProps> = ({
   onSubmit,
+  onPressBackButton,
+  onPressRegister,
+  onPressResetPassword
 }) => {
   const ref2 = useRef<TextInput>(null);
   const initialValues = { username: '', password: '' };
-  const validationSchema = {
+  const validationSchema = Yup.object({
     username: Yup.string().required('Campo obrigatório'),
     password: Yup
       .string()
       .required('Campo obrigatório')
       .min(8, 'Mínimo de 8 caracteres')
-  };
-
-  function onPressRegister() {
-    console.log("Register");
-  }
+  });
 
   return (
     <Formik
@@ -49,7 +52,7 @@ export const LoginScreenServerless: React.FC<LoginScreenServerlessProps> = ({
         return (
           <TemplateScreen
             headerText="Bem-vindo de volta!"
-            onPressBackButton={() => console.log("BackButton")}
+            onPressBackButton={onPressBackButton}
           >
             <FormikTextInput
               label="Usuário"
@@ -70,9 +73,7 @@ export const LoginScreenServerless: React.FC<LoginScreenServerlessProps> = ({
             />
 
             <View style={styles.forgotPassword}>
-              <TouchableOpacity
-                onPress={() => console.log('ResetPasswordScreen')}
-              >
+              <TouchableOpacity onPress={onPressResetPassword}>
                 <Text style={styles.forgot}>Esqueceu sua senha?</Text>
               </TouchableOpacity>
             </View>
@@ -90,7 +91,7 @@ export const LoginScreenServerless: React.FC<LoginScreenServerlessProps> = ({
           </TemplateScreen>
         )
       }}
-    </Formik >
+    </Formik>
   );
 };
 
@@ -115,10 +116,21 @@ const styles = StyleSheet.create({
 });
 
 export const LoginScreen = () => {
+  const navigation = useAppNavigation();
+
   return (
-    <LoginScreenServerless
+    <LoginScreenFree
       onSubmit={(values) => {
         console.log(values)
+      }}
+      onPressBackButton={() => {
+        navigation.replace("Start");
+      }}
+      onPressRegister={() => {
+        navigation.replace("Register");
+      }}
+      onPressResetPassword={() => {
+        navigation.replace("ResetPassword");
       }}
     />
   );

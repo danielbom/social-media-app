@@ -4,15 +4,17 @@ import { TemplateScreen } from './TemplateScreen';
 import { AppButton } from '../../components/app/AppButton';
 import { StyleSheet, View } from 'react-native';
 import { Paragraph } from 'react-native-paper';
+import { useAppNavigation } from '../../hooks/useAppNavigation';
 
-export const StartScreen: React.FC = () => {
-  function onPressLogin() {
-    console.log("Login");
-  }
-  function onPressRegister() {
-    console.log("Register");
-  }
+type StartScreenFreeProps = {
+  onPressLogin: () => void;
+  onPressRegister: () => void;
+}
 
+export const StartScreenFree: React.FC<StartScreenFreeProps> = ({
+  onPressLogin,
+  onPressRegister,
+}) => {
   return (
     <TemplateScreen headerText="Rede Social">
       <Paragraph style={styles.text}>
@@ -28,6 +30,21 @@ export const StartScreen: React.FC = () => {
         </AppButton>
       </View>
     </TemplateScreen>
+  );
+}
+
+export const StartScreen: React.FC = () => {
+  const navigation = useAppNavigation();
+
+  return (
+    <StartScreenFree
+      onPressLogin={() => {
+        navigation.replace("Login");
+      }}
+      onPressRegister={() => {
+        navigation.replace("Register");
+      }}
+    />
   );
 };
 
