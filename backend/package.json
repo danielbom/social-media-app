@@ -11,7 +11,8 @@
     "build": "dotnet build",
     "format": "dotnet format",
     "test": "dotnet test",
-    "test:dev": "dotnet watch test --project SocialMedia.sln"
+    "test:dev": "dotnet watch test --project SocialMedia.sln",
+    "db:update": "dotnet ef database update"
   },
   "dependencies": {
     "axios": "^0.26.1"

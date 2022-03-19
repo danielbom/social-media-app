@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SocialMedia.Data;
 
+[AutoTimestamp]
 public class Comment
 {
     public Guid Id { get; set; }
@@ -21,6 +22,8 @@ public class Comment
     public Comment? CommentParent { get; set; }
 
     public Post? PostParent { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 
     public Comment(Guid id, string content)
     {

@@ -38,6 +38,29 @@ public class AppDbContext : DbContext
         EnsureDesignTimeBuild(builder);
     }
 
+    public override int SaveChanges()
+    {
+        AddTimestamps();
+        return base.SaveChanges();
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        AddTimestamps();
+        return base.SaveChangesAsync();
+    }
+
+    private void AddTimestamps()
+    {
+        foreach (var entity in ChangeTracker.Entries())
+        {
+            if (entity.State == EntityState.Added || entity.State == EntityState.Modified)
+            {
+                AutoTimestamp.Update(entity);
+            }
+        }
+    }
+
     private void EnsureDesignTimeBuild(ModelBuilder builder)
     {
         if (Database.IsSqlite() && !_designTime)

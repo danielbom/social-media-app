@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SocialMedia.Data;
 
+[AutoTimestamp]
 public class Post
 {
     public Guid Id { get; set; }
@@ -18,9 +19,12 @@ public class Post
 
     [IgnoreDataMember]
     public virtual ICollection<Comment> Comments { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 
     public Post(Guid id, string content)
     {
+        var now = DateTime.UtcNow;
         Id = id;
         Content = content;
         Likes = 0;

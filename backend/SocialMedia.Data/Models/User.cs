@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SocialMedia.Data;
 
+[AutoTimestamp]
 [Index("Username", IsUnique = true)]
 public class User
 {
@@ -19,6 +20,8 @@ public class User
     public string Password { get; set; }
     [Required]
     public string Role { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 
     public User(Guid id, string username, string password, string role)
     {

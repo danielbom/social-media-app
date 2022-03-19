@@ -17,6 +17,10 @@ export class InitialFlow {
         this.password = password;
     }
 
+    async registerUser() {
+        await api.post("/Auth/Register", { username: "user", password: "123mudar" });
+    }
+
     async doLogin() {
         const loginResponse = await api.post("/Auth/Login", {
             username: this.username,
@@ -59,5 +63,6 @@ export class InitialFlow {
         const commentId = await this.commentFirstPost(postId);
         const answerId = await this.answerFirstComment(commentId);
         await this.finishThreadComments(answerId);
+        await this.registerUser();
     }
 }
