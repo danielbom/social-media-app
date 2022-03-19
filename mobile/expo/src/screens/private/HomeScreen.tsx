@@ -2,10 +2,13 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { AppButton } from '../../components/app/AppButton';
+import { useRouting } from '../../hooks/useRouting';
 
 export const HomeScreen: React.FC = () => {
+  const routing = useRouting();
+
   function onPressLogout() {
-    console.log("Logout");
+    routing.unauthorize();
   }
 
   return (
