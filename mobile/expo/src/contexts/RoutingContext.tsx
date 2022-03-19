@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 export const RoutingContext = React.createContext({
   privateEnabled: false,
@@ -9,16 +9,18 @@ export const RoutingContext = React.createContext({
 export const RoutingProvider: React.FC = ({ children }) => {
   const [privateEnabled, setPrivateEnabled] = useState(false);
 
-  function authorize() {
-    setPrivateEnabled(true);
-  }
-
-  function unauthorize() {
-    setPrivateEnabled(false);
-  }
+  const value = useMemo(() => ({
+    privateEnabled,
+    authorize() {
+      setPrivateEnabled(true);
+    },
+    unauthorize() {
+      setPrivateEnabled(false);
+    }
+  }), [privateEnabled]);
 
   return (
-    <RoutingContext.Provider value={{ privateEnabled, authorize, unauthorize }}>
+    <RoutingContext.Provider value={value}>
       {children}
     </RoutingContext.Provider>
   )
