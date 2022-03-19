@@ -3,10 +3,10 @@ import * as Yup from "yup";
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { Formik, FormikHelpers } from 'formik';
 
-import { FormikTextInput } from '../../components/FormitTextInput';
+import { FormikTextInput } from '../../components/formik/FormitTextInput';
 import { TemplateScreen } from './TemplateScreen';
-import { AppLink } from '../../components/public/AppLink';
-import { AppButton } from '../../components/public/AppButton';
+import { AppLink } from '../../components/app/AppLink';
+import { AppButton } from '../../components/app/AppButton';
 
 type Values = {
   username: string;

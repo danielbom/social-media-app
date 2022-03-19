@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { AppButton } from '../../components/public/AppButton';
+import { AppButton } from '../../components/app/AppButton';
 
 export const HomeScreen: React.FC = () => {
   function onPressLogout() {

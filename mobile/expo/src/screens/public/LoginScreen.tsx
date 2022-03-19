@@ -4,9 +4,9 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { Formik, FormikHelpers } from 'formik';
 
 import { theme } from '../../core/theme';
-import { AppLink } from '../../components/public/AppLink';
-import { AppButton } from '../../components/public/AppButton';
-import { FormikTextInput } from '../../components/FormitTextInput';
+import { AppLink } from '../../components/app/AppLink';
+import { AppButton } from '../../components/app/AppButton';
+import { FormikTextInput } from '../../components/formik/FormitTextInput';
 import { TemplateScreen } from './TemplateScreen';
 
 type Values = {

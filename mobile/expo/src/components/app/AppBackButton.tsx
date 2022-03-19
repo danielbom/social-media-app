@@ -1,12 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { OpaqueColorValue, TouchableOpacity, TouchableOpacityProps } from 'react-native';
 
-type BackButtonProps = {
+type AppBackButtonProps = {
   size?: number;
   color?: string | OpaqueColorValue;
 } & TouchableOpacityProps
 
-export const BackButton: React.FC<BackButtonProps> = ({ size, color, ...props }) => {
+export const AppBackButton: React.FC<AppBackButtonProps> = ({ size, color, ...props }) => {
   return (
     <TouchableOpacity {...props}>
       <Ionicons

@@ -2,7 +2,7 @@ import { useField } from 'formik';
 import { StyleProp, StyleSheet, TextInput, View, ViewStyle } from 'react-native';
 import { TextInput as PaperTextInput } from 'react-native-paper';
 import { TextInputProps } from 'react-native-paper/lib/typescript/components/TextInput/TextInput';
-import { theme } from '../core/theme';
+import { theme } from '../../core/theme';
 import { FormikDescription } from './FormikDescription';
 
 import { FormikError } from './FormikError';

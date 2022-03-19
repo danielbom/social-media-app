@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { TemplateScreen } from './TemplateScreen';
-import { AppButton } from '../../components/public/AppButton';
+import { AppButton } from '../../components/app/AppButton';
 import { StyleSheet, View } from 'react-native';
 import { Paragraph } from 'react-native-paper';
 

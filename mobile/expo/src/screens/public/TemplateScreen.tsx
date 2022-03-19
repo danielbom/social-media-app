@@ -1,7 +1,7 @@
 import React from 'react';
 import { Keyboard, KeyboardAvoidingView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 
-import { BackButton } from '../../components/BackButton';
+import { AppBackButton } from '../../components/app/AppBackButton';
 import { theme } from '../../core/theme';
 
 type TemplateScreenProps = {
@@ -18,7 +18,9 @@ export const TemplateScreen: React.FC<TemplateScreenProps> = ({
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.screen}>
         <View style={styles.screenHeader}>
-          {onPressBackButton ? <BackButton onPress={onPressBackButton} /> : null}
+          {onPressBackButton
+            ? <AppBackButton onPress={onPressBackButton} />
+            : <View style={styles.emptyHeader} />}
         </View>
         <View style={styles.center}>
           <View style={styles.container}>
@@ -47,6 +49,9 @@ const styles = StyleSheet.create({
   screenHeader: {
     paddingTop: 24,
     paddingHorizontal: 24
+  },
+  emptyHeader: {
+    height: 16,
   },
   center: {
     flex: 1,

@@ -1,6 +1,6 @@
 import { FieldMetaProps } from "formik";
 import { StyleSheet, Text } from 'react-native';
-import { theme } from "../core/theme";
+import { theme } from "../../core/theme";
 
 type FormikErrorProps = {
   meta: FieldMetaProps<any>
