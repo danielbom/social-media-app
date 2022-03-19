@@ -1,5 +1,12 @@
+import React from 'react';
 import { useField } from 'formik';
-import { StyleProp, StyleSheet, TextInput, View, ViewStyle } from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  TextInput,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { TextInput as PaperTextInput } from 'react-native-paper';
 import { TextInputProps } from 'react-native-paper/lib/typescript/components/TextInput/TextInput';
 import { theme } from '../../core/theme';
@@ -13,7 +20,7 @@ type FormikTextFieldProps = {
   autoComplete?: boolean;
   inputRef?: React.Ref<TextInput>;
   containerStyles?: StyleProp<ViewStyle>;
-} & Omit<TextInputProps, "theme">;
+} & Omit<TextInputProps, 'theme'>;
 
 export const FormikTextInput: React.FC<FormikTextFieldProps> = ({
   name,
@@ -46,7 +53,7 @@ export const FormikTextInput: React.FC<FormikTextFieldProps> = ({
       <FormikError meta={meta} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -60,4 +67,4 @@ const styles = StyleSheet.create({
     fontSize: 13,
     paddingTop: 8,
   },
-})
+});

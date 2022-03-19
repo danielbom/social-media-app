@@ -1,5 +1,6 @@
-import { StartScreenFree } from "../../components/screens/StartScreenFree";
-import { useAppNavigation } from "../../hooks/useAppNavigation";
+import React from 'react';
+import { StartScreenFree } from '../../components/screens/StartScreenFree';
+import { useAppNavigation } from '../../hooks/useAppNavigation';
 
 export const StartScreen: React.FC = () => {
   const navigation = useAppNavigation();
@@ -7,10 +8,10 @@ export const StartScreen: React.FC = () => {
   return (
     <StartScreenFree
       onPressLogin={() => {
-        navigation.replace("Login");
+        navigation.replace('Login');
       }}
       onPressRegister={() => {
-        navigation.replace("Register");
+        navigation.replace('Register');
       }}
     />
   );

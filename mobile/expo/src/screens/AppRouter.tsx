@@ -28,7 +28,9 @@ export const AppRouter: React.FC = () => {
 
   return (
     <NavigationContainer>
-      <PublicStack.Navigator initialRouteName='Start' screenOptions={{ headerShown: false }}>
+      <PublicStack.Navigator
+        initialRouteName="Start"
+        screenOptions={{ headerShown: false }}>
         {routing.privateEnabled ? (
           <>
             <PublicStack.Screen name="Home" component={HomeScreen} />
@@ -38,10 +40,13 @@ export const AppRouter: React.FC = () => {
             <PublicStack.Screen name="Start" component={StartScreen} />
             <PublicStack.Screen name="Login" component={LoginScreen} />
             <PublicStack.Screen name="Register" component={RegisterScreen} />
-            <PublicStack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+            <PublicStack.Screen
+              name="ResetPassword"
+              component={ResetPasswordScreen}
+            />
           </>
         )}
       </PublicStack.Navigator>
     </NavigationContainer>
   );
-}
+};

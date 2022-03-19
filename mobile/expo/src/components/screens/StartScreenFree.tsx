@@ -8,7 +8,7 @@ import { Paragraph } from 'react-native-paper';
 type StartScreenFreeProps = {
   onPressLogin: () => void;
   onPressRegister: () => void;
-}
+};
 
 export const StartScreenFree: React.FC<StartScreenFreeProps> = ({
   onPressLogin,
@@ -16,9 +16,7 @@ export const StartScreenFree: React.FC<StartScreenFreeProps> = ({
 }) => {
   return (
     <TemplateScreen headerText="Rede Social">
-      <Paragraph style={styles.text}>
-        Uma rede social de exemplo
-      </Paragraph>
+      <Paragraph style={styles.text}>Uma rede social de exemplo</Paragraph>
       <View style={styles.buttons}>
         <AppButton mode="contained" onPress={onPressLogin}>
           Entrar
@@ -30,14 +28,14 @@ export const StartScreenFree: React.FC<StartScreenFreeProps> = ({
       </View>
     </TemplateScreen>
   );
-}
+};
 
 const styles = StyleSheet.create({
   buttons: {
-    paddingVertical: 16
+    paddingVertical: 16,
   },
   separator: {
-    height: 8
+    height: 8,
   },
   text: {
     fontSize: 15,

@@ -1,6 +1,12 @@
 import React, { useRef } from 'react';
 import * as Yup from 'yup';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { Formik, FormikHelpers } from 'formik';
 
 import { theme } from '../../core/theme';
@@ -25,24 +31,22 @@ export const LoginScreenFree: React.FC<LoginScreenFreeProps> = ({
   onSubmit,
   onPressBackButton,
   onPressRegister,
-  onPressResetPassword
+  onPressResetPassword,
 }) => {
   const ref2 = useRef<TextInput>(null);
   const initialValues = { username: '', password: '' };
   const validationSchema = Yup.object({
     username: Yup.string().required('Campo obrigatório'),
-    password: Yup
-      .string()
+    password: Yup.string()
       .required('Campo obrigatório')
-      .min(8, 'Mínimo de 8 caracteres')
+      .min(8, 'Mínimo de 8 caracteres'),
   });
 
   return (
     <Formik
       onSubmit={onSubmit}
       initialValues={initialValues}
-      validationSchema={validationSchema}
-    >
+      validationSchema={validationSchema}>
       {form => {
         async function onPressSubmit() {
           await form.submitForm();
@@ -51,8 +55,7 @@ export const LoginScreenFree: React.FC<LoginScreenFreeProps> = ({
         return (
           <TemplateScreen
             headerText="Bem-vindo de volta!"
-            onPressBackButton={onPressBackButton}
-          >
+            onPressBackButton={onPressBackButton}>
             <FormikTextInput
               label="Usuário"
               name="username"
@@ -77,18 +80,14 @@ export const LoginScreenFree: React.FC<LoginScreenFreeProps> = ({
               </TouchableOpacity>
             </View>
 
-            <AppButton onPress={onPressSubmit}>
-              Entrar
-            </AppButton>
+            <AppButton onPress={onPressSubmit}>Entrar</AppButton>
 
             <View style={styles.registerContainer}>
               <Text>Ainda não possui uma conta? </Text>
-              <AppLink onPress={onPressRegister}>
-                Registrar
-              </AppLink>
+              <AppLink onPress={onPressRegister}>Registrar</AppLink>
             </View>
           </TemplateScreen>
-        )
+        );
       }}
     </Formik>
   );

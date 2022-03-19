@@ -1,3 +1,4 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { StyleSheet, SafeAreaView } from 'react-native';
@@ -17,7 +18,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
-    width: "100%",
-  }
+    height: '100%',
+    width: '100%',
+  },
 });

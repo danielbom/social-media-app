@@ -1,5 +1,12 @@
 import React from 'react';
-import { Keyboard, KeyboardAvoidingView, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 
 import { AppBackButton } from '../../components/app/AppBackButton';
 import { theme } from '../../core/theme';
@@ -12,15 +19,17 @@ type TemplateScreenProps = {
 export const TemplateScreen: React.FC<TemplateScreenProps> = ({
   children,
   headerText,
-  onPressBackButton
+  onPressBackButton,
 }) => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.screen}>
         <View style={styles.screenHeader}>
-          {onPressBackButton
-            ? <AppBackButton onPress={onPressBackButton} />
-            : <View style={styles.emptyHeader} />}
+          {onPressBackButton ? (
+            <AppBackButton onPress={onPressBackButton} />
+          ) : (
+            <View style={styles.emptyHeader} />
+          )}
         </View>
         <View style={styles.center}>
           <View style={styles.container}>
@@ -29,9 +38,7 @@ export const TemplateScreen: React.FC<TemplateScreenProps> = ({
                 <View style={styles.headerLogo}>
                   <Text style={styles.headerLogoText}>Logo</Text>
                 </View>
-                <Text style={styles.headerText}>
-                  {headerText}
-                </Text>
+                <Text style={styles.headerText}>{headerText}</Text>
               </View>
               {children}
             </KeyboardAvoidingView>
@@ -48,7 +55,7 @@ const styles = StyleSheet.create({
   },
   screenHeader: {
     paddingTop: 24,
-    paddingHorizontal: 24
+    paddingHorizontal: 24,
   },
   emptyHeader: {
     height: 16,
@@ -64,20 +71,20 @@ const styles = StyleSheet.create({
     maxWidth: 340,
   },
   headerContainer: {
-    alignItems: "center"
+    alignItems: 'center',
   },
   headerLogo: {
     height: 110,
     width: 110,
-    borderColor: "#000",
+    borderColor: '#000',
     borderWidth: 1,
     borderRadius: 100,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: theme.colors.primary
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.colors.primary,
   },
   headerLogoText: {
-    color: "#fff"
+    color: '#fff',
   },
   headerText: {
     fontSize: 21,

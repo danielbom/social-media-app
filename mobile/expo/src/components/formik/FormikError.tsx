@@ -1,14 +1,15 @@
-import { FieldMetaProps } from "formik";
+import React from 'react';
+import { FieldMetaProps } from 'formik';
 import { StyleSheet, Text } from 'react-native';
-import { theme } from "../../core/theme";
+import { theme } from '../../core/theme';
 
 type FormikErrorProps = {
-  meta: FieldMetaProps<any>
-}
+  meta: FieldMetaProps<any>;
+};
 
 export const FormikError: React.FC<FormikErrorProps> = ({ meta }) => {
   if (meta && meta.touched && meta.error) {
-    return <Text style={styles.error}>{meta.error}</Text>
+    return <Text style={styles.error}>{meta.error}</Text>;
   }
   return null;
 };
@@ -18,6 +19,6 @@ const styles = StyleSheet.create({
     color: theme.colors.error,
     fontSize: 13,
     paddingTop: 8,
-    paddingStart: 6
+    paddingStart: 6,
   },
-})
+});

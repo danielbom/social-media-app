@@ -1,5 +1,5 @@
 import React from 'react';
-import * as Yup from "yup";
+import * as Yup from 'yup';
 import { StyleSheet } from 'react-native';
 import { Formik, FormikHelpers } from 'formik';
 
@@ -16,10 +16,9 @@ type ResetPasswordScreenFreeProps = {
   onPressBackButton: () => void;
 };
 
-export const ResetPasswordScreenFree: React.FC<ResetPasswordScreenFreeProps> = ({
-  onSubmit,
-  onPressBackButton
-}) => {
+export const ResetPasswordScreenFree: React.FC<
+  ResetPasswordScreenFreeProps
+> = ({ onSubmit, onPressBackButton }) => {
   const initialValues = { username: '' };
   const validationSchema = Yup.object({
     username: Yup.string().required('Campo obrigatório'),
@@ -29,8 +28,7 @@ export const ResetPasswordScreenFree: React.FC<ResetPasswordScreenFreeProps> = (
     <Formik
       onSubmit={onSubmit}
       initialValues={initialValues}
-      validationSchema={validationSchema}
-    >
+      validationSchema={validationSchema}>
       {form => {
         async function onPressSubmit() {
           await form.submitForm();
@@ -39,8 +37,7 @@ export const ResetPasswordScreenFree: React.FC<ResetPasswordScreenFreeProps> = (
         return (
           <TemplateScreen
             headerText="Recuperar senha"
-            onPressBackButton={onPressBackButton}
-          >
+            onPressBackButton={onPressBackButton}>
             <FormikTextInput
               label="Usuário"
               name="username"
@@ -50,11 +47,9 @@ export const ResetPasswordScreenFree: React.FC<ResetPasswordScreenFreeProps> = (
               description="Você receberá um email com instruções para atualizar sua senha."
             />
 
-            <AppButton onPress={onPressSubmit}>
-              Enviar pedido
-            </AppButton>
+            <AppButton onPress={onPressSubmit}>Enviar pedido</AppButton>
           </TemplateScreen>
-        )
+        );
       }}
     </Formik>
   );

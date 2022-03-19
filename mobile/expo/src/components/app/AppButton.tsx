@@ -1,18 +1,22 @@
-import { StyleSheet } from "react-native";
-import { Button } from "react-native-paper";
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { Button } from 'react-native-paper';
 
 type AppSubmitProps = {
   onPress?: () => any;
-  mode?: "text" | "outlined" | "contained" | undefined;
+  mode?: 'text' | 'outlined' | 'contained' | undefined;
 };
 
-export const AppButton: React.FC<AppSubmitProps> = ({ mode, children, onPress }) => {
+export const AppButton: React.FC<AppSubmitProps> = ({
+  mode,
+  children,
+  onPress,
+}) => {
   return (
     <Button
-      mode={mode || "contained"}
+      mode={mode || 'contained'}
       labelStyle={styles.text}
-      onPress={onPress}
-    >
+      onPress={onPress}>
       {children}
     </Button>
   );

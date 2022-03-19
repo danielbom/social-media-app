@@ -13,9 +13,7 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <View style={styles.screen}>
-      <AppButton onPress={onPressLogout}>
-        Sair
-      </AppButton>
+      <AppButton onPress={onPressLogout}>Sair</AppButton>
     </View>
   );
 };
@@ -23,7 +21,7 @@ export const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
-  }
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

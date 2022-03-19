@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import * as Yup from "yup";
+import * as Yup from 'yup';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { Formik, FormikHelpers } from 'formik';
 
@@ -28,18 +28,16 @@ export const RegisterScreenFree: React.FC<RegisterScreenFreeProps> = ({
   const initialValues = { username: '', password: '' };
   const validationSchema = Yup.object({
     username: Yup.string().required('Campo obrigatório'),
-    password: Yup
-      .string()
+    password: Yup.string()
       .required('Campo obrigatório')
-      .min(8, 'Mínimo de 8 caracteres')
+      .min(8, 'Mínimo de 8 caracteres'),
   });
 
   return (
     <Formik
       onSubmit={onSubmit}
       initialValues={initialValues}
-      validationSchema={validationSchema}
-    >
+      validationSchema={validationSchema}>
       {form => {
         async function onPressSubmit() {
           await form.submitForm();
@@ -48,8 +46,7 @@ export const RegisterScreenFree: React.FC<RegisterScreenFreeProps> = ({
         return (
           <TemplateScreen
             headerText="Crie sua conta"
-            onPressBackButton={onPressBackButton}
-          >
+            onPressBackButton={onPressBackButton}>
             <FormikTextInput
               label="Usuário"
               name="username"
@@ -68,19 +65,15 @@ export const RegisterScreenFree: React.FC<RegisterScreenFreeProps> = ({
               onSubmitEditing={() => onPressSubmit()}
             />
 
-            <AppButton onPress={onPressSubmit}>
-              Salvar
-            </AppButton>
+            <AppButton onPress={onPressSubmit}>Salvar</AppButton>
 
             <View style={styles.loginContainer}>
               <Text>Você já possui uma conta? </Text>
 
-              <AppLink onPress={onPressLogin}>
-                Entrar
-              </AppLink>
+              <AppLink onPress={onPressLogin}>Entrar</AppLink>
             </View>
           </TemplateScreen>
-        )
+        );
       }}
     </Formik>
   );
