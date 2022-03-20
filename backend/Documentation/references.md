@@ -5,3 +5,4 @@
 * [Swagger JWT Improve Configuration](https://stackoverflow.com/questions/43447688/setting-up-swagger-asp-net-core-using-the-authorization-headers-bearer)
 * [ODataParametersSwaggerDefinition](https://stackoverflow.com/questions/41973356/is-there-a-way-to-get-swashbuckle-to-add-odata-parameters-to-web-api-2-iqueryabl)
 * [Soft Delete](https://spin.atomicobject.com/2019/01/29/entity-framework-core-soft-delete/)
+* [How to use parameters in powershell](https://www.red-gate.com/simple-talk/sysadmin/powershell/how-to-use-parameters-in-powershell/)

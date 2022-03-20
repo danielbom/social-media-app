@@ -10,7 +10,7 @@ using Xunit.Abstractions;
 
 namespace SocialMedia.Tests.Integration;
 
-public class PostTest : IDisposable
+public class PostsTest : IDisposable
 {
     private Logger Logger;
     private Server Server;
@@ -18,7 +18,7 @@ public class PostTest : IDisposable
 
     private ICollection<string> PostIds = new List<string>();
 
-    public PostTest(ITestOutputHelper helper)
+    public PostsTest(ITestOutputHelper helper)
     {
         Logger = new("PostTest", helper);
         Server = new Server(helper);
@@ -32,7 +32,7 @@ public class PostTest : IDisposable
         var auth = await Authenticator.Execute(UserSample.GetAuthLogin());
         using var client = Server.CreateClient();
         // Exercise
-        var response = await client.GetAsync($"/Post/{auth.User.Id}");
+        var response = await client.GetAsync($"/Posts/{auth.User.Id}");
         // Verify
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
@@ -45,9 +45,9 @@ public class PostTest : IDisposable
         Server.Token = auth.Token;
         using var client = Server.CreateClient();
         // Exercise
-        var response = await client.GetAsync($"/Post/{Guid.Empty}");
+        var response = await client.GetAsync($"/Posts/{Guid.Empty}");
         // Verify
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class PostTest : IDisposable
         Server.Token = auth.Token;
         using var client = Server.CreateClient();
         // Exercise
-        var response = await client.GetAsync($"/Post/{auth.User.Id}");
+        var response = await client.GetAsync($"/Posts/{auth.User.Id}");
         // Verify
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
@@ -71,7 +71,7 @@ public class PostTest : IDisposable
         Server.Token = auth.Token;
         using var client = Server.CreateClient();
         // Exercise
-        var response = await client.PostAsync("/Post", Server.CreateBody(new PostCreate("sample")));
+        var response = await client.PostAsync("/Posts", Server.CreateBody(new PostCreate("sample")));
         var content = await response.Content.ReadAsStringAsync();
         var definition = new { Id = "" };
         var result = JsonConvert.DeserializeAnonymousType(content, definition);

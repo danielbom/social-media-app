@@ -8,18 +8,17 @@ using SocialMedia.Api.Repositories;
 
 namespace SocialMedia.Api.Controllers;
 
-
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class CommentController : ODataController
+public class CommentsController : ODataController
 {
     private readonly AppDbContext DbContext;
     private readonly UserRepository UserRepository;
     private readonly PostRepository PostRepository;
     private readonly CommentRepository CommentRepository;
 
-    public CommentController(AppDbContext dbContext, UserRepository userRepository, PostRepository postRepository, CommentRepository commentRepository)
+    public CommentsController(AppDbContext dbContext, UserRepository userRepository, PostRepository postRepository, CommentRepository commentRepository)
     {
         DbContext = dbContext;
         UserRepository = userRepository;
@@ -34,19 +33,19 @@ public class CommentController : ODataController
         return Ok(CommentRepository.FindById(id));
     }
 
-    [HttpPost("{commentId}/Answer")]
+    [HttpPost("{commentId}/Answers")]
     public async Task<IActionResult> Answer(Guid commentId, [FromBody] CommentCreate body)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+            return ValidationProblem(ModelState);
 
         var user = UserRepository.FindByUsername(User.Identity?.Name!);
         if (user == null)
-            return NotFound(new { message = "User not found" });
+            return BadRequest(new { message = "User not found" });
 
         var comment = CommentRepository.FindById(commentId);
         if (comment == null)
-            return NotFound(new { message = "Comment not found" });
+            return BadRequest(new { message = "Comment not found" });
 
         var answer = CommentRepository.CreateAnswer(body.Content, comment, user);
         await DbContext.Comments.AddAsync(answer);

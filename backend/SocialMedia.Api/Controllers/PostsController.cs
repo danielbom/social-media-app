@@ -35,14 +35,14 @@ public class CommentCreate
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class PostController : ODataController
+public class PostsController : ODataController
 {
     private readonly AppDbContext DbContext;
     private readonly UserRepository UserRepository;
     private readonly PostRepository PostRepository;
     private readonly CommentRepository CommentRepository;
 
-    public PostController(AppDbContext dbContext, PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository)
+    public PostsController(AppDbContext dbContext, PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository)
     {
         DbContext = dbContext;
         PostRepository = postRepository;
@@ -56,7 +56,7 @@ public class PostController : ODataController
     {
         var user = await UserRepository.FindById(userId);
         if (user == null)
-            return NotFound(new { message = "User not found" });
+            return BadRequest(new { message = "User not found" });
 
         return Ok(DbContext.Posts.Where(x => x.Author!.Id == user.Id));
     }
@@ -65,11 +65,11 @@ public class PostController : ODataController
     public async Task<IActionResult> Create([FromBody] PostCreate body)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+            return ValidationProblem(ModelState);
 
         var user = UserRepository.FindByUsername(User.Identity?.Name!);
         if (user == null)
-            return NotFound(new { message = "User not found" });
+            return BadRequest(new { message = "User not found" });
 
         var post = PostRepository.Create(body.Content, user);
         await DbContext.Posts.AddAsync(post);
@@ -79,13 +79,13 @@ public class PostController : ODataController
         return CreatedAtAction(nameof(Create), new { Id = post.Id }, post);
     }
 
-    [HttpGet("{postId}/Comment")]
+    [HttpGet("{postId}/Comments")]
     [EnableQuery]
     public IActionResult CommentIndex(Guid postId)
     {
         var post = PostRepository.FindById(postId);
         if (post == null)
-            return NotFound(new { message = "Post not found" });
+            return BadRequest(new { message = "Post not found" });
 
         return Ok(DbContext.Comments.Where(x => x.PostParent!.Id == post.Id).Select(x => new
         {
@@ -96,7 +96,7 @@ public class PostController : ODataController
         }));
     }
 
-    [HttpPost("{postId}/Comment")]
+    [HttpPost("{postId}/Comments")]
     public async Task<IActionResult> CommentCreate(Guid postId, [FromBody] CommentCreate body)
     {
         if (!ModelState.IsValid)
@@ -104,11 +104,11 @@ public class PostController : ODataController
 
         var user = UserRepository.FindByUsername(User.Identity?.Name!);
         if (user == null)
-            return NotFound(new { message = "User not found" });
+            return BadRequest(new { message = "User not found" });
 
         var post = PostRepository.FindById(postId);
         if (post == null)
-            return NotFound(new { message = "Post not found" });
+            return BadRequest(new { message = "Post not found" });
 
         var comment = CommentRepository.Create(body.Content, post, user);
         await DbContext.Comments.AddAsync(comment);

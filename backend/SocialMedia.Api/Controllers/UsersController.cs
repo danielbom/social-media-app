@@ -21,12 +21,12 @@ public class UpdateUser
 [ApiController]
 [Route("[controller]")]
 [Authorize(Roles = "admin")]
-public class UserController : ODataController
+public class UsersController : ODataController
 {
     private readonly AppDbContext DbContext;
     private readonly UserRepository UserRepository;
 
-    public UserController(AppDbContext dbContext, UserRepository userRepository)
+    public UsersController(AppDbContext dbContext, UserRepository userRepository)
     {
         DbContext = dbContext;
         UserRepository = userRepository;
@@ -50,11 +50,11 @@ public class UserController : ODataController
     public async Task<IActionResult> Update(Guid userId, [FromBody] UpdateUser body)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+            return ValidationProblem(ModelState);
 
         var user = await UserRepository.FindById(userId);
         if (user == null)
-            return NotFound(new { message = "User not found" });
+            return BadRequest(new { message = "User not found" });
 
         var updated = false;
 

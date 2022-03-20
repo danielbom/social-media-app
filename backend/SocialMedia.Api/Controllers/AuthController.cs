@@ -63,7 +63,7 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<dynamic>> Login([FromBody] AuthLogin body)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+            return ValidationProblem(ModelState);
 
         var user = UserRepository.FindByUsername(body.Username);
         if (user == null)
@@ -84,7 +84,7 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<dynamic>> Register([FromBody] AuthRegister body)
     {
         if (!ModelState.IsValid)
-            return BadRequest(ModelState);
+            return ValidationProblem(ModelState);
 
         var userExists = UserRepository.FindByUsername(body.Username);
         if (userExists != null)

@@ -1,15 +1,4 @@
-import axios from "axios";
-import https from "https";
-
-const api = axios.create({
-    baseURL: "https://localhost:5501",
-    httpsAgent: new https.Agent({
-        rejectUnauthorized: false
-    }),
-    headers: {
-        "Content-Type": "application/json"
-    }
-});
+import Api from "./Api.js";
 
 export class InitialFlow {
     constructor({ username, password }) {
@@ -18,41 +7,40 @@ export class InitialFlow {
     }
 
     async registerUser() {
-        await api.post("/Auth/Register", { username: "user", password: "123mudar" });
+        await Api.register({ username: "user", password: "123mudar" });
     }
 
     async doLogin() {
-        const loginResponse = await api.post("/Auth/Login", {
+        await Api.login({
             username: this.username,
             password: this.password
         });
-        const { token } = loginResponse.data;
-        api.defaults.headers.common.Authorization = `Bearer ${token}`;
+        Api.enableAuthentication();
     }
 
     async createFirstPost() {
-        const postResponse = await api.post("/Post", {
+        const postResponse = await Api.createPost({
             content: "Meu primeiro post como administrador"
         });
         return postResponse.data.id;
     }
 
     async commentFirstPost(postId) {
-        const postCommentResponse = await api.post(`/Post/${postId}/Comment`, {
+        const postCommentResponse = await Api.commentPost(postId, {
             content: "Este comentario foi desnecessario"
         });
         return postCommentResponse.data.id;
     }
 
     async answerFirstComment(commentId) {
-        const commentAnswerResponse = await api.post(`/Comment/${commentId}/Answer`, {
+        const commentAnswerResponse = await Api.answerComment(commentId, {
             content: "Okay"
         });
         return commentAnswerResponse.data.id;
     }
 
     async finishThreadComments(answerId) {
-        await api.post(`/Comment/${answerId}/Answer`, {
+        await Api.answerComment(answerId, {
             content: "Fechou"
         });
     }
