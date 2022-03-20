@@ -9,7 +9,7 @@ import {
 import { theme } from '../../core/theme';
 
 type AppLinkProps = {
-  textProps?: TextProps;
+  textProps?: Omit<TextProps, 'children'>;
 } & TouchableOpacityProps;
 
 export const AppLink: React.FC<AppLinkProps> = ({
@@ -17,12 +17,7 @@ export const AppLink: React.FC<AppLinkProps> = ({
   textProps,
   ...props
 }) => {
-  const {
-    style: textStyles,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    children: _,
-    ...textPropsRest
-  } = textProps || {};
+  const { style: textStyles, ...textPropsRest } = textProps || {};
 
   return (
     <TouchableOpacity {...props}>
