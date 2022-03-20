@@ -118,7 +118,11 @@ if (app.Environment.IsDevelopment())
 app.UseODataQueryRequest();
 app.UseODataBatching();
 
-app.UseHttpsRedirection();
+if (app.Environment.IsProduction())
+{
+    // Disable https redirects with invalid ssl certification
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
