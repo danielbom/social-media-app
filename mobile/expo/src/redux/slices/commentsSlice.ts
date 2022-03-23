@@ -1,11 +1,6 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-
-type Comment = {
-  id: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-};
+import { RootState } from '../store';
+import { Comment } from '../../services/api';
 
 const commentsAdapter = createEntityAdapter<Comment>();
 
@@ -23,3 +18,9 @@ export const commentsSlice = createSlice({
     },
   },
 });
+
+const baseSelectors = commentsAdapter.getSelectors<RootState>(state => state.comments.comments);
+
+export const selectors = {
+  ...baseSelectors,
+};

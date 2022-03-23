@@ -1,4 +1,5 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../store';
 
 type Post = {
   id: string;
@@ -23,3 +24,9 @@ export const postsSlice = createSlice({
     },
   },
 });
+
+const baseSelectors = postsAdapter.getSelectors<RootState>(state => state.posts.posts);
+
+export const selectors = {
+  ...baseSelectors,
+};

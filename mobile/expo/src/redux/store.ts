@@ -1,4 +1,4 @@
-import { configureStore, MiddlewareArray } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import { actionUpdate } from './middlewares/actionUpdate';
 import { actionSlice } from './slices/actionSlice';
 import { commentsSlice } from './slices/commentsSlice';
@@ -12,7 +12,7 @@ export const store = configureStore({
     [usersSlice.name]: usersSlice.reducer,
     [actionSlice.name]: actionSlice.reducer,
   },
-  middleware: new MiddlewareArray().concat(actionUpdate),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(actionUpdate),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

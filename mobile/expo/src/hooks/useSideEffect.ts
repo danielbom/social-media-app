@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useStore } from 'react-redux';
-import { RootState } from '../store';
+import { RootState } from '../redux';
 
 // https://www.youtube.com/watch?v=MrUzA-x3oBc&ab_channel=Codeminer42
 
