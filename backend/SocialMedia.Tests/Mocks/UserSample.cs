@@ -11,7 +11,7 @@ class UserSample
         return $@"{{ ""username"": ""{Username}"", ""password"": ""{Password}"" }}";
     }
 
-    public static AuthLogin GetAuthLogin()
+    public static AuthLogin ToAuthLogin()
     {
         return new AuthLogin(Username, Password);
     }

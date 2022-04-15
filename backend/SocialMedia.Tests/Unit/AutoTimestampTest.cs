@@ -21,7 +21,7 @@ public class AutoTimestampTest : IDisposable
     public void AutoTimestampMustVerifyAnnotation()
     {
         Assert.True(AutoTimestamp.HasAnnotation(typeof(User)));
-        Assert.False(AutoTimestamp.HasAnnotation(typeof(LearningTest)));
+        Assert.False(AutoTimestamp.HasAnnotation(typeof(AutoTimestampTest)));
     }
 
     [Fact]

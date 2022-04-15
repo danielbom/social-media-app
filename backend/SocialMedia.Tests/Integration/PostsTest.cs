@@ -29,7 +29,7 @@ public class PostsTest : IDisposable
     public async void PostIndexUnauthorized()
     {
         // Setup
-        var auth = await Authenticator.Execute(UserSample.GetAuthLogin());
+        var auth = await Authenticator.Execute(UserSample.ToAuthLogin());
         using var client = Server.CreateClient();
         // Exercise
         var response = await client.GetAsync($"/Posts/{auth.User.Id}");
@@ -41,7 +41,7 @@ public class PostsTest : IDisposable
     public async void PostIndexUserNotFound()
     {
         // Setup
-        var auth = await Authenticator.Execute(UserSample.GetAuthLogin());
+        var auth = await Authenticator.Execute(UserSample.ToAuthLogin());
         Server.Token = auth.Token;
         using var client = Server.CreateClient();
         // Exercise
@@ -54,7 +54,7 @@ public class PostsTest : IDisposable
     public async void PostIndexOk()
     {
         // Setup
-        var auth = await Authenticator.Execute(UserSample.GetAuthLogin());
+        var auth = await Authenticator.Execute(UserSample.ToAuthLogin());
         Server.Token = auth.Token;
         using var client = Server.CreateClient();
         // Exercise
@@ -67,7 +67,7 @@ public class PostsTest : IDisposable
     public async void PostCreate()
     {
         // Setup
-        var auth = await Authenticator.Execute(UserSample.GetAuthLogin());
+        var auth = await Authenticator.Execute(UserSample.ToAuthLogin());
         Server.Token = auth.Token;
         using var client = Server.CreateClient();
         // Exercise

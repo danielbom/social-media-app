@@ -2,7 +2,7 @@ using Xunit;
 
 namespace SocialMedia.Tests;
 
-public class LearningTest
+public class ExperimentsTest
 {
     [Fact]
     public void Test1()
