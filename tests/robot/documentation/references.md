@@ -1,0 +1,5 @@
+* [Sample Video #1](https://www.youtube.com/watch?v=80hzRdfXF4o&list=WL&ab_channel=QAninja)
+* [Samples #1](https://testersdock.com/api-testing-robot-framework/)
+* [Samples #2](https://robocorp.com/docs/development-guide/http/http-examples)
+* [Samples #3](https://github.com/mayribeirofernandes/testesrobotframework)
+* [BuiltIn Documentation](https://robotframework.org/robotframework/2.1.2/libraries/BuiltIn.html)
