@@ -1,5 +1,6 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../store';
+import { logout } from '../thunks/auth';
 
 type Post = {
   id: string;
@@ -13,19 +14,26 @@ const postsAdapter = createEntityAdapter<Post>();
 export const postsSlice = createSlice({
   name: 'posts',
   initialState: {
-    posts: postsAdapter.getInitialState(),
+    entities: postsAdapter.getInitialState(),
   },
   reducers: {
     addOne(state, action) {
-      postsAdapter.addOne(state.posts, action.payload);
+      postsAdapter.addOne(state.entities, action.payload);
     },
     updateOne(state, action) {
-      postsAdapter.updateOne(state.posts, action.payload);
+      postsAdapter.updateOne(state.entities, action.payload);
     },
+  },
+  extraReducers(builder) {
+    builder.addCase(logout.fulfilled, (state, action) => {
+      postsAdapter.removeAll(state.entities);
+    });
   },
 });
 
-const baseSelectors = postsAdapter.getSelectors<RootState>(state => state.posts.posts);
+const baseSelectors = postsAdapter.getSelectors<RootState>(
+  state => state.posts.entities,
+);
 
 export const selectors = {
   ...baseSelectors,

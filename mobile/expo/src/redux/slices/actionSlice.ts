@@ -3,13 +3,13 @@ import { RootState } from '../store';
 
 type ActionState =
   | {
-    type: string;
-    payload: any;
-  }
+      type: string;
+      payload: any;
+    }
   | {
-    type: string;
-    error: any;
-  };
+      type: string;
+      error: any;
+    };
 
 const initialState = {
   lastAction: undefined as ActionState | undefined,
@@ -27,12 +27,11 @@ export const actionSlice = createSlice({
   },
 });
 
-
 export const selectors = {
-  getLastAction(state: RootState): { action?: ActionState, count: number } {
+  getLastAction(state: RootState): { action?: ActionState; count: number } {
     return {
       count: state.action.count,
-      action: state.action.lastAction
-    }
-  }
+      action: state.action.lastAction,
+    };
+  },
 };

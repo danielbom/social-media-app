@@ -12,7 +12,8 @@ export const store = configureStore({
     [usersSlice.name]: usersSlice.reducer,
     [actionSlice.name]: actionSlice.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(actionUpdate),
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().concat(actionUpdate),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

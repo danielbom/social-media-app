@@ -12,5 +12,5 @@ export const storeActions = {
   auth: {
     login,
     register,
-  }
+  },
 };
