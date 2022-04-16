@@ -1,5 +1,5 @@
 export class User {
-  id: string;
+  id: Uuid;
   username: string;
   password: string;
   role: string;

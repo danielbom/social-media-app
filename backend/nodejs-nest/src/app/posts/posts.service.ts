@@ -13,15 +13,15 @@ export class PostsService {
     return [];
   }
 
-  async findOne(id: string): Promise<Post> {
+  async findOne(id: Uuid): Promise<Post> {
     return {} as any;
   }
 
-  async update(id: string, updatePostDto: UpdatePostDto): Promise<Post> {
+  async update(id: Uuid, updatePostDto: UpdatePostDto): Promise<Post> {
     return {} as any;
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: Uuid): Promise<void> {
     throw new MethodNotAllowedException();
   }
 }

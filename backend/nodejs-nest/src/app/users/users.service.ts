@@ -13,15 +13,15 @@ export class UsersService {
     return [];
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOne(id: Uuid): Promise<User> {
     return {} as any;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(id: Uuid, updateUserDto: UpdateUserDto): Promise<User> {
     return {} as any;
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: Uuid): Promise<void> {
     throw new MethodNotAllowedException();
   }
 }

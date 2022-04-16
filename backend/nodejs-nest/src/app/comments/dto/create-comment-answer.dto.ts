@@ -9,5 +9,5 @@ export class CreateCommentAnswerDto {
   content: string;
 
   @JoiSchema(Joi.string().required())
-  commentId: string;
+  commentId: Uuid;
 }

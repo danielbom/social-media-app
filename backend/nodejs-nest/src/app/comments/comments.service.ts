@@ -19,18 +19,15 @@ export class CommentsService {
     return [];
   }
 
-  async findOne(id: string): Promise<Comment> {
+  async findOne(id: Uuid): Promise<Comment> {
     return {} as any;
   }
 
-  async update(
-    id: string,
-    updateCommentDto: UpdateCommentDto,
-  ): Promise<Comment> {
+  async update(id: Uuid, updateCommentDto: UpdateCommentDto): Promise<Comment> {
     return {} as any;
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: Uuid): Promise<void> {
     throw new MethodNotAllowedException();
   }
 }
