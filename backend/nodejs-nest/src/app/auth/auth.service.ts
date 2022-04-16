@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { Role } from '../users/entities/role.enum';
 import { User } from '../users/entities/user.entity';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { AuthRegisterDto } from './dto/auth-register.dto';
@@ -10,7 +11,11 @@ const users: Record<string, User> = {
     id: '1',
     username: 'admin',
     password: '123mudar',
-    role: 'admin',
+    role: Role.ADMIN,
+    comments: [],
+    posts: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
 };
 
@@ -43,7 +48,11 @@ export class AuthService {
       id: idCount.toString(),
       username: authRegisterDto.username,
       password: authRegisterDto.password,
-      role: 'user',
+      role: Role.USER,
+      comments: [],
+      posts: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
     idCount++;
     users[newUser.id] = newUser;
