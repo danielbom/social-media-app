@@ -1,3 +1,4 @@
+import { MethodNotAllowedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { CommentsController } from './comments.controller';
 import { CommentsService } from './comments.service';
@@ -16,5 +17,16 @@ describe('CommentsController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  describe('CommentsController.remove', () => {
+    it('should fail ever', async () => {
+      try {
+        await controller.remove('');
+        throw new Error('unreachable');
+      } catch (error) {
+        expect(error).toBeInstanceOf(MethodNotAllowedException);
+      }
+    });
   });
 });

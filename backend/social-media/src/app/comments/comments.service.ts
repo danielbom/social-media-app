@@ -1,31 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, MethodNotAllowedException } from '@nestjs/common';
 import { CreateCommentAnswerDto } from './dto/create-comment-answer.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @Injectable()
 export class CommentsService {
-  create(createCommentDto: CreateCommentDto) {
-    return 'This action adds a new comment';
+  async create(createCommentDto: CreateCommentDto): Promise<Comment> {
+    return {} as any;
   }
 
-  createAnswer(createCommentAnswerDto: CreateCommentAnswerDto) {
-    return 'This action adds a new comment answer';
+  async createAnswer(
+    createCommentAnswerDto: CreateCommentAnswerDto,
+  ): Promise<Comment> {
+    return {} as any;
   }
 
-  findAll() {
-    return `This action returns all comments`;
+  async findAll(): Promise<Comment[]> {
+    return [];
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
+  async findOne(id: string): Promise<Comment> {
+    return {} as any;
   }
 
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
+  async update(
+    id: string,
+    updateCommentDto: UpdateCommentDto,
+  ): Promise<Comment> {
+    return {} as any;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} comment`;
+  async remove(id: string): Promise<void> {
+    throw new MethodNotAllowedException();
   }
 }

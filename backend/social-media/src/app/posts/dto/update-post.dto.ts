@@ -1,4 +1,10 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreatePostDto } from './create-post.dto';
+import { JoiSchema, JoiSchemaOptions } from 'nestjs-joi';
+import Joi from 'joi';
 
-export class UpdatePostDto extends PartialType(CreatePostDto) {}
+@JoiSchemaOptions({
+  allowUnknown: false,
+})
+export class UpdatePostDto {
+  @JoiSchema(Joi.string().required())
+  content: string;
+}

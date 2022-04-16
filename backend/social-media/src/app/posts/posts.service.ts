@@ -1,26 +1,27 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, MethodNotAllowedException } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { Post } from './entities/post.entity';
 
 @Injectable()
 export class PostsService {
-  create(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
+  async create(createPostDto: CreatePostDto): Promise<Post> {
+    return {} as any;
   }
 
-  findAll() {
-    return `This action returns all posts`;
+  async findAll(): Promise<Post[]> {
+    return [];
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: string): Promise<Post> {
+    return {} as any;
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async update(id: string, updatePostDto: UpdatePostDto): Promise<Post> {
+    return {} as any;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async remove(id: string): Promise<void> {
+    throw new MethodNotAllowedException();
   }
 }
