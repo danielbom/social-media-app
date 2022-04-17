@@ -1,13 +1,14 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { JoiPipe } from 'nestjs-joi';
+import request from 'supertest';
+
 import { AppModule } from 'src/app/app.module';
 import { AuthService } from 'src/app/auth/auth.service';
 import { CommentsService } from 'src/app/comments/comments.service';
 import { PostsService } from 'src/app/posts/posts.service';
 import { UsersService } from 'src/app/users/users.service';
 import { DatabaseModule } from 'src/database/database.module';
-import request from 'supertest';
 
 function mockService<T extends { prototype: Record<string, any> }>(Cls: T) {
   const props = Object.getOwnPropertyNames(Cls.prototype);
