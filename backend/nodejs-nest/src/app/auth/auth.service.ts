@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Role } from '../users/entities/role.enum';
 import { User } from '../users/entities/user.entity';
 import { AuthLoginDto } from './dto/auth-login.dto';
@@ -10,7 +11,7 @@ const users: Record<string, User> = {
   '1': {
     id: '1',
     username: 'admin',
-    password: '123mudar',
+    password: 'senh@zona',
     role: Role.ADMIN,
     comments: [],
     posts: [],
@@ -21,6 +22,8 @@ const users: Record<string, User> = {
 
 @Injectable()
 export class AuthService {
+  constructor(private jwtService: JwtService) {}
+
   async login(authLoginDto: AuthLoginDto): Promise<AuthLoginResponse> {
     const user = Object.values(users).find(
       (x) => x.username === authLoginDto.username,
@@ -30,9 +33,8 @@ export class AuthService {
       throw new BadRequestException('User and/or password was invalid!');
     }
 
-    return {
-      token: 'some-token',
-    };
+    const token = await this.jwtService.signAsync({ sub: user.id });
+    return { token };
   }
 
   async register(authRegisterDto: AuthRegisterDto): Promise<User> {

@@ -6,12 +6,16 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthUser } from 'src/decorators/auth-user.decorator';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
 import { CommentsService } from './comments.service';
 import { CreateCommentAnswerDto } from './dto/create-comment-answer.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
+@UseGuards(JwtAuthGuard)
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
@@ -27,7 +31,8 @@ export class CommentsController {
   }
 
   @Get()
-  findAll() {
+  findAll(@AuthUser() user: any) {
+    console.log(user);
     return this.commentsService.findAll();
   }
 

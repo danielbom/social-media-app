@@ -1,12 +1,14 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { JoiPipeModule } from 'nestjs-joi';
+import { DatabaseModule } from 'src/database/database.module';
+import { LoggerMiddleware } from 'src/middleware/logger.middleware';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CommentsModule } from './comments/comments.module';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
-import { JoiPipeModule } from 'nestjs-joi';
-import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
   imports: [
@@ -20,4 +22,8 @@ import { DatabaseModule } from 'src/database/database.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

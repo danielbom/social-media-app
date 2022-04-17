@@ -12,6 +12,10 @@ const env = {
     port: +process.env.APP_PORT,
     cors: process.env.APP_CORS,
   },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  },
 };
 
 (function ensureSafeEnvironments() {
@@ -29,6 +33,10 @@ const env = {
         .required()
         .regex(/^[^;]+(;[^;]+)*$/, { name: 'list of origins' })
         .label('APP_CORS'),
+    }),
+    jwt: Joi.object({
+      secret: Joi.string().required().label('JWT_SECRET'),
+      expiresIn: Joi.string().required().label('JWT_EXPIRES_IN'),
     }),
   });
 
