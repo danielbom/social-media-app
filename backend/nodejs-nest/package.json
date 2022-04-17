@@ -22,7 +22,9 @@
     "ts:check": "tsc --noEmit",
     "typeorm": "ts-node --require tsconfig-paths/register --require ./tsconfig.build.json ./node_modules/typeorm/cli --dataSource ./src/database/typeorm-data-source.ts",
     "migration:generate": "yarn typeorm migration:generate --pretty",
-    "migration:run": "ts-node --require tsconfig-paths/register --require ./tsconfig.build.json scripts/run-migrations.ts"
+    "migration:show": "yarn typeorm migration:show",
+    "migration:run": "yarn typeorm migration:run",
+    "migration:revert": "yarn typeorm migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
