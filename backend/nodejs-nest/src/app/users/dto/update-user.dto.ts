@@ -1,4 +1,13 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateUserDto } from './create-user.dto';
+import { JoiSchema, JoiSchemaOptions } from 'nestjs-joi';
+import Joi from 'joi';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
+@JoiSchemaOptions({
+  allowUnknown: false,
+})
+export class UpdateUserDto {
+  @JoiSchema(Joi.string().optional())
+  username: string;
+
+  @JoiSchema(Joi.string().optional())
+  password: string;
+}

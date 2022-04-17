@@ -6,6 +6,7 @@ import { CommentsModule } from './comments/comments.module';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
 import { JoiPipeModule } from 'nestjs-joi';
+import { DatabaseModule } from 'src/database/database.module';
 
 @Module({
   imports: [
@@ -13,11 +14,8 @@ import { JoiPipeModule } from 'nestjs-joi';
     CommentsModule,
     PostsModule,
     UsersModule,
-    JoiPipeModule.forRoot({
-      pipeOpts: {
-        usePipeValidationException: true,
-      },
-    }),
+    JoiPipeModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

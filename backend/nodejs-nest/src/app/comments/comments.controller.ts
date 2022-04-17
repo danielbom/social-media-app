@@ -21,7 +21,7 @@ export class CommentsController {
     return this.commentsService.create(createCommentDto);
   }
 
-  @Post()
+  @Post('/answers')
   createAnswer(@Body() createCommentAnswerDto: CreateCommentAnswerDto) {
     return this.commentsService.createAnswer(createCommentAnswerDto);
   }
