@@ -2,21 +2,18 @@ import { BadRequestException } from '@nestjs/common';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { UnreachableException } from 'src/exceptions/unreachable.exception';
 import { PasswordJwtStrategy } from 'src/strategies/passport-jwt.strategy';
+import { MockRepository } from 'src/tests/mock-repository';
+
 import { User } from '../users/entities/user.entity';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
-class Unreachable extends Error {}
-
 describe('AuthController', () => {
   let controller: AuthController;
-  let userRepository = {
-    findOne: jest.fn(),
-    create: jest.fn(),
-    save: jest.fn(),
-  };
-  let jwtService = {
+  const userRepository = MockRepository.create();
+  const jwtService = {
     signAsync: jest.fn(),
   };
 
@@ -52,7 +49,7 @@ describe('AuthController', () => {
           username: '',
           password: '',
         });
-        throw new Unreachable();
+        throw new UnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
         expect(error.message).toBe('User and/or password was invalid!');
@@ -67,7 +64,7 @@ describe('AuthController', () => {
       };
 
       jwtService.signAsync.mockImplementationOnce(() => token);
-      userRepository.findOne.mockImplementationOnce(() => body);
+      userRepository.findOne.mockImplementationOnce(async () => body);
       const result = await controller.login(body);
 
       expect(result).toStrictEqual({ token });
@@ -78,13 +75,13 @@ describe('AuthController', () => {
     it('should fail for duplicate username stored', async () => {
       try {
         const userExists = {};
-        userRepository.findOne.mockImplementationOnce(() => userExists);
+        userRepository.findOne.mockImplementationOnce(async () => userExists);
 
         await controller.register({
           username: 'admin',
           password: '',
         });
-        throw new Unreachable();
+        throw new UnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
       }

@@ -2,8 +2,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { PasswordJwtStrategy } from 'src/strategies/passport-jwt.strategy';
-import { User } from '../users/entities/user.entity';
 
+import { User } from '../users/entities/user.entity';
 import { AuthService } from './auth.service';
 
 describe('AuthService', () => {

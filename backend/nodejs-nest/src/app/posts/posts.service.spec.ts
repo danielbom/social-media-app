@@ -1,5 +1,6 @@
 import { MethodNotAllowedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { UnreachableException } from 'src/exceptions/unreachable.exception';
 import { PostsService } from './posts.service';
 
 describe('PostsService', () => {
@@ -21,7 +22,7 @@ describe('PostsService', () => {
     it('should fail ever', async () => {
       try {
         await service.remove('');
-        throw new Error('unreachable');
+        throw new UnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(MethodNotAllowedException);
       }

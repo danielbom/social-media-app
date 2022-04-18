@@ -1,5 +1,6 @@
 import { MethodNotAllowedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { UnreachableException } from 'src/exceptions/unreachable.exception';
 import { CommentsController } from './comments.controller';
 import { CommentsService } from './comments.service';
 
@@ -23,7 +24,7 @@ describe('CommentsController', () => {
     it('should fail ever', async () => {
       try {
         await controller.remove('');
-        throw new Error('unreachable');
+        throw new UnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(MethodNotAllowedException);
       }

@@ -52,7 +52,9 @@ export class UsersService {
   }
 
   async remove(id: Uuid): Promise<void> {
-    throw new MethodNotAllowedException();
+    const user = await this.throwIfUserNotExists({ id });
+
+    await this.userRepository.softDelete({ id: user.id });
   }
 
   async throwIfUserExists(where: Partial<User>) {
