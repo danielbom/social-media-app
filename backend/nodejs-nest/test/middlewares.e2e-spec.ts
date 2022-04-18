@@ -105,7 +105,7 @@ describe('Middleware', () => {
       .post('/posts')
       .send({ content: 'x' })
       .expect(HttpStatus.CREATED);
-    middlewareMustBeCalled({ joi: 1, jwt: 1 });
+    middlewareMustBeCalled({ joi: 2, jwt: 1 });
   });
 
   it('/posts/x (PATCH)', async () => {
@@ -113,7 +113,7 @@ describe('Middleware', () => {
       .patch('/posts/x')
       .send({ content: 'x' })
       .expect(HttpStatus.OK);
-    middlewareMustBeCalled({ joi: 2, jwt: 1 });
+    middlewareMustBeCalled({ joi: 3, jwt: 1 });
   });
 
   it('/users (POST)', async () => {

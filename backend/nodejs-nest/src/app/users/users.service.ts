@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  MethodNotAllowedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -17,12 +13,12 @@ export class UsersService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    await this.throwIfUserExists({ username: createUserDto.username });
+  async create({ username, password }: CreateUserDto): Promise<User> {
+    await this.throwIfUserExists({ username });
 
     const user = this.userRepository.create({
-      username: createUserDto.username,
-      password: createUserDto.password,
+      username,
+      password,
       role: Role.USER,
     });
 
