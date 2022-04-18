@@ -1,18 +1,17 @@
 import { BadRequestException } from '@nestjs/common';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { UnreachableException } from 'src/exceptions/unreachable.exception';
 import { PasswordJwtStrategy } from 'src/strategies/passport-jwt.strategy';
-import { MockRepository } from 'src/tests/mock-repository';
+import { MockService } from 'src/tests/mock-service';
 
-import { User } from '../users/entities/user.entity';
+import { UsersService } from '../users/users.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
-  const userRepository = MockRepository.create();
+  const usersService = MockService.create<UsersService>(UsersService);
   const jwtService = {
     signAsync: jest.fn(),
   };
@@ -21,14 +20,12 @@ describe('AuthController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [JwtModule.register({})],
       controllers: [AuthController],
-      providers: [
-        AuthService,
-        PasswordJwtStrategy,
-        { provide: getRepositoryToken(User), useValue: userRepository },
-      ],
+      providers: [AuthService, UsersService, PasswordJwtStrategy],
     })
       .overrideProvider(JwtService)
       .useValue(jwtService)
+      .overrideProvider(UsersService)
+      .useValue(usersService)
       .compile();
 
     controller = module.get<AuthController>(AuthController);
@@ -43,59 +40,21 @@ describe('AuthController', () => {
   });
 
   describe('AuthController.login', () => {
-    it('should fail on invalid data', async () => {
-      try {
-        await controller.login({
-          username: '',
-          password: '',
-        });
-        throw new UnreachableException();
-      } catch (error) {
-        expect(error).toBeInstanceOf(BadRequestException);
-        expect(error.message).toBe('User and/or password was invalid!');
-      }
-    });
-
     it('should works on valid data', async () => {
       const token = 'some-token';
       const body = {
         username: 'some-user',
         password: 'some-pass',
       };
+      const user = { id: 'user-id', ...body };
 
       jwtService.signAsync.mockImplementationOnce(() => token);
-      userRepository.findOne.mockImplementationOnce(async () => body);
+      usersService.getAuthenticated.mockImplementationOnce(async () => user);
       const result = await controller.login(body);
 
+      expect(jwtService.signAsync).toBeCalledTimes(1);
+      expect(jwtService.signAsync).toBeCalledWith({ sub: user.id });
       expect(result).toStrictEqual({ token });
-    });
-  });
-
-  describe('AuthController.register', () => {
-    it('should fail for duplicate username stored', async () => {
-      try {
-        const userExists = {};
-        userRepository.findOne.mockImplementationOnce(async () => userExists);
-
-        await controller.register({
-          username: 'admin',
-          password: '',
-        });
-        throw new UnreachableException();
-      } catch (error) {
-        expect(error).toBeInstanceOf(BadRequestException);
-      }
-    });
-    it('should works for valid data', async () => {
-      const user = {};
-      userRepository.create.mockImplementationOnce(() => user);
-      userRepository.findOne.mockImplementationOnce(() => null);
-      const newUser = await controller.register({
-        username: 'user1',
-        password: '123',
-      });
-
-      expect(newUser).toBe(user);
     });
   });
 });

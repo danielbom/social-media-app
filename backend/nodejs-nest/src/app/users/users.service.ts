@@ -7,6 +7,11 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from './entities/role.enum';
 import { User } from './entities/user.entity';
 
+interface UserAuthDto {
+  username: string;
+  password: string;
+}
+
 @Injectable()
 export class UsersService {
   constructor(
@@ -14,7 +19,7 @@ export class UsersService {
   ) {}
 
   async create({ username, password }: CreateUserDto): Promise<User> {
-    await this.throwIfUserExists({ username });
+    await this.ensureUserNotExists({ username });
 
     const user = this.userRepository.create({
       username,
@@ -36,7 +41,7 @@ export class UsersService {
   }
 
   async update(id: Uuid, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.throwIfUserNotExists({ id });
+    const user = await this.getUserOrThrow({ id });
 
     for (const key in updateUserDto) {
       user[key] = updateUserDto[key];
@@ -48,12 +53,26 @@ export class UsersService {
   }
 
   async remove(id: Uuid): Promise<void> {
-    const user = await this.throwIfUserNotExists({ id });
+    const user = await this.getUserOrThrow({ id });
 
     await this.userRepository.softDelete({ id: user.id });
   }
 
-  async throwIfUserExists(where: Partial<User>) {
+  async getAuthenticated({ username, password }: UserAuthDto): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { username } });
+
+    if (user === null) {
+      throw new BadRequestException('User and/or password was invalid!');
+    }
+
+    if (user.password !== password) {
+      throw new BadRequestException('User and/or password was invalid!');
+    }
+
+    return user;
+  }
+
+  private async ensureUserNotExists(where: Partial<User>) {
     const user = await this.userRepository.findOne({ where });
 
     if (user !== null) {
@@ -61,7 +80,7 @@ export class UsersService {
     }
   }
 
-  async throwIfUserNotExists(where: Partial<User>): Promise<User> {
+  private async getUserOrThrow(where: Partial<User>): Promise<User> {
     const user = await this.userRepository.findOne({ where });
 
     if (user === null) {
