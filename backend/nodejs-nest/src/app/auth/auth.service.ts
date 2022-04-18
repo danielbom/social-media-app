@@ -1,35 +1,32 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { Role } from '../users/entities/role.enum';
 import { User } from '../users/entities/user.entity';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { AuthRegisterDto } from './dto/auth-register.dto';
 import { AuthLoginResponse } from './response/auth-login.response';
 
-let idCount = 2;
-const users: Record<string, User> = {
-  '1': {
-    id: '1',
-    username: 'admin',
-    password: 'senh@zona',
-    role: Role.ADMIN,
-    comments: [],
-    posts: [],
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-};
-
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private jwtService: JwtService,
+    @InjectRepository(User) private userRepository: Repository<User>,
+  ) {}
 
-  async login(authLoginDto: AuthLoginDto): Promise<AuthLoginResponse> {
-    const user = Object.values(users).find(
-      (x) => x.username === authLoginDto.username,
-    );
+  async login({
+    username,
+    password,
+  }: AuthLoginDto): Promise<AuthLoginResponse> {
+    const user = await this.userRepository.findOne({ where: { username } });
 
-    if (!user || user.password !== authLoginDto.password) {
+    if (!user) {
+      throw new BadRequestException('User and/or password was invalid!');
+    }
+
+    if (user.password !== password) {
       throw new BadRequestException('User and/or password was invalid!');
     }
 
@@ -37,28 +34,21 @@ export class AuthService {
     return { token };
   }
 
-  async register(authRegisterDto: AuthRegisterDto): Promise<User> {
-    const user = Object.values(users).find(
-      (x) => x.username === authRegisterDto.username,
-    );
+  async register({ username, password }: AuthRegisterDto): Promise<User> {
+    const userExists = await this.userRepository.findOne({
+      where: { username },
+    });
 
-    if (user) {
+    if (userExists) {
       throw new BadRequestException('User already exists!');
     }
 
-    const newUser: User = {
-      id: idCount.toString(),
-      username: authRegisterDto.username,
-      password: authRegisterDto.password,
+    const newUser = this.userRepository.create({
+      username,
+      password,
       role: Role.USER,
-      comments: [],
-      posts: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    idCount++;
-    users[newUser.id] = newUser;
-
+    });
+    await this.userRepository.save(newUser);
     return newUser;
   }
 }
