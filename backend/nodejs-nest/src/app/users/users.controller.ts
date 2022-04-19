@@ -1,18 +1,20 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
-import { AuthUser } from 'src/decorators/auth-user.decorator';
+import { UsersService } from './users.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
@@ -25,8 +27,7 @@ export class UsersController {
   }
 
   @Get()
-  findAll(@AuthUser() user) {
-    console.log(user);
+  findAll() {
     return this.usersService.findAll();
   }
 
@@ -41,6 +42,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: Uuid) {
     return this.usersService.remove(id);
   }

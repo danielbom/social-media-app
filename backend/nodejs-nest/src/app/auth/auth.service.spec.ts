@@ -1,12 +1,15 @@
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { env } from 'src/environment';
 import { PasswordJwtStrategy } from 'src/strategies/passport-jwt.strategy';
 import { MockService } from 'src/tests/mock-service';
 
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
+
+env.jwt.secret = 'x';
 
 describe('AuthService', () => {
   let service: AuthService;

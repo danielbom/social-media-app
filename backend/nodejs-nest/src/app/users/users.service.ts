@@ -7,7 +7,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from './entities/role.enum';
 import { User } from './entities/user.entity';
 
-interface UserAuthDto {
+export interface UserAuthDto {
   username: string;
   password: string;
 }

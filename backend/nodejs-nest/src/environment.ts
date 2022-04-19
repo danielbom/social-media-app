@@ -1,5 +1,7 @@
 import Joi from 'joi';
 
+const nodeEnv = process.env.NODE_ENV ?? 'development';
+
 const env = {
   database: {
     host: process.env.MYSQL_HOST,
@@ -9,6 +11,10 @@ const env = {
     database: process.env.MYSQL_DATABASE,
   },
   app: {
+    nodeEnv,
+    isTest: nodeEnv === 'test',
+    isDevelopment: nodeEnv === 'development',
+    isProduction: nodeEnv === 'production',
     port: +process.env.APP_PORT,
     cors: process.env.APP_CORS,
   },
@@ -19,6 +25,15 @@ const env = {
 };
 
 (function ensureSafeEnvironments() {
+  if (env.app.isTest) {
+    // In the test environment all the configuration should come with your test
+    const anyEnv = env as any;
+    anyEnv.jwt = {};
+    anyEnv.app = {};
+    anyEnv.database = {};
+    return;
+  }
+
   const schema = Joi.object<typeof env>({
     database: Joi.object({
       host: Joi.string().required().label('MYSQL_HOST'),
@@ -28,6 +43,12 @@ const env = {
       database: Joi.string().required().label('MYSQL_DATABASE'),
     }),
     app: Joi.object({
+      nodeEnv: Joi.string()
+        .allow('test', 'development', 'production')
+        .required(),
+      isTest: Joi.boolean().required(),
+      isDevelopment: Joi.boolean().required(),
+      isProduction: Joi.boolean().required(),
       port: Joi.number().min(1000).required().label('APP_PORT'),
       cors: Joi.string()
         .required()

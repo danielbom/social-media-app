@@ -1,4 +1,5 @@
 import { Repository } from 'typeorm';
+import { MockFactory } from './mock-factory';
 
 type IMockRepository<T, R = Repository<T>> = {
   [K in keyof R]: R[K] extends (...args: infer A) => infer O
@@ -8,10 +9,6 @@ type IMockRepository<T, R = Repository<T>> = {
 
 export class MockRepository {
   static create<T>(): IMockRepository<T> {
-    const mock: any = {};
-    for (const key of Object.getOwnPropertyNames(Repository.prototype)) {
-      mock[key] = jest.fn();
-    }
-    return mock;
+    return MockFactory.create(Repository.prototype) as any;
   }
 }

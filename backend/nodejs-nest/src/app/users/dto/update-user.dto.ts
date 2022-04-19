@@ -6,8 +6,8 @@ import Joi from 'joi';
 })
 export class UpdateUserDto {
   @JoiSchema(Joi.string().optional())
-  username: string;
+  username?: string;
 
   @JoiSchema(Joi.string().optional())
-  password: string;
+  password?: string;
 }

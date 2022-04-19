@@ -1,19 +1,22 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
   UseGuards,
 } from '@nestjs/common';
-import { PostsService } from './posts.service';
+import { AuthUser } from 'src/decorators/auth-user.decorator';
+import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+
+import { User } from '../users/entities/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
-import { AuthUser } from 'src/decorators/auth-user.decorator';
-import { User } from '../users/entities/user.entity';
+import { PostsService } from './posts.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('posts')
@@ -45,6 +48,7 @@ export class PostsController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: Uuid, @AuthUser() user: User) {
     return this.postsService.remove(id, user);
   }

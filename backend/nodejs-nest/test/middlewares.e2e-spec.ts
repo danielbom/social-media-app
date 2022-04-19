@@ -1,17 +1,18 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { JoiPipe } from 'nestjs-joi';
-import request from 'supertest';
-
 import { AppModule } from 'src/app/app.module';
 import { AuthService } from 'src/app/auth/auth.service';
 import { CommentsService } from 'src/app/comments/comments.service';
 import { PostsService } from 'src/app/posts/posts.service';
 import { UsersService } from 'src/app/users/users.service';
 import { DatabaseModule } from 'src/database/database.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { env } from 'src/environment';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
-import { JwtService } from '@nestjs/jwt';
+import request from 'supertest';
+
+import { MemoryTypeOrmModule } from './lib/memory-typeorm-module';
 
 function mockService<T extends { prototype: Record<string, any> }>(Cls: T) {
   const props = Object.getOwnPropertyNames(Cls.prototype);
@@ -53,20 +54,14 @@ function middlewareMustBeCalled(
   expect(middlewareSpy.jwt).toBeCalledTimes(middlewareCount.jwt ?? 0);
 }
 
+env.jwt.secret = 'x';
+
 describe('Middleware', () => {
   let app: INestApplication;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRoot({
-          type: 'better-sqlite3',
-          database: ':memory:',
-          logging: false,
-          synchronize: true,
-        }),
-        AppModule,
-      ],
+      imports: [MemoryTypeOrmModule(), AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -92,11 +87,36 @@ describe('Middleware', () => {
     middlewareMustBeCalled({ joi: 1 });
   });
 
+  it('/comments (GET)', async () => {
+    await request(app.getHttpServer()).get('/comments').expect(HttpStatus.OK);
+    middlewareMustBeCalled({ joi: 1, jwt: 1 });
+  });
+
   it('/comments (POST)', async () => {
     await request(app.getHttpServer())
       .post('/comments')
       .send({ postId: 'y', content: 'x' })
       .expect(HttpStatus.CREATED);
+    middlewareMustBeCalled({ joi: 2, jwt: 1 });
+  });
+
+  it('/comments/x (PATCH)', async () => {
+    await request(app.getHttpServer())
+      .patch('/comments/x')
+      .send({ content: 'x' })
+      .expect(HttpStatus.OK);
+    middlewareMustBeCalled({ joi: 3, jwt: 1 });
+  });
+
+  it('/comments/x (DELETE)', async () => {
+    await request(app.getHttpServer())
+      .delete('/comments/x')
+      .expect(HttpStatus.NO_CONTENT);
+    middlewareMustBeCalled({ joi: 2, jwt: 1 });
+  });
+
+  it('/posts (GET)', async () => {
+    await request(app.getHttpServer()).get('/posts').expect(HttpStatus.OK);
     middlewareMustBeCalled({ joi: 1, jwt: 1 });
   });
 
@@ -116,6 +136,18 @@ describe('Middleware', () => {
     middlewareMustBeCalled({ joi: 3, jwt: 1 });
   });
 
+  it('/posts/x (DELETE)', async () => {
+    await request(app.getHttpServer())
+      .delete('/posts/x')
+      .expect(HttpStatus.NO_CONTENT);
+    middlewareMustBeCalled({ joi: 2, jwt: 1 });
+  });
+
+  it('/users (GET)', async () => {
+    await request(app.getHttpServer()).get('/users').expect(HttpStatus.OK);
+    middlewareMustBeCalled({ jwt: 1 });
+  });
+
   it('/users (POST)', async () => {
     await request(app.getHttpServer())
       .post('/users')
@@ -124,8 +156,18 @@ describe('Middleware', () => {
     middlewareMustBeCalled({ joi: 1, jwt: 1 });
   });
 
-  it('/users (PATCH)', async () => {
-    await request(app.getHttpServer()).patch('/users/x').expect(HttpStatus.OK);
+  it('/users/x (PATCH)', async () => {
+    await request(app.getHttpServer())
+      .patch('/users/x')
+      .send({})
+      .expect(HttpStatus.OK);
     middlewareMustBeCalled({ joi: 2, jwt: 1 });
+  });
+
+  it('/users/x (DELETE)', async () => {
+    await request(app.getHttpServer())
+      .delete('/users/x')
+      .expect(HttpStatus.NO_CONTENT);
+    middlewareMustBeCalled({ joi: 1, jwt: 1 });
   });
 });

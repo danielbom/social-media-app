@@ -1,10 +1,13 @@
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { env } from 'src/environment';
 import { PasswordJwtStrategy } from 'src/strategies/passport-jwt.strategy';
 
 import { UsersService } from '../users/users.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+
+env.jwt.secret = 'x';
 
 describe('AuthController', () => {
   let controller: AuthController;
