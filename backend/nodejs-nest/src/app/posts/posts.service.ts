@@ -54,7 +54,7 @@ export class PostsService {
     await this.postRepository.softDelete({ id: post.id });
   }
 
-  private async getPostOrThrow(where: Partial<Post>): Promise<Post> {
+  async getPostOrThrow(where: Partial<Post>): Promise<Post> {
     const post = await this.postRepository.findOne({
       where,
       relations: ['author'],
@@ -67,7 +67,7 @@ export class PostsService {
     return post;
   }
 
-  private ensurePostAuthor(post: Post, user: User): void {
+  ensurePostAuthor(post: Post, user: User): void {
     if (post.author.id !== user.id) {
       throw new ForbiddenException();
     }

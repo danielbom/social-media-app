@@ -72,7 +72,7 @@ export class UsersService {
     return user;
   }
 
-  private async ensureUserNotExists(where: Partial<User>) {
+  async ensureUserNotExists(where: Partial<User>) {
     const user = await this.userRepository.findOne({ where });
 
     if (user !== null) {
@@ -80,7 +80,7 @@ export class UsersService {
     }
   }
 
-  private async getUserOrThrow(where: Partial<User>): Promise<User> {
+  async getUserOrThrow(where: Partial<User>): Promise<User> {
     const user = await this.userRepository.findOne({ where });
 
     if (user === null) {

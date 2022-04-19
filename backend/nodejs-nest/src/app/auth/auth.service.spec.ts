@@ -1,17 +1,19 @@
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { PasswordJwtStrategy } from 'src/strategies/passport-jwt.strategy';
 import { MockService } from 'src/tests/mock-service';
 
 import { User } from '../users/entities/user.entity';
-import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
   let service: AuthService;
   const usersService = MockService.create<UsersService>(UsersService);
+  const jwtService = {
+    signAsync: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,6 +25,8 @@ describe('AuthService', () => {
         { provide: getRepositoryToken(User), useValue: {} },
       ],
     })
+      .overrideProvider(JwtService)
+      .useValue(jwtService)
       .overrideProvider(UsersService)
       .useValue(usersService)
       .compile();
@@ -32,5 +36,24 @@ describe('AuthService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('AuthController.login', () => {
+    it('should works on valid data', async () => {
+      const token = 'some-token';
+      const body = {
+        username: 'some-user',
+        password: 'some-pass',
+      };
+      const user = { id: 'user-id', ...body };
+
+      jwtService.signAsync.mockImplementationOnce(() => token);
+      usersService.getAuthenticated.mockImplementationOnce(async () => user);
+      const result = await service.login(body);
+
+      expect(jwtService.signAsync).toBeCalledTimes(1);
+      expect(jwtService.signAsync).toBeCalledWith({ sub: user.id });
+      expect(result).toStrictEqual({ token });
+    });
   });
 });
