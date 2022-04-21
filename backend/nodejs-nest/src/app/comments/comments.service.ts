@@ -31,6 +31,7 @@ export class CommentsService {
       content,
       postParent,
       author,
+      likes: 0,
     });
 
     await this.commentsRepository.save(comment);
@@ -48,6 +49,7 @@ export class CommentsService {
       author,
       commentParent,
       postParent: commentParent.postParent,
+      likes: 0,
     });
     await this.commentsRepository.save(comment);
     return comment;

@@ -1,7 +1,7 @@
 import { Repository } from 'typeorm';
 import { MockFactory } from './mock-factory';
 
-type IMockRepository<T, R = Repository<T>> = {
+export type IMockRepository<T, R = Repository<T>> = {
   [K in keyof R]: R[K] extends (...args: infer A) => infer O
     ? jest.Mock<O, A>
     : never;

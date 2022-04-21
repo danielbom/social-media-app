@@ -34,10 +34,10 @@ describe('PostsService', () => {
   describe('PostsService.create', () => {
     it('should works', async () => {
       const author = { id: 'user-id' } as User;
-      const userData = { content: '' };
-      postRepository.create.mockReturnValueOnce(userData);
-      const post = await service.create(userData, author);
-      expect(post).toBe(userData);
+      const postData = { content: '' };
+      postRepository.create.mockReturnValueOnce(postData);
+      const post = await service.create(postData, author);
+      expect(post).toBe(postData);
       expect(postRepository.create).toBeCalledTimes(1);
       expect(postRepository.save).toBeCalledTimes(1);
     });

@@ -21,6 +21,7 @@ export class PostsService {
     const post = this.postRepository.create({
       content,
       author,
+      likes: 0,
     });
 
     await this.postRepository.save(post);

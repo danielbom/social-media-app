@@ -1,6 +1,7 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { JoiPipe } from 'nestjs-joi';
 import { AppModule } from 'src/app/app.module';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -10,32 +11,20 @@ import { UsersService } from 'src/app/users/users.service';
 import { DatabaseModule } from 'src/database/database.module';
 import { env } from 'src/environment';
 import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { MockConnection } from 'src/tests/mock-connection';
+import { MockFactory } from 'src/tests/mock-factory';
 import request from 'supertest';
-
-import { MemoryTypeOrmModule } from './lib/memory-typeorm-module';
-
-function mockService<T extends { prototype: Record<string, any> }>(Cls: T) {
-  const props = Object.getOwnPropertyNames(Cls.prototype);
-
-  for (const prop of props) {
-    if (prop === 'constructor') continue;
-
-    const value = Cls.prototype[prop];
-    if (typeof value === 'function') {
-      Cls.prototype[prop] = jest.fn();
-    }
-  }
-}
+import { Connection } from 'typeorm';
 
 // Database: off
 Reflect.deleteMetadata('imports', DatabaseModule);
 
 // Services: off
-mockService(AuthService);
-mockService(CommentsService);
-mockService(PostsService);
-mockService(UsersService);
-mockService(JwtService);
+MockFactory.pollutePrototype(AuthService);
+MockFactory.pollutePrototype(CommentsService);
+MockFactory.pollutePrototype(PostsService);
+MockFactory.pollutePrototype(UsersService);
+MockFactory.pollutePrototype(JwtService);
 
 // Middleware: off
 const middlewareSpy = {
@@ -61,15 +50,14 @@ describe('Middleware', () => {
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [MemoryTypeOrmModule(), AppModule],
-    }).compile();
+      imports: [TypeOrmModule.forRoot({}), AppModule],
+    })
+      .overrideProvider(Connection)
+      .useValue(new MockConnection())
+      .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
-  });
-
-  afterEach(async () => {
-    await app.close();
   });
 
   it('/auth/login (POST)', async () => {
