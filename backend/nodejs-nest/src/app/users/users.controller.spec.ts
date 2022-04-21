@@ -57,7 +57,7 @@ describe('UsersController', () => {
   });
 
   it('UsersController.update should only call UsersService.update', async () => {
-    const args = [0 as any, 2 as any] as const;
+    const args = [0 as any, 1 as any] as const;
     await controller.update(...args);
     expect(service.update).toBeCalledTimes(1);
     expect(service.update).toBeCalledWith(...args);
