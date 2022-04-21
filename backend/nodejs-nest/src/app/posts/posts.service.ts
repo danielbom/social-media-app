@@ -40,11 +40,11 @@ export class PostsService {
 
   async update(
     id: Uuid,
-    updatePostDto: UpdatePostDto,
+    { content }: UpdatePostDto,
     user: User,
   ): Promise<Post> {
     const post = await this.findOne(id, user);
-    post.content = updatePostDto.content;
+    post.content = content;
     await this.postRepository.save(post);
     return post;
   }

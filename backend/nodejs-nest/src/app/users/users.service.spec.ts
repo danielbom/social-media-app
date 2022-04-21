@@ -1,11 +1,11 @@
-import { BadRequestException, MethodNotAllowedException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { UnreachableException } from 'src/exceptions/unreachable.exception';
+import { MockRepository } from 'src/tests/mock-repository';
+
 import { User } from './entities/user.entity';
 import { UserAuthDto, UsersService } from './users.service';
-
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { MockRepository } from 'src/tests/mock-repository';
-import { UnreachableException } from 'src/exceptions/unreachable.exception';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -30,7 +30,7 @@ describe('UsersService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('PostsService.create', () => {
+  describe('UsersService.create', () => {
     it('should works if user does not exists', async () => {
       const userData = { username: '', password: '' };
       userRepository.findOne.mockReturnValueOnce(null);
@@ -55,7 +55,7 @@ describe('UsersService', () => {
     });
   });
 
-  describe('PostsService.update', () => {
+  describe('UsersService.update', () => {
     it('should works if user exists', async () => {
       const id = 'x';
       const newUsername = 'user-2';
@@ -81,7 +81,7 @@ describe('UsersService', () => {
     });
   });
 
-  describe('PostsService.remove', () => {
+  describe('UsersService.remove', () => {
     it('should works if user exists', async () => {
       const id = 'x';
       userRepository.findOne.mockImplementation(async () => ({ id }));
@@ -101,7 +101,7 @@ describe('UsersService', () => {
     });
   });
 
-  describe('PostsService.getAuthenticated', () => {
+  describe('UsersService.getAuthenticated', () => {
     it('should works', async () => {
       const userData: UserAuthDto = { username: 'user-1', password: '123' };
       userRepository.findOne.mockResolvedValueOnce(userData);

@@ -33,42 +33,42 @@ describe('CommentsController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('CommentsController.create should only call CommentsService.create', async () => {
+  test('CommentsController.create should only call CommentsService.create', async () => {
     const args = [0 as any, 1 as any] as const;
     await controller.create(...args);
     expect(service.create).toBeCalledTimes(1);
     expect(service.create).toBeCalledWith(...args);
   });
 
-  it('CommentsController.createAnswer should only call CommentsService.createAnswer', async () => {
+  test('CommentsController.createAnswer should only call CommentsService.createAnswer', async () => {
     const args = [0 as any, 1 as any] as const;
     await controller.createAnswer(...args);
     expect(service.createAnswer).toBeCalledTimes(1);
     expect(service.createAnswer).toBeCalledWith(...args);
   });
 
-  it('CommentsController.findAll should only call CommentsService.findAll', async () => {
+  test('CommentsController.findAll should only call CommentsService.findAll', async () => {
     const args = [0 as any] as const;
     await controller.findAll(...args);
     expect(service.findAll).toBeCalledTimes(1);
     expect(service.findAll).toBeCalledWith(...args);
   });
 
-  it('CommentsController.findOne should only call CommentsService.findOne', async () => {
+  test('CommentsController.findOne should only call CommentsService.findOne', async () => {
     const args = [0 as any, 1 as any] as const;
     await controller.findOne(...args);
     expect(service.findOne).toBeCalledTimes(1);
     expect(service.findOne).toBeCalledWith(...args);
   });
 
-  it('CommentsController.remove should only call CommentsService.remove', async () => {
+  test('CommentsController.remove should only call CommentsService.remove', async () => {
     const args = [0 as any, 1 as any] as const;
     await controller.remove(...args);
     expect(service.remove).toBeCalledTimes(1);
     expect(service.remove).toBeCalledWith(...args);
   });
 
-  it('CommentsController.update should only call CommentsService.update', async () => {
+  test('CommentsController.update should only call CommentsService.update', async () => {
     const args = [0 as any, 1 as any, 2 as any] as const;
     await controller.update(...args);
     expect(service.update).toBeCalledTimes(1);

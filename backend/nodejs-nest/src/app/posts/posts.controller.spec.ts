@@ -29,35 +29,35 @@ describe('PostsController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('PostsController.create should only call PostsService.create', async () => {
+  test('PostsController.create should only call PostsService.create', async () => {
     const args = [0 as any, 1 as any] as const;
     await controller.create(...args);
     expect(service.create).toBeCalledTimes(1);
     expect(service.create).toBeCalledWith(...args);
   });
 
-  it('PostsController.findAll should only call PostsService.findAll', async () => {
+  test('PostsController.findAll should only call PostsService.findAll', async () => {
     const args = [0 as any] as const;
     await controller.findAll(...args);
     expect(service.findAll).toBeCalledTimes(1);
     expect(service.findAll).toBeCalledWith(...args);
   });
 
-  it('PostsController.findOne should only call PostsService.findOne', async () => {
+  test('PostsController.findOne should only call PostsService.findOne', async () => {
     const args = [0 as any, 1 as any] as const;
     await controller.findOne(...args);
     expect(service.findOne).toBeCalledTimes(1);
     expect(service.findOne).toBeCalledWith(...args);
   });
 
-  it('PostsController.remove should only call PostsService.remove', async () => {
+  test('PostsController.remove should only call PostsService.remove', async () => {
     const args = [0 as any, 1 as any] as const;
     await controller.remove(...args);
     expect(service.remove).toBeCalledTimes(1);
     expect(service.remove).toBeCalledWith(...args);
   });
 
-  it('PostsController.update should only call PostsService.update', async () => {
+  test('PostsController.update should only call PostsService.update', async () => {
     const args = [0 as any, 1 as any, 2 as any] as const;
     await controller.update(...args);
     expect(service.update).toBeCalledTimes(1);

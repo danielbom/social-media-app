@@ -1,15 +1,12 @@
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { env } from 'src/environment';
 import { PasswordJwtStrategy } from 'src/strategies/passport-jwt.strategy';
 import { MockService } from 'src/tests/mock-service';
 
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
-
-env.jwt.secret = 'x';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -28,6 +25,8 @@ describe('AuthService', () => {
         { provide: getRepositoryToken(User), useValue: {} },
       ],
     })
+      .overrideProvider(PasswordJwtStrategy)
+      .useValue({})
       .overrideProvider(JwtService)
       .useValue(jwtService)
       .overrideProvider(UsersService)
@@ -41,22 +40,27 @@ describe('AuthService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('AuthController.login', () => {
-    it('should works on valid data', async () => {
-      const token = 'some-token';
-      const body = {
-        username: 'some-user',
-        password: 'some-pass',
-      };
-      const user = { id: 'user-id', ...body };
+  test('AuthService.login should works', async () => {
+    const token = 'some-token';
+    const body = {
+      username: 'some-user',
+      password: 'some-pass',
+    };
+    const user = { id: 'user-id', ...body };
 
-      jwtService.signAsync.mockImplementationOnce(() => token);
-      usersService.getAuthenticated.mockImplementationOnce(async () => user);
-      const result = await service.login(body);
+    jwtService.signAsync.mockImplementationOnce(() => token);
+    usersService.getAuthenticated.mockImplementationOnce(async () => user);
+    const result = await service.login(body);
 
-      expect(jwtService.signAsync).toBeCalledTimes(1);
-      expect(jwtService.signAsync).toBeCalledWith({ sub: user.id });
-      expect(result).toStrictEqual({ token });
-    });
+    expect(jwtService.signAsync).toBeCalledTimes(1);
+    expect(jwtService.signAsync).toBeCalledWith({ sub: user.id });
+    expect(result).toStrictEqual({ token });
+  });
+
+  test('AuthService.register should only call UsersService.create', async () => {
+    const arg = { password: '', username: '' };
+    await service.register(arg);
+    expect(usersService.create).toBeCalledTimes(1);
+    expect(usersService.create).toBeCalledWith(arg);
   });
 });

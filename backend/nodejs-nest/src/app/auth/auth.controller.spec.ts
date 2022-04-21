@@ -35,18 +35,18 @@ describe('AuthController', () => {
     jest.clearAllMocks();
   });
 
-  it('should be defined', () => {
+  test('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
-  it('CommentsController.login should only call CommentsService.login', async () => {
+  test('CommentsController.login should only call CommentsService.login', async () => {
     const args = [0 as any] as const;
     await controller.login(...args);
     expect(service.login).toBeCalledTimes(1);
     expect(service.login).toBeCalledWith(...args);
   });
 
-  it('CommentsController.register should only call CommentsService.register', async () => {
+  test('CommentsController.register should only call CommentsService.register', async () => {
     const args = [0 as any] as const;
     await controller.register(...args);
     expect(service.register).toBeCalledTimes(1);
