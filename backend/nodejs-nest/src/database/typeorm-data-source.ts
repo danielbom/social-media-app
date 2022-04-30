@@ -17,7 +17,8 @@ const dataSource = new DataSource({
   entities: [User, Comment, Post],
   migrations: [path.resolve(__dirname, 'migrations', '*.ts')],
   namingStrategy: new SnakeNamingStrategy(),
-  // synchronize: true,
+  // synchronize: true, // run new migrations
+  // logging: true, // show sql
 });
 
 export default dataSource;

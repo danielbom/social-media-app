@@ -8,19 +8,24 @@ export interface Constructor<T = any> extends Function {
 export class TestSchema {
   constructor(private schema: Joi.Schema) {}
 
-  static fromClass(type: Constructor) {
+  static fromClass(type: Constructor): TestSchema {
     return new TestSchema(getClassSchema(type));
   }
 
-  mustWorks(value: any) {
-    const response = this.schema.validate(value);
-    expect(Joi.isError(response.error)).toBeFalsy();
-    return response;
+  mustWorks(value: any): Joi.ValidationResult {
+    const result = this.schema.validate(value);
+    expect(Joi.isError(result.error)).toBeFalsy();
+    return result;
   }
 
-  mustFail(value: any) {
-    const response = this.schema.validate(value);
-    expect(Joi.isError(response.error)).toBeTruthy();
-    return response;
+  mustFail(value: any): Joi.ValidationResult {
+    const result = this.schema.validate(value);
+    try {
+      expect(Joi.isError(result.error)).toBeTruthy();
+    } catch (error) {
+      console.error(result);
+      throw error;
+    }
+    return result;
   }
 }

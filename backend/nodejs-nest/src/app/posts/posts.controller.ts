@@ -8,17 +8,16 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthUser } from 'src/decorators/auth-user.decorator';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { Auth } from 'src/decorators/auth.decorator';
 
 import { User } from '../users/entities/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostsService } from './posts.service';
 
-@UseGuards(JwtAuthGuard)
+@Auth()
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}

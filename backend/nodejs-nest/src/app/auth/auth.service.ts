@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TokenPayload } from 'src/strategies/passport-jwt.strategy';
+import { Role } from '../users/entities/role.enum';
 
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
@@ -29,6 +30,6 @@ export class AuthService {
   }
 
   async register({ username, password }: AuthRegisterDto): Promise<User> {
-    return this.userService.create({ username, password });
+    return this.userService.create({ username, password, role: Role.USER });
   }
 }

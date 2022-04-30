@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UnreachableException } from 'src/exceptions/unreachable.exception';
 import { MockRepository } from 'src/tests/mock-repository';
+import { Role } from './entities/role.enum';
 
 import { User } from './entities/user.entity';
 import { UserAuthDto, UsersService } from './users.service';
@@ -31,8 +32,9 @@ describe('UsersService', () => {
   });
 
   describe('UsersService.create', () => {
+    const userData = { username: '', password: '', role: Role.USER };
+
     it('should works if user does not exists', async () => {
-      const userData = { username: '', password: '' };
       userRepository.findOne.mockReturnValueOnce(null);
       userRepository.create.mockReturnValueOnce(userData);
       const user = await service.create(userData);
@@ -44,7 +46,6 @@ describe('UsersService', () => {
 
     it('should not works if user exists', async () => {
       try {
-        const userData = { username: '', password: '' };
         userRepository.findOne.mockResolvedValueOnce({} as any);
         await service.create(userData);
         throw new UnreachableException();

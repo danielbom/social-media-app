@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Role } from './entities/role.enum';
 import { User } from './entities/user.entity';
 
 export interface UserAuthDto {
@@ -18,13 +17,13 @@ export class UsersService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
-  async create({ username, password }: CreateUserDto): Promise<User> {
+  async create({ username, password, role }: CreateUserDto): Promise<User> {
     await this.ensureUserNotExists({ username });
 
     const user = this.userRepository.create({
       username,
       password,
-      role: Role.USER,
+      role,
     });
 
     await this.userRepository.save(user);

@@ -30,7 +30,7 @@ export class PostsService {
   }
 
   async findAll(author: User): Promise<Post[]> {
-    return this.postRepository.find({ where: { author } });
+    return this.postRepository.find({ where: { author: { id: author.id } } });
   }
 
   async findOne(id: Uuid, user: User): Promise<Post> {

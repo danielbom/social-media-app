@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { PasswordJwtStrategy } from 'src/strategies/passport-jwt.strategy';
 import { MockService } from 'src/tests/mock-service';
+import { Role } from '../users/entities/role.enum';
 
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
@@ -61,6 +62,6 @@ describe('AuthService', () => {
     const arg = { password: '', username: '' };
     await service.register(arg);
     expect(usersService.create).toBeCalledTimes(1);
-    expect(usersService.create).toBeCalledWith(arg);
+    expect(usersService.create).toBeCalledWith({ ...arg, role: Role.USER });
   });
 });

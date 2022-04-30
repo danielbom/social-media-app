@@ -22,11 +22,12 @@
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "lint:fix": "yarn lint --fix",
     "ts:check": "tsc --noEmit",
-    "typeorm": "dotenv -- ts-node --require tsconfig-paths/register --require ./tsconfig.build.json ./node_modules/typeorm/cli --dataSource ./src/database/typeorm-data-source.ts",
-    "migration:generate": "yarn typeorm migration:generate --pretty",
-    "migration:show": "yarn typeorm migration:show",
-    "migration:run": "yarn typeorm migration:run",
-    "migration:revert": "yarn typeorm migration:revert"
+    "typeorm": "dotenv -- ts-node --require tsconfig-paths/register --require ./tsconfig.build.json ./node_modules/typeorm/cli",
+    "migration": "yarn typeorm --dataSource ./src/database/typeorm-data-source.ts",
+    "migration:generate": "yarn migration migration:generate --pretty",
+    "migration:show": "yarn migration migration:show",
+    "migration:run": "yarn migration migration:run",
+    "migration:revert": "yarn migration migration:revert"
   },
   "dependencies": {
     "@devniel/nestjs-typeorm-testing": "^0.1.5-alpha",

@@ -17,6 +17,7 @@ const env = {
     isProduction: nodeEnv === 'production',
     port: +process.env.APP_PORT,
     cors: process.env.APP_CORS,
+    adminPassword: process.env.APP_ADMIN_PASSWORD,
   },
   jwt: {
     secret: process.env.JWT_SECRET,
@@ -54,6 +55,7 @@ const env = {
         .required()
         .regex(/^[^;]+(;[^;]+)*$/, { name: 'list of origins' })
         .label('APP_CORS'),
+      adminPassword: Joi.string().required().label('APP_ADMIN_PASSWORD'),
     }),
     jwt: Joi.object({
       secret: Joi.string().required().label('JWT_SECRET'),

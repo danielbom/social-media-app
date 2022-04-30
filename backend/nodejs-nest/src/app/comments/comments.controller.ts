@@ -8,10 +8,9 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthUser } from 'src/decorators/auth-user.decorator';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { Auth } from 'src/decorators/auth.decorator';
 
 import { User } from '../users/entities/user.entity';
 import { CommentsService } from './comments.service';
@@ -19,7 +18,7 @@ import { CreateCommentAnswerDto } from './dto/create-comment-answer.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 
-@UseGuards(JwtAuthGuard)
+@Auth()
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}

@@ -8,15 +8,17 @@ import {
   Param,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/guards/jwt-auth.guard';
+import { AuthUser } from 'src/decorators/auth-user.decorator';
+import { Auth } from 'src/decorators/auth.decorator';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Role } from './entities/role.enum';
+import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
-@UseGuards(JwtAuthGuard)
+@Auth([Role.ADMIN])
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

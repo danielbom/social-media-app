@@ -8,9 +8,21 @@ import { User } from 'src/app/users/entities/user.entity';
 export class RolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
+  private getRoles(context: ExecutionContext): Role[] {
+    const rolesClass = this.reflector.get<Role[] | undefined>(
+      'roles',
+      context.getClass(),
+    );
+    const rolesHandler = this.reflector.get<Role[] | undefined>(
+      'roles',
+      context.getHandler(),
+    );
+    return rolesHandler || rolesClass || [];
+  }
+
   canActivate(context: ExecutionContext): boolean {
-    const roles = this.reflector.get<Role[]>('roles', context.getHandler());
-    if (roles.length === 0) return true;
+    const roles = this.getRoles(context);
+    if (!roles || roles.length === 0) return true;
 
     const request = context.switchToHttp().getRequest();
     const user: User = request.user;
