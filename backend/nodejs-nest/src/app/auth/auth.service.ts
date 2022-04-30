@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { TokenPayload } from 'src/strategies/passport-jwt.strategy';
-import { Role } from '../users/entities/role.enum';
 
+import { Role } from '../users/entities/role.enum';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { AuthRegisterDto } from './dto/auth-register.dto';
 import { AuthLoginResponse } from './response/auth-login.response';
+import { TokenPayload } from './strategies/passport-jwt.strategy';
 
 @Injectable()
 export class AuthService {

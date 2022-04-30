@@ -9,13 +9,11 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { AuthUser } from 'src/decorators/auth-user.decorator';
 import { Auth } from 'src/decorators/auth.decorator';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from './entities/role.enum';
-import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
 @Auth([Role.ADMIN])

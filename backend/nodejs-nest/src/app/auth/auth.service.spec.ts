@@ -1,13 +1,13 @@
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { PasswordJwtStrategy } from 'src/strategies/passport-jwt.strategy';
 import { MockService } from 'src/tests/mock-service';
-import { Role } from '../users/entities/role.enum';
 
+import { Role } from '../users/entities/role.enum';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
+import { PasswordJwtStrategy } from './strategies/passport-jwt.strategy';
 
 describe('AuthService', () => {
   let service: AuthService;
