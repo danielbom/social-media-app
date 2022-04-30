@@ -2,23 +2,30 @@ import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UnreachableException } from 'src/exceptions/unreachable.exception';
+import { HashService } from 'src/services/hash/hash.service';
 import { MockRepository } from 'src/tests/mock-repository';
 import { Role } from './entities/role.enum';
 
 import { User } from './entities/user.entity';
 import { UserAuthDto, UsersService } from './users.service';
+import { MockService } from 'src/tests/mock-service';
 
 describe('UsersService', () => {
   let service: UsersService;
   const userRepository = MockRepository.create();
+  const hashService = MockService.create<HashService>(HashService);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
+        HashService,
         { provide: getRepositoryToken(User), useValue: userRepository },
       ],
-    }).compile();
+    })
+      .overrideProvider(HashService)
+      .useValue(hashService)
+      .compile();
 
     service = module.get<UsersService>(UsersService);
   });
@@ -106,6 +113,7 @@ describe('UsersService', () => {
     it('should works', async () => {
       const userData: UserAuthDto = { username: 'user-1', password: '123' };
       userRepository.findOne.mockResolvedValueOnce(userData);
+      hashService.compare.mockResolvedValueOnce(true);
       const user = await service.getAuthenticated(userData);
       expect(user).toBe(userData);
     });

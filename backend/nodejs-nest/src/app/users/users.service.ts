@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { HashService } from 'src/services/hash/hash.service';
 import { Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,14 +16,16 @@ export interface UserAuthDto {
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    private hashService: HashService,
   ) {}
 
   async create({ username, password, role }: CreateUserDto): Promise<User> {
     await this.ensureUserNotExists({ username });
 
+    const hash = await this.hashService.hash(password);
     const user = this.userRepository.create({
       username,
-      password,
+      password: hash,
       role,
     });
 
@@ -64,7 +67,11 @@ export class UsersService {
       throw new BadRequestException('User and/or password was invalid!');
     }
 
-    if (user.password !== password) {
+    const isPasswordValid = await this.hashService.compare(
+      password,
+      user.password,
+    );
+    if (!isPasswordValid) {
       throw new BadRequestException('User and/or password was invalid!');
     }
 
