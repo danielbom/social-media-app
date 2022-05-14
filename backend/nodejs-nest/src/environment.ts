@@ -19,6 +19,10 @@ const env = {
     cors: process.env.APP_CORS,
     adminPassword: process.env.APP_ADMIN_PASSWORD,
   },
+  ws: {
+    port: +process.env.WS_PORT,
+    cors: process.env.WS_CORS,
+  },
   jwt: {
     secret: process.env.JWT_SECRET,
     expiresIn: process.env.JWT_EXPIRES_IN, // https://github.com/zeit/ms.js
@@ -35,6 +39,9 @@ const env = {
     return;
   }
 
+  const cors = Joi.string()
+    .required()
+    .regex(/^[^;]+(;[^;]+)*$/, { name: 'list of origins' });
   const schema = Joi.object<typeof env>({
     database: Joi.object({
       host: Joi.string().required().label('MYSQL_HOST'),
@@ -51,11 +58,12 @@ const env = {
       isDevelopment: Joi.boolean().required(),
       isProduction: Joi.boolean().required(),
       port: Joi.number().min(1000).required().label('APP_PORT'),
-      cors: Joi.string()
-        .required()
-        .regex(/^[^;]+(;[^;]+)*$/, { name: 'list of origins' })
-        .label('APP_CORS'),
+      cors: cors.label('APP_CORS'),
       adminPassword: Joi.string().required().label('APP_ADMIN_PASSWORD'),
+    }),
+    ws: Joi.object({
+      port: Joi.number().required().label('WS_PORT'),
+      cors: cors.label('WS_CORS'),
     }),
     jwt: Joi.object({
       secret: Joi.string().required().label('JWT_SECRET'),
