@@ -25,6 +25,7 @@
     "typeorm": "dotenv -- ts-node --require tsconfig-paths/register --require ./tsconfig.build.json ./node_modules/typeorm/cli",
     "migration": "yarn typeorm --dataSource ./src/database/typeorm-data-source.ts",
     "migration:generate": "yarn migration migration:generate --pretty",
+    "migration:create": "yarn typeorm migration:create",
     "migration:show": "yarn migration migration:show",
     "migration:run": "yarn migration migration:run",
     "migration:revert": "yarn migration migration:revert"

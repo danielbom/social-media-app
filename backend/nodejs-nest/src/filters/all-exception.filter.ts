@@ -78,8 +78,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
   }
 
   private log(message: string, ...args: any[]) {
-    message = chalk.red('Error:', message);
     if (args.length > 0) message = message + '\n' + chalk.gray(args.join('\n'));
-    this.logger.log(message);
+    this.logger.error(message);
   }
 }

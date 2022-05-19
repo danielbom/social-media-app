@@ -16,11 +16,11 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: Uuid;
 
-  @Column()
+  @Column({ unique: true })
   username: string;
 
-  @Column()
-  password: string;
+  @Column({ select: false })
+  password?: string;
 
   @Column({ type: 'enum', enum: Role })
   role: Role;

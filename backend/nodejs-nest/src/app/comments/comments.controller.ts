@@ -17,6 +17,7 @@ import { CommentsService } from './comments.service';
 import { CreateCommentAnswerDto } from './dto/create-comment-answer.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { Comment } from './entities/comment.entity';
 
 @Auth()
 @Controller('comments')
@@ -24,7 +25,10 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto, @AuthUser() user: User) {
+  create(
+    @Body() createCommentDto: CreateCommentDto,
+    @AuthUser() user: User,
+  ): Promise<Comment> {
     return this.commentsService.create(createCommentDto, user);
   }
 
@@ -32,17 +36,17 @@ export class CommentsController {
   createAnswer(
     @Body() createCommentAnswerDto: CreateCommentAnswerDto,
     @AuthUser() user: User,
-  ) {
+  ): Promise<Comment> {
     return this.commentsService.createAnswer(createCommentAnswerDto, user);
   }
 
   @Get()
-  findAll(@AuthUser() user: User) {
+  findAll(@AuthUser() user: User): Promise<Comment[]> {
     return this.commentsService.findAll(user);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: Uuid, @AuthUser() user: User) {
+  findOne(@Param('id') id: Uuid, @AuthUser() user: User): Promise<Comment> {
     return this.commentsService.findOne(id, user);
   }
 
@@ -51,13 +55,13 @@ export class CommentsController {
     @Param('id') id: Uuid,
     @Body() updateCommentDto: UpdateCommentDto,
     @AuthUser() user: User,
-  ) {
+  ): Promise<Comment> {
     return this.commentsService.update(id, updateCommentDto, user);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: Uuid, @AuthUser() user: User) {
+  remove(@Param('id') id: Uuid, @AuthUser() user: User): Promise<void> {
     return this.commentsService.remove(id, user);
   }
 }

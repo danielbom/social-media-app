@@ -1,7 +1,7 @@
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { UnreachableException } from 'src/exceptions/unreachable.exception';
+import { TestUnreachableException } from 'src/tests/test-unreachable.exception';
 import { MockRepository } from 'src/tests/mock-repository';
 import { MockService } from 'src/tests/mock-service';
 
@@ -95,7 +95,7 @@ describe('CommentsService', () => {
         const author = { id: 'user-1' } as User;
         commentRepository.findOne.mockImplementation(async () => null);
         await service.findOne('', author);
-        throw new UnreachableException();
+        throw new TestUnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
       }
@@ -107,7 +107,7 @@ describe('CommentsService', () => {
         const user = { id: 'user-2' } as User;
         commentRepository.findOne.mockImplementation(async () => ({ author }));
         await service.findOne('', user);
-        throw new UnreachableException();
+        throw new TestUnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(ForbiddenException);
       }
