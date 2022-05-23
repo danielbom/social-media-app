@@ -14,7 +14,12 @@ export class TestSchema {
 
   mustWorks(value: any): Joi.ValidationResult {
     const result = this.schema.validate(value);
-    expect(Joi.isError(result.error)).toBeFalsy();
+    try {
+      expect(Joi.isError(result.error)).toBeFalsy();
+    } catch (error) {
+      console.error({ value, result });
+      throw error;
+    }
     return result;
   }
 
@@ -23,7 +28,7 @@ export class TestSchema {
     try {
       expect(Joi.isError(result.error)).toBeTruthy();
     } catch (error) {
-      console.error(result);
+      console.error({ value, result });
       throw error;
     }
     return result;
