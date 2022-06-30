@@ -48,14 +48,14 @@ describe('CommentsController', () => {
   });
 
   test('CommentsController.findAll should only call CommentsService.findAll', async () => {
-    const args = [0 as any] as const;
+    const args = [0 as any, 1 as any] as const;
     await controller.findAll(...args);
     expect(service.findAll).toBeCalledTimes(1);
     expect(service.findAll).toBeCalledWith(...args);
   });
 
   test('CommentsController.findOne should only call CommentsService.findOne', async () => {
-    const args = [0 as any, 1 as any] as const;
+    const args = [0 as any, 1 as any, 2 as any] as const;
     await controller.findOne(...args);
     expect(service.findOne).toBeCalledTimes(1);
     expect(service.findOne).toBeCalledWith(...args);

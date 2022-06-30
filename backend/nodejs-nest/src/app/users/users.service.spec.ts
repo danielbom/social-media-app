@@ -42,7 +42,7 @@ describe('UsersService', () => {
     const userData = { username: '', password: '', role: Role.USER };
 
     it('should works if user does not exists', async () => {
-      userRepository.findOne.mockReturnValueOnce(null);
+      userRepository.findOne.mockResolvedValue(null);
       userRepository.create.mockReturnValueOnce(userData);
       const user = await service.create(userData);
       expect(user).toBe(userData);
@@ -111,11 +111,15 @@ describe('UsersService', () => {
 
   describe('UsersService.getAuthenticated', () => {
     it('should works', async () => {
-      const userData: UserAuthDto = { username: 'user-1', password: '123' };
-      userRepository.findOne.mockResolvedValueOnce(userData);
+      const user = { id: 'x', username: 'user', password: 'pass' } as User;
+      const userAuth: UserAuthDto = {
+        username: 'user-1',
+        password: '123',
+      };
+      userRepository.findOne.mockResolvedValueOnce(user);
       hashService.compare.mockResolvedValueOnce(true);
-      const user = await service.getAuthenticated(userData);
-      expect(user).toBe(userData);
+      const auth = await service.getAuthenticated(userAuth);
+      expect(auth).toStrictEqual({ id: user.id });
     });
 
     it('should fail if user does not exists', async () => {

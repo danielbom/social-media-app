@@ -104,7 +104,7 @@ export class CommentsService {
   }
 
   ensureCommentAuthor(comment: Comment, user: User): void {
-    if (comment.author.id !== user.id) {
+    if (comment.authorId !== user.id) {
       throw new ForbiddenException();
     }
   }

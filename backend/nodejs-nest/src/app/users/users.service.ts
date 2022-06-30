@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UnreachableException } from 'src/exceptions/unreachable.exception';
 import { HashService } from 'src/services/hash/hash.service';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -21,7 +21,7 @@ export class UsersService {
   ) {}
 
   async create({ username, password, role }: CreateUserDto): Promise<User> {
-    await this.ensureUserNotExists({ username });
+    await this.ensureUserNotExists({ where: { username } });
 
     const hash = await this.hashService.hash(password);
     const user = this.userRepository.create({
@@ -46,7 +46,7 @@ export class UsersService {
     id: Uuid,
     { username, password, role }: UpdateUserDto,
   ): Promise<User> {
-    const user = await this.getUserOrThrow({ id });
+    const user = await this.getUserOrThrow({ where: { id } });
 
     if (username) {
       user.username = username;
@@ -64,7 +64,7 @@ export class UsersService {
   }
 
   async remove(id: Uuid): Promise<void> {
-    const user = await this.getUserOrThrow({ id });
+    const user = await this.getUserOrThrow({ where: { id } });
 
     await this.userRepository.softDelete({ id: user.id });
   }
@@ -99,16 +99,16 @@ export class UsersService {
     return { id: user.id };
   }
 
-  async ensureUserNotExists(where: Partial<User>) {
-    const user = await this.userRepository.findOne({ where });
+  async ensureUserNotExists(options: FindOneOptions<User>) {
+    const user = await this.userRepository.findOne(options);
 
     if (user !== null) {
       throw new BadRequestException('User already exists!');
     }
   }
 
-  async getUserOrThrow(where: Partial<User>): Promise<User> {
-    const user = await this.userRepository.findOne({ where });
+  async getUserOrThrow(options: FindOneOptions<User>): Promise<User> {
+    const user = await this.userRepository.findOne(options);
 
     if (user === null) {
       throw new BadRequestException('User not exists!');

@@ -47,27 +47,19 @@ export class PostsService {
     );
   }
 
-  async findOneForUser(id: Uuid, user: User, filters?: Filters): Promise<Post> {
-    const post = await this.getPostOrThrow(
-      applyFiltersOptionsOne1({ where: { id } }, filters),
-    );
-    this.ensurePostAuthor(post, user);
-    return post;
-  }
-
   async update(
     id: Uuid,
     { content }: UpdatePostDto,
     user: User,
   ): Promise<Post> {
-    const post = await this.findOneForUser(id, user);
+    const post = await this.findOneByAuthor(id, user);
     post.content = content;
     await this.postRepository.save(post);
     return post;
   }
 
   async remove(id: Uuid, user: User): Promise<void> {
-    const post = await this.findOneForUser(id, user);
+    const post = await this.findOneByAuthor(id, user);
     await this.postRepository.softDelete({ id: post.id });
   }
 
@@ -82,8 +74,21 @@ export class PostsService {
   }
 
   ensurePostAuthor(post: Post, user: User): void {
-    if (post.author.id !== user.id) {
+    if (post.authorId !== user.id) {
       throw new ForbiddenException();
     }
+  }
+
+  async findOneByAuthor(
+    id: Uuid,
+    author: User,
+    options?: FindOneOptions<Post>,
+  ): Promise<Post> {
+    const post = await this.getPostOrThrow({
+      ...options,
+      where: { ...options?.where, id },
+    });
+    this.ensurePostAuthor(post, author);
+    return post;
   }
 }

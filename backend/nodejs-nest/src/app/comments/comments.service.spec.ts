@@ -85,7 +85,9 @@ describe('CommentsService', () => {
     it('should works if user was the author', async () => {
       const author = { id: 'user-id' } as User;
       const postId = 'post-id';
-      commentRepository.findOne.mockImplementation(async () => ({ author }));
+      commentRepository.findOne.mockImplementation(
+        async () => ({ authorId: author.id } as Comment),
+      );
       await service.findOne(postId, author);
       expect(commentRepository.findOne).toBeCalledTimes(1);
     });

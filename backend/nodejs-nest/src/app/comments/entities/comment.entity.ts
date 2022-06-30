@@ -28,6 +28,9 @@ export class Comment {
   @ManyToOne(() => User, (x) => x.comments)
   author: User;
 
+  @Column()
+  postParentId: Uuid;
+
   @ManyToOne(() => Post, (x) => x.comments)
   postParent: Post;
 
@@ -44,5 +47,5 @@ export class Comment {
   updatedAt: Date;
 
   @DeleteDateColumn()
-  deletedAt?: Date;
+  deletedAt: Date | null;
 }
