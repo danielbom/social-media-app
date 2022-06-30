@@ -4,6 +4,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Post } from 'src/entities/post.entity';
 import { User } from 'src/entities/user.entity';
 import { UnreachableException } from 'src/exceptions/unreachable.exception';
+import { TestUnreachableException } from 'src/tests/test-unreachable.exception';
 import { MockRepository } from 'src/tests/mock-repository';
 
 import { PostsService } from './posts.service';

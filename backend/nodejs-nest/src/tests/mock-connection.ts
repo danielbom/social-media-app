@@ -28,6 +28,6 @@ export class MockConnection {
   }
 
   private _invalidRepositoryMetadata(cls: any): never {
-    throw Error('Invalid meta repository data: ' + cls);
+    throw new Error('Invalid meta repository data: ' + cls);
   }
 }

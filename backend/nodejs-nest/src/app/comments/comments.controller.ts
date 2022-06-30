@@ -12,6 +12,7 @@ import {
 import { AuthUser } from 'src/decorators/auth-user.decorator';
 import { Auth } from 'src/decorators/auth.decorator';
 import { User } from 'src/entities/user.entity';
+import { Comment } from 'src/entities/comment.entity';
 import { Filters, Queryable, QueryFilters } from 'src/lib/query-filters';
 
 import { CommentsService } from './comments.service';
@@ -25,7 +26,10 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
-  create(@Body() createCommentDto: CreateCommentDto, @AuthUser() user: User) {
+  create(
+    @Body() createCommentDto: CreateCommentDto,
+    @AuthUser() user: User,
+  ): Promise<Comment> {
     return this.commentsService.create(createCommentDto, user);
   }
 
@@ -33,7 +37,7 @@ export class CommentsController {
   createAnswer(
     @Body() createCommentAnswerDto: CreateCommentAnswerDto,
     @AuthUser() user: User,
-  ) {
+  ): Promise<Comment> {
     return this.commentsService.createAnswer(createCommentAnswerDto, user);
   }
 
@@ -63,13 +67,13 @@ export class CommentsController {
     @Param('id') id: Uuid,
     @Body() updateCommentDto: UpdateCommentDto,
     @AuthUser() user: User,
-  ) {
+  ): Promise<Comment> {
     return this.commentsService.update(id, updateCommentDto, user);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: Uuid, @AuthUser() user: User) {
+  remove(@Param('id') id: Uuid, @AuthUser() user: User): Promise<void> {
     return this.commentsService.remove(id, user);
   }
 }

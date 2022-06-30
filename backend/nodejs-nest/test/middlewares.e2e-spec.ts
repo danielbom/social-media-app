@@ -41,9 +41,7 @@ const middlewareSpy = {
 };
 
 middlewareSpy.role.mockImplementation(() => true);
-middlewareSpy.jwt.mockImplementation(
-  async () => ({ role: Role.ADMIN } as User),
-);
+middlewareSpy.jwt.mockImplementation(async () => ({ role: 'admin' } as User));
 
 type MiddlewareSpy = typeof middlewareSpy;
 

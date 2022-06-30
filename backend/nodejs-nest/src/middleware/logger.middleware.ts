@@ -6,8 +6,6 @@ import chalk from 'chalk';
 export class LoggerMiddleware implements NestMiddleware {
   private logger = new Logger('HTTP');
 
-  private log = (...args: any[]) => this.logger.log(chalk.cyan(...args));
-
   use(request: Request, response: Response, next: NextFunction): void {
     const { ip, method, originalUrl } = request;
     const userAgent = request.get('user-agent') ?? '';
@@ -18,10 +16,13 @@ export class LoggerMiddleware implements NestMiddleware {
       const contentLength = response.get('content-length') ?? '-';
       const endTime = Date.now();
       const totalTime = endTime - startTime;
+      const message = `${method} ${originalUrl} ${statusCode} ${contentLength} ${totalTime}ms - ${userAgent} ${ip}`;
 
-      this.log(
-        `${method} ${originalUrl} ${statusCode} ${contentLength} ${totalTime}ms - ${userAgent} ${ip}`,
-      );
+      if (statusCode >= 400) {
+        this.logger.error(message);
+      } else {
+        this.logger.log(chalk.cyan(message));
+      }
     });
 
     next();

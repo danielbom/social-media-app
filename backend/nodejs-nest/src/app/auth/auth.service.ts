@@ -7,7 +7,7 @@ import { UsersService } from '../users/users.service';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { AuthRegisterDto } from './dto/auth-register.dto';
 import { AuthLoginResponse } from './response/auth-login.response';
-import { TokenPayload } from './strategies/passport-jwt.strategy';
+import { TokenPayload } from './types/token-payload';
 
 @Injectable()
 export class AuthService {

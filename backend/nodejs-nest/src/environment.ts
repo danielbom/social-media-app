@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import Joi from 'joi';
 
 const nodeEnv = process.env.NODE_ENV ?? 'development';
 
-const environment = {
+const env = {
   database: {
     host: process.env.MYSQL_HOST!,
     port: +process.env.MYSQL_PORT!,
@@ -13,8 +14,9 @@ const environment = {
   app: {
     nodeEnv,
     isTest: nodeEnv === 'test',
-    isDevelopment: nodeEnv === 'development',
+    isDevelopment: nodeEnv === 'development' || nodeEnv === 'debug',
     isProduction: nodeEnv === 'production',
+    isDebug: nodeEnv === 'debug',
     port: +process.env.APP_PORT!,
     cors: process.env.APP_CORS!,
     adminPassword: process.env.APP_ADMIN_PASSWORD!,
@@ -30,9 +32,9 @@ const environment = {
 };
 
 (function ensureSafeEnvironments() {
-  if (environment.app.isTest) {
+  if (env.app.isTest) {
     // In the test environment all the configuration should come with your test
-    const anyEnv = environment as any;
+    const anyEnv = env as any;
     anyEnv.jwt = {};
     anyEnv.app = {};
     anyEnv.database = {};
@@ -42,7 +44,7 @@ const environment = {
   const cors = Joi.string()
     .required()
     .regex(/^[^;]+(;[^;]+)*$/, { name: 'list of origins' });
-  const schema = Joi.object<typeof environment>({
+  const schema = Joi.object<Required<typeof env>>({
     database: Joi.object({
       host: Joi.string().required().label('MYSQL_HOST'),
       port: Joi.number().required().label('MYSQL_PORT'),
@@ -71,7 +73,7 @@ const environment = {
     }),
   });
 
-  const result = schema.validate(environment, { abortEarly: false });
+  const result = schema.validate(env, { abortEarly: false });
 
   if (result.error) {
     console.error('Invalid environment variables:');
@@ -81,8 +83,5 @@ const environment = {
     process.exit(1);
   }
 })();
-
-export type Env = NonNullable<typeof environment>;
-const env = environment as Env;
 
 export { env };

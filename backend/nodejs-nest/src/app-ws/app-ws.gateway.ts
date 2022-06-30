@@ -20,15 +20,16 @@ export class AppWsGateway
   @WebSocketServer()
   private server: Server;
 
-  afterInit(server: Server) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  afterInit(server: Server): void {
     this.logger.log(`WebSocket Server started on port ${env.ws.port}`);
   }
 
-  handleConnection(client: Socket) {
+  handleConnection(client: Socket): void {
     this.logger.log(`Client connected: ${client.id}`);
   }
 
-  handleDisconnect(client: Socket) {
+  handleDisconnect(client: Socket): void {
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 }

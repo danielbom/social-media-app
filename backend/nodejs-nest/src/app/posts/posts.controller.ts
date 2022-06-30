@@ -12,6 +12,7 @@ import {
 import { AuthUser } from 'src/decorators/auth-user.decorator';
 import { Auth } from 'src/decorators/auth.decorator';
 import { User } from 'src/entities/user.entity';
+import { Post as EPost } from 'src/entities/post.entity';
 import { Filters, Queryable, QueryFilters } from 'src/lib/query-filters';
 
 import { CreatePostDto } from './dto/create-post.dto';
@@ -24,7 +25,10 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto, @AuthUser() user: User) {
+  create(
+    @Body() createPostDto: CreatePostDto,
+    @AuthUser() user: User,
+  ): Promise<EPost> {
     return this.postsService.create(createPostDto, user);
   }
 
@@ -50,13 +54,13 @@ export class PostsController {
     @Param('id') id: Uuid,
     @Body() updatePostDto: UpdatePostDto,
     @AuthUser() user: User,
-  ) {
+  ): Promise<EPost> {
     return this.postsService.update(id, updatePostDto, user);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: Uuid, @AuthUser() user: User) {
+  remove(@Param('id') id: Uuid, @AuthUser() user: User): Promise<void> {
     return this.postsService.remove(id, user);
   }
 }

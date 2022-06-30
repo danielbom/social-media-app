@@ -9,9 +9,7 @@ import { UsersService } from 'src/app/users/users.service';
 import { env } from 'src/environment';
 import Joi from 'joi';
 
-export interface TokenPayload {
-  sub: string;
-}
+import { TokenPayload } from '../types/token-payload';
 
 const uuid = Joi.string().uuid();
 const isUuid = (value: string) => !uuid.validate(value).error;

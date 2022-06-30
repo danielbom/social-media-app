@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Role } from 'src/entities/role.enum';
 import { User } from 'src/entities/user.entity';
-import { UnreachableException } from 'src/exceptions/unreachable.exception';
+import { TestUnreachableException } from 'src/tests/test-unreachable.exception';
 import { HashService } from 'src/services/hash/hash.service';
 import { MockRepository } from 'src/tests/mock-repository';
 import { MockService } from 'src/tests/mock-service';
@@ -55,7 +55,7 @@ describe('UsersService', () => {
       try {
         userRepository.findOne.mockResolvedValueOnce({} as any);
         await service.create(userData);
-        throw new UnreachableException();
+        throw new TestUnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
         expect(userRepository.create).not.toBeCalled();
@@ -81,7 +81,7 @@ describe('UsersService', () => {
       try {
         userRepository.findOne.mockImplementation(async () => null);
         await service.update('', {});
-        throw new UnreachableException();
+        throw new TestUnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
         expect(userRepository.save).not.toBeCalled();
@@ -102,7 +102,7 @@ describe('UsersService', () => {
       try {
         userRepository.findOne.mockImplementation(async () => null);
         await service.remove('');
-        throw new UnreachableException();
+        throw new TestUnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
       }
@@ -127,7 +127,7 @@ describe('UsersService', () => {
         const userData: UserAuthDto = { username: 'user-1', password: '123' };
         userRepository.findOne.mockResolvedValueOnce(null);
         await service.getAuthenticated(userData);
-        throw new UnreachableException();
+        throw new TestUnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
       }
@@ -141,7 +141,7 @@ describe('UsersService', () => {
           password: correctPassword,
         });
         await service.getAuthenticated(userData);
-        throw new UnreachableException();
+        throw new TestUnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
       }
