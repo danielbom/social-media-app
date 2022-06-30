@@ -14,7 +14,7 @@ export interface TokenPayload {
 }
 
 const uuid = Joi.string().uuid();
-const isUuid = (value: string) => uuid.validate(value).error === null;
+const isUuid = (value: string) => !uuid.validate(value).error;
 
 @Injectable()
 export class PasswordJwtStrategy extends PassportStrategy(Strategy) {
