@@ -90,7 +90,7 @@ describe('Middleware', () => {
       .get('/comments')
       .set('Authorization', authorization)
       .expect(HttpStatus.OK);
-    middlewareMustBeCalled({ joi: 1, role: 1, jwt: 1 });
+    middlewareMustBeCalled({ joi: 2, role: 1, jwt: 1 });
   });
 
   it('/comments (POST)', async () => {

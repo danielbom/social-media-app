@@ -23,5 +23,6 @@
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
     "noImplicitReturns": true
-  }
+  },
+  "exclude": ["node_modules", "dist", "tmp"]
 }
