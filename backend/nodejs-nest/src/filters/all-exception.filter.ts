@@ -3,16 +3,17 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
-  HttpStatus,
+  InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import chalk from 'chalk';
+import { UnreachableException } from 'src/exceptions/unreachable.exception';
+import { TypeormExceptions } from 'src/shared/typeorm-exceptions';
 import { QueryFailedError } from 'typeorm';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-  private logger = new Logger('AllExceptionsHandler');
+  private logger = new Logger('AppExceptionsHandler');
 
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
@@ -20,24 +21,33 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const { httpAdapter } = this.httpAdapterHost;
     const ctx = host.switchToHttp();
 
-    this.logException(exception);
-    const result = this.resolveException(exception);
-    httpAdapter.reply(ctx.getResponse(), result, result.status);
+    const httpException = this.resolveException(exception);
+
+    const statusCode = httpException.getStatus();
+    const response = httpException.getResponse();
+    const result =
+      typeof response === 'string'
+        ? { statusCode, message: response }
+        : { ...response, statusCode };
+    httpAdapter.reply(ctx.getResponse(), result, statusCode);
   }
 
-  private tableDoestExists(exception: QueryFailedError): boolean {
-    return (
-      exception.message.startsWith("Table '") &&
-      exception.message.endsWith("' doesn't exist")
-    );
-  }
-
-  private logException(exception: unknown) {
+  private resolveException(exception: unknown): HttpException {
     if (typeof exception === 'object' && exception !== null) {
+      if (exception instanceof HttpException) return exception;
+
+      if (exception instanceof UnreachableException) {
+        this.logger.error(exception.message);
+        this.logger.verbose(exception.stack);
+        return new InternalServerErrorException();
+      }
+
       if (exception instanceof QueryFailedError) {
-        if (this.tableDoestExists(exception)) {
-          this.log(exception.message, exception.stack);
-          return this.logTip(
+        this.logger.error(exception.message);
+        this.logger.verbose(exception.stack);
+
+        if (TypeormExceptions.TableDoesNotExists.mysql(exception)) {
+          this.logger.verbose(
             [
               exception.message,
               'This generally happens when:',
@@ -47,39 +57,20 @@ export class AllExceptionsFilter implements ExceptionFilter {
               '    - you are trying access a new table that was not created yet;',
             ].join('\n'),
           );
+          return new InternalServerErrorException();
         }
+
+        return new InternalServerErrorException();
       }
 
-      const anyException = exception as any;
-      if ('message' in exception && 'stack' in exception) {
-        return this.log(anyException.message, anyException.stack);
+      if (exception instanceof Error) {
+        this.logger.error(exception.message);
+        this.logger.verbose(exception.stack);
+        return new InternalServerErrorException();
       }
     }
 
-    this.log(`Unknown Exception: ${exception}`);
-  }
-
-  private resolveException(exception: unknown) {
-    if (exception instanceof HttpException) {
-      return {
-        status: exception.getStatus(),
-        message: exception.getResponse(),
-      };
-    }
-
-    return {
-      status: HttpStatus.INTERNAL_SERVER_ERROR,
-      message: 'Internal Server Error',
-    };
-  }
-
-  private logTip(...args: any[]) {
-    this.logger.log(chalk.magenta('Tip:', ...args));
-  }
-
-  private log(message: string, ...args: any[]) {
-    message = chalk.red('Error:', message);
-    if (args.length > 0) message = message + '\n' + chalk.gray(args.join('\n'));
-    this.logger.log(message);
+    this.logger.error(`Unknown Exception: ${exception}`);
+    return new InternalServerErrorException();
   }
 }
