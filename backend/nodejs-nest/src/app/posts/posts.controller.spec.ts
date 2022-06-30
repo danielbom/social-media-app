@@ -46,8 +46,8 @@ describe('PostsController', () => {
   test('PostsController.findOne should only call PostsService.findOne', async () => {
     const args = [0 as any, 1 as any] as const;
     await controller.findOne(...args);
-    expect(service.findOne).toBeCalledTimes(1);
-    expect(service.findOne).toBeCalledWith(...args);
+    expect(service.findOneForUser).toBeCalledTimes(1);
+    expect(service.findOneForUser).toBeCalledWith(...args);
   });
 
   test('PostsController.remove should only call PostsService.remove', async () => {

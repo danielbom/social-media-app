@@ -4,7 +4,13 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {
+  applyFilters,
+  applyFiltersOptionsOne1,
+  Filters,
+  Page,
+} from 'src/lib/query-filters';
+import { FindOneOptions, Repository } from 'typeorm';
 
 import { PostsService } from '../posts/posts.service';
 import { User } from '../users/entities/user.entity';
@@ -25,7 +31,7 @@ export class CommentsService {
     author: User,
   ): Promise<Comment> {
     const postParent = await this.postsService.getPostOrThrow({
-      id: postId,
+      where: { id: postId },
     });
     const comment = this.commentsRepository.create({
       content,
@@ -43,7 +49,9 @@ export class CommentsService {
     { commentId, content }: CreateCommentAnswerDto,
     author: User,
   ): Promise<Comment> {
-    const commentParent = await this.getCommentOrThrow({ id: commentId });
+    const commentParent = await this.getCommentOrThrow({
+      where: { id: commentId },
+    });
     const comment = this.commentsRepository.create({
       content,
       author,
@@ -55,14 +63,16 @@ export class CommentsService {
     return comment;
   }
 
-  async findAll(author: User): Promise<Comment[]> {
-    return this.commentsRepository.find({
-      where: { author },
+  async findAll(author: User, filters: Filters): Promise<Page<Comment>> {
+    return applyFilters(filters, this.commentsRepository, {
+      where: { authorId: author.id },
     });
   }
 
-  async findOne(id: Uuid, user: User): Promise<Comment> {
-    const comment = await this.getCommentOrThrow({ id });
+  async findOne(id: Uuid, user: User, filters?: Filters): Promise<Comment> {
+    const comment = await this.getCommentOrThrow(
+      applyFiltersOptionsOne1({ where: { id } }, filters),
+    );
     this.ensureCommentAuthor(comment, user);
     return comment;
   }
@@ -83,11 +93,8 @@ export class CommentsService {
     await this.commentsRepository.softDelete({ id: comment.id });
   }
 
-  async getCommentOrThrow(where: Partial<Comment>): Promise<Comment> {
-    const comment = await this.commentsRepository.findOne({
-      where,
-      relations: ['author'],
-    });
+  async getCommentOrThrow(options: FindOneOptions<Comment>): Promise<Comment> {
+    const comment = await this.commentsRepository.findOne(options);
 
     if (comment === null) {
       throw new BadRequestException('Comment not exists!');

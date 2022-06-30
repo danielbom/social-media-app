@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { AuthUser } from 'src/decorators/auth-user.decorator';
 import { Auth } from 'src/decorators/auth.decorator';
+import { Filters, Queryable, QueryFilters } from 'src/lib/query-filters';
 
 import { User } from '../users/entities/user.entity';
 import { CommentsService } from './comments.service';
@@ -37,13 +38,24 @@ export class CommentsController {
   }
 
   @Get()
-  findAll(@AuthUser() user: User) {
-    return this.commentsService.findAll(user);
+  @Queryable({
+    relations: ['author', 'answers', 'answers.author'],
+  })
+  findAll(@AuthUser() user: User, @QueryFilters() filters: Filters) {
+    return this.commentsService.findAll(user, filters);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: Uuid, @AuthUser() user: User) {
-    return this.commentsService.findOne(id, user);
+  @Queryable({
+    pagination: false,
+    relations: ['author', 'answers', 'answers.author'],
+  })
+  findOne(
+    @Param('id') id: Uuid,
+    @AuthUser() user: User,
+    @QueryFilters() filters: Filters,
+  ) {
+    return this.commentsService.findOne(id, user, filters);
   }
 
   @Patch(':id')

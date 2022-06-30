@@ -48,7 +48,7 @@ describe('PostsService', () => {
       const author = { id: 'user-id' } as User;
       const postId = 'post-id';
       postRepository.findOne.mockImplementation(async () => ({ author }));
-      await service.findOne(postId, author);
+      await service.findOneForUser(postId, author);
       expect(postRepository.findOne).toBeCalledTimes(1);
     });
 
@@ -56,7 +56,7 @@ describe('PostsService', () => {
       try {
         const author = { id: 'user-1' } as User;
         postRepository.findOne.mockImplementation(async () => null);
-        await service.findOne('', author);
+        await service.findOneForUser('', author);
         throw new UnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
@@ -68,7 +68,7 @@ describe('PostsService', () => {
         const author = { id: 'user-1' } as User;
         const user = { id: 'user-2' } as User;
         postRepository.findOne.mockImplementation(async () => ({ author }));
-        await service.findOne('', user);
+        await service.findOneForUser('', user);
         throw new UnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(ForbiddenException);
@@ -81,8 +81,8 @@ describe('PostsService', () => {
       const author = { id: 'user-id' } as User;
       const newContent = 'content-2';
       const previousPost = { content: 'content-1', author } as Post;
-      service.findOne = jest
-        .fn(service.findOne)
+      service.findOneForUser = jest
+        .fn(service.findOneForUser)
         .mockImplementationOnce(async () => previousPost);
       await service.update('', { content: newContent }, author);
       expect(postRepository.save).toBeCalledTimes(1);
@@ -98,8 +98,8 @@ describe('PostsService', () => {
       const author = { id: 'user-id' } as User;
       const user = { id: 'user-id' } as User;
       const post = { id: 'post-id', author } as Post;
-      service.findOne = jest
-        .fn(service.findOne)
+      service.findOneForUser = jest
+        .fn(service.findOneForUser)
         .mockImplementationOnce(async () => post);
       await service.remove('', user);
       expect(postRepository.softDelete).toBeCalledTimes(1);

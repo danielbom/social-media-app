@@ -22,6 +22,9 @@ export class Comment {
   @Column()
   likes: number;
 
+  @Column()
+  authorId: Uuid;
+
   @ManyToOne(() => User, (x) => x.comments)
   author: User;
 

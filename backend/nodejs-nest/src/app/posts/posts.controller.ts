@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { AuthUser } from 'src/decorators/auth-user.decorator';
 import { Auth } from 'src/decorators/auth.decorator';
+import { Filters, Queryable, QueryFilters } from 'src/lib/query-filters';
 
 import { User } from '../users/entities/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -28,13 +29,20 @@ export class PostsController {
   }
 
   @Get()
-  findAll(@AuthUser() user: User) {
-    return this.postsService.findAll(user);
+  @Queryable({
+    relations: ['author'],
+  })
+  findAll(@QueryFilters() filters: Filters) {
+    return this.postsService.findAll(filters);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: Uuid, @AuthUser() user: User) {
-    return this.postsService.findOne(id, user);
+  @Queryable({
+    relations: ['author', 'comments'],
+    pagination: false,
+  })
+  findOne(@Param('id') id: Uuid, @QueryFilters() filters: Filters) {
+    return this.postsService.findOne(id, filters);
   }
 
   @Patch(':id')

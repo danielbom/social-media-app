@@ -10,6 +10,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { Auth } from 'src/decorators/auth.decorator';
+import { Queryable } from 'src/lib/query-filters';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -27,11 +28,13 @@ export class UsersController {
   }
 
   @Get()
+  @Queryable({})
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
+  @Queryable({ pagination: false })
   findOne(@Param('id') id: Uuid) {
     return this.usersService.findOne(id);
   }

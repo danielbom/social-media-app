@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UnreachableException } from 'src/exceptions/unreachable.exception';
 import { HashService } from 'src/services/hash/hash.service';
 import { Repository } from 'typeorm';
 
@@ -30,28 +31,36 @@ export class UsersService {
     });
 
     await this.userRepository.save(user);
-
-    return user;
+    return this.hidePassword(user);
   }
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
 
-  async findOne(id: Uuid): Promise<User> {
+  async findOne(id: Uuid): Promise<User | null> {
     return this.userRepository.findOne({ where: { id } });
   }
 
-  async update(id: Uuid, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(
+    id: Uuid,
+    { username, password, role }: UpdateUserDto,
+  ): Promise<User> {
     const user = await this.getUserOrThrow({ id });
 
-    for (const key in updateUserDto) {
-      user[key] = updateUserDto[key];
+    if (username) {
+      user.username = username;
+    }
+    if (password) {
+      const hash = await this.hashService.hash(password);
+      user.password = hash;
+    }
+    if (role) {
+      user.role = role;
     }
 
     await this.userRepository.save(user);
-
-    return user;
+    return this.hidePassword(user);
   }
 
   async remove(id: Uuid): Promise<void> {
@@ -60,11 +69,23 @@ export class UsersService {
     await this.userRepository.softDelete({ id: user.id });
   }
 
-  async getAuthenticated({ username, password }: UserAuthDto): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { username } });
+  async getAuthenticated({
+    username,
+    password,
+  }: UserAuthDto): Promise<{ id: Uuid }> {
+    const user = await this.userRepository.findOne({
+      where: { username },
+      select: ['id', 'password'],
+    });
 
     if (user === null) {
       throw new BadRequestException('User and/or password was invalid!');
+    }
+
+    if (!user.password) {
+      throw new UnreachableException(
+        'user.password must exists in UsersService.getAuthenticated',
+      );
     }
 
     const isPasswordValid = await this.hashService.compare(
@@ -75,7 +96,7 @@ export class UsersService {
       throw new BadRequestException('User and/or password was invalid!');
     }
 
-    return user;
+    return { id: user.id };
   }
 
   async ensureUserNotExists(where: Partial<User>) {
@@ -93,6 +114,11 @@ export class UsersService {
       throw new BadRequestException('User not exists!');
     }
 
+    return user;
+  }
+
+  hidePassword(user: User): User {
+    user.password = undefined;
     return user;
   }
 }

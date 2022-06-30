@@ -22,6 +22,9 @@ export class Post {
   @Column()
   likes: number;
 
+  @Column()
+  authorId: Uuid;
+
   @ManyToOne(() => User, (x) => x.posts)
   author: User;
 

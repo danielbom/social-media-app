@@ -12,20 +12,35 @@ export class TestSchema {
     return new TestSchema(getClassSchema(type));
   }
 
-  mustWorks(value: any): Joi.ValidationResult {
-    const result = this.schema.validate(value);
-    expect(Joi.isError(result.error)).toBeFalsy();
-    return result;
-  }
-
-  mustFail(value: any): Joi.ValidationResult {
-    const result = this.schema.validate(value);
+  mustWorks(value: any, options?: Joi.ValidationOptions): Joi.ValidationResult {
+    const result = this.schema.validate(value, options);
     try {
-      expect(Joi.isError(result.error)).toBeTruthy();
+      expect(result.error).not.toBeDefined();
     } catch (error) {
-      console.error(result);
+      console.error(value, result.error);
       throw error;
     }
     return result;
+  }
+
+  mustFail(value: any, options?: Joi.ValidationOptions): Joi.ValidationResult {
+    const result = this.schema.validate(value, options);
+    try {
+      expect(result.error).toBeDefined();
+    } catch (error) {
+      console.error(value, result.value);
+      throw error;
+    }
+    return result;
+  }
+
+  mustMatch(value: any, output: any, options?: Joi.ValidationOptions): void {
+    const result = this.mustWorks(value, options);
+    try {
+      expect(result.value).toStrictEqual(output);
+    } catch (error) {
+      console.error(value, result);
+      throw error;
+    }
   }
 }

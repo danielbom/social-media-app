@@ -4,7 +4,13 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {
+  applyFilters,
+  applyFiltersOptionsOne1,
+  Filters,
+  Page,
+} from 'src/lib/query-filters';
+import { FindOneOptions, Repository } from 'typeorm';
 
 import { User } from '../users/entities/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -29,12 +35,22 @@ export class PostsService {
     return post;
   }
 
-  async findAll(author: User): Promise<Post[]> {
-    return this.postRepository.find({ where: { author: { id: author.id } } });
+  async findAll(filters: Filters): Promise<Page<Post>> {
+    return applyFilters(filters, this.postRepository, {
+      where: { authorId: filters.queries.authorId },
+    });
   }
 
-  async findOne(id: Uuid, user: User): Promise<Post> {
-    const post = await this.getPostOrThrow({ id });
+  async findOne(id: Uuid, filters?: Filters): Promise<Post | null> {
+    return this.postRepository.findOne(
+      applyFiltersOptionsOne1({ where: { id } }, filters),
+    );
+  }
+
+  async findOneForUser(id: Uuid, user: User, filters?: Filters): Promise<Post> {
+    const post = await this.getPostOrThrow(
+      applyFiltersOptionsOne1({ where: { id } }, filters),
+    );
     this.ensurePostAuthor(post, user);
     return post;
   }
@@ -44,22 +60,19 @@ export class PostsService {
     { content }: UpdatePostDto,
     user: User,
   ): Promise<Post> {
-    const post = await this.findOne(id, user);
+    const post = await this.findOneForUser(id, user);
     post.content = content;
     await this.postRepository.save(post);
     return post;
   }
 
   async remove(id: Uuid, user: User): Promise<void> {
-    const post = await this.findOne(id, user);
+    const post = await this.findOneForUser(id, user);
     await this.postRepository.softDelete({ id: post.id });
   }
 
-  async getPostOrThrow(where: Partial<Post>): Promise<Post> {
-    const post = await this.postRepository.findOne({
-      where,
-      relations: ['author'],
-    });
+  async getPostOrThrow(options: FindOneOptions<Post>): Promise<Post> {
+    const post = await this.postRepository.findOne(options);
 
     if (post === null) {
       throw new BadRequestException('Post not exists!');
