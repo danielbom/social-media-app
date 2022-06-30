@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Comment } from 'src/entities/comment.entity';
+import { Post } from 'src/entities/post.entity';
 import { MockService } from 'src/tests/mock-service';
 
-import { Post } from '../posts/entities/post.entity';
 import { PostsService } from '../posts/posts.service';
 import { CommentsController } from './comments.controller';
 import { CommentsService } from './comments.service';
-import { Comment } from './entities/comment.entity';
 
 describe('CommentsController', () => {
   let controller: CommentsController;

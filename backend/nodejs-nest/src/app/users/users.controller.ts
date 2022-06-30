@@ -10,11 +10,11 @@ import {
   Post,
 } from '@nestjs/common';
 import { Auth } from 'src/decorators/auth.decorator';
+import { Role } from 'src/entities/role.enum';
 import { Queryable } from 'src/lib/query-filters';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Role } from './entities/role.enum';
 import { UsersService } from './users.service';
 
 @Auth([Role.ADMIN])

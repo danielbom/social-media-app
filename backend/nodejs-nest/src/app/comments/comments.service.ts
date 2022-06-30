@@ -4,6 +4,8 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Comment } from 'src/entities/comment.entity';
+import { User } from 'src/entities/user.entity';
 import {
   applyFilters,
   applyFiltersOptionsOne1,
@@ -13,11 +15,9 @@ import {
 import { FindOneOptions, Repository } from 'typeorm';
 
 import { PostsService } from '../posts/posts.service';
-import { User } from '../users/entities/user.entity';
 import { CreateCommentAnswerDto } from './dto/create-comment-answer.dto';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { UpdateCommentDto } from './dto/update-comment.dto';
-import { Comment } from './entities/comment.entity';
 
 @Injectable()
 export class CommentsService {

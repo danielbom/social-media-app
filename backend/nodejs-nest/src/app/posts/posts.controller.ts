@@ -11,9 +11,9 @@ import {
 } from '@nestjs/common';
 import { AuthUser } from 'src/decorators/auth-user.decorator';
 import { Auth } from 'src/decorators/auth.decorator';
+import { User } from 'src/entities/user.entity';
 import { Filters, Queryable, QueryFilters } from 'src/lib/query-filters';
 
-import { User } from '../users/entities/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostsService } from './posts.service';

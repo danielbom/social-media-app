@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { Role } from 'src/app/users/entities/role.enum';
+import { Role } from 'src/entities/role.enum';
 import { env } from 'src/environment';
 import { HashService } from 'src/services/hash/hash.service';
 import { MigrationInterface, QueryRunner } from 'typeorm';

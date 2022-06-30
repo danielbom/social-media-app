@@ -1,9 +1,8 @@
 import path from 'path';
-import { Comment } from 'src/app/comments/entities/comment.entity';
-import { Post } from 'src/app/posts/entities/post.entity';
-import { User } from 'src/app/users/entities/user.entity';
+import { Comment } from 'src/entities/comment.entity';
+import { Post } from 'src/entities/post.entity';
+import { User } from 'src/entities/user.entity';
 import { env } from 'src/environment';
-
 import { DataSource } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 

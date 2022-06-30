@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/entities/user.entity';
 import { UnreachableException } from 'src/exceptions/unreachable.exception';
 import { HashService } from 'src/services/hash/hash.service';
 import { FindOneOptions, Repository } from 'typeorm';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
 
 export interface UserAuthDto {
   username: string;

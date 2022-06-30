@@ -1,5 +1,5 @@
-import { Comment } from 'src/app/comments/entities/comment.entity';
-import { Post } from 'src/app/posts/entities/post.entity';
+import { Comment } from 'src/entities/comment.entity';
+import { Post } from 'src/entities/post.entity';
 import {
   PrimaryGeneratedColumn,
   Column,

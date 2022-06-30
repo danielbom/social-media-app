@@ -1,5 +1,6 @@
+import { Role } from 'src/entities/role.enum';
 import { TestSchema } from 'src/tests/test-schema';
-import { Role } from '../entities/role.enum';
+
 import { CreateUserDto } from './create-user.dto';
 import { UpdateUserDto } from './update-user.dto';
 

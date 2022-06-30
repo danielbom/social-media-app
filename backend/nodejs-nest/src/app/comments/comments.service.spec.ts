@@ -1,15 +1,15 @@
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Comment } from 'src/entities/comment.entity';
+import { Post } from 'src/entities/post.entity';
+import { User } from 'src/entities/user.entity';
 import { UnreachableException } from 'src/exceptions/unreachable.exception';
 import { MockRepository } from 'src/tests/mock-repository';
 import { MockService } from 'src/tests/mock-service';
 
-import { Post } from '../posts/entities/post.entity';
 import { PostsService } from '../posts/posts.service';
-import { User } from '../users/entities/user.entity';
 import { CommentsService } from './comments.service';
-import { Comment } from './entities/comment.entity';
 
 describe('CommentsService', () => {
   let service: CommentsService;

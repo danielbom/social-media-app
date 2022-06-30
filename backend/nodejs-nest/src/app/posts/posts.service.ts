@@ -4,6 +4,8 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Post } from 'src/entities/post.entity';
+import { User } from 'src/entities/user.entity';
 import {
   applyFilters,
   applyFiltersOptionsOne1,
@@ -12,10 +14,8 @@ import {
 } from 'src/lib/query-filters';
 import { FindOneOptions, Repository } from 'typeorm';
 
-import { User } from '../users/entities/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { Post } from './entities/post.entity';
 
 @Injectable()
 export class PostsService {

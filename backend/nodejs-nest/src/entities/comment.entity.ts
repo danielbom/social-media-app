@@ -1,5 +1,4 @@
-import { Comment } from 'src/app/comments/entities/comment.entity';
-import { User } from 'src/app/users/entities/user.entity';
+import { Post } from 'src/entities/post.entity';
 import {
   Column,
   CreateDateColumn,
@@ -10,9 +9,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity()
-export class Post {
+export class Comment {
   @PrimaryGeneratedColumn('uuid')
   id: Uuid;
 
@@ -25,11 +25,20 @@ export class Post {
   @Column()
   authorId: Uuid;
 
-  @ManyToOne(() => User, (x) => x.posts)
+  @ManyToOne(() => User, (x) => x.comments)
   author: User;
 
-  @OneToMany(() => Comment, (x) => x.postParent)
-  comments: Comment[];
+  @Column()
+  postParentId: Uuid;
+
+  @ManyToOne(() => Post, (x) => x.comments)
+  postParent: Post;
+
+  @OneToMany(() => Comment, (x) => x.commentParent)
+  commentAnswers: Comment[];
+
+  @ManyToOne(() => Comment, (x) => x.commentAnswers)
+  commentParent?: Comment;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -1,14 +1,14 @@
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Role } from 'src/entities/role.enum';
+import { User } from 'src/entities/user.entity';
 import { UnreachableException } from 'src/exceptions/unreachable.exception';
 import { HashService } from 'src/services/hash/hash.service';
 import { MockRepository } from 'src/tests/mock-repository';
-import { Role } from './entities/role.enum';
-
-import { User } from './entities/user.entity';
-import { UserAuthDto, UsersService } from './users.service';
 import { MockService } from 'src/tests/mock-service';
+
+import { UserAuthDto, UsersService } from './users.service';
 
 describe('UsersService', () => {
   let service: UsersService;

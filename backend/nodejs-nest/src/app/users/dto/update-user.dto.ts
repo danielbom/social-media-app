@@ -1,6 +1,6 @@
-import { JoiSchema, JoiSchemaOptions } from 'nestjs-joi';
 import Joi from 'joi';
-import { Role } from '../entities/role.enum';
+import { JoiSchema, JoiSchemaOptions } from 'nestjs-joi';
+import { Role } from 'src/entities/role.enum';
 
 @JoiSchemaOptions({
   allowUnknown: false,

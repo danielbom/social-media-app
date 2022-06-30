@@ -1,11 +1,11 @@
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { Post } from 'src/entities/post.entity';
+import { User } from 'src/entities/user.entity';
 import { UnreachableException } from 'src/exceptions/unreachable.exception';
 import { MockRepository } from 'src/tests/mock-repository';
 
-import { User } from '../users/entities/user.entity';
-import { Post } from './entities/post.entity';
 import { PostsService } from './posts.service';
 
 describe('PostsService', () => {
@@ -47,7 +47,9 @@ describe('PostsService', () => {
     it('should works if user was the author', async () => {
       const author = { id: 'user-id' } as User;
       const postId = 'post-id';
-      postRepository.findOne.mockImplementation(async () => ({ author }));
+      postRepository.findOne.mockImplementation(async () => ({
+        authorId: author.id,
+      }));
       await service.findOneByAuthor(postId, author);
       expect(postRepository.findOne).toBeCalledTimes(1);
     });
