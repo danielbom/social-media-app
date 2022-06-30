@@ -2,37 +2,37 @@ import Joi from 'joi';
 
 const nodeEnv = process.env.NODE_ENV ?? 'development';
 
-const env = {
+const environment = {
   database: {
-    host: process.env.MYSQL_HOST,
-    port: +process.env.MYSQL_PORT,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
+    host: process.env.MYSQL_HOST!,
+    port: +process.env.MYSQL_PORT!,
+    user: process.env.MYSQL_USER!,
+    password: process.env.MYSQL_PASSWORD!,
+    database: process.env.MYSQL_DATABASE!,
   },
   app: {
     nodeEnv,
     isTest: nodeEnv === 'test',
     isDevelopment: nodeEnv === 'development',
     isProduction: nodeEnv === 'production',
-    port: +process.env.APP_PORT,
-    cors: process.env.APP_CORS,
-    adminPassword: process.env.APP_ADMIN_PASSWORD,
+    port: +process.env.APP_PORT!,
+    cors: process.env.APP_CORS!,
+    adminPassword: process.env.APP_ADMIN_PASSWORD!,
   },
   ws: {
-    port: +process.env.WS_PORT,
-    cors: process.env.WS_CORS,
+    port: +process.env.WS_PORT!,
+    cors: process.env.WS_CORS!,
   },
   jwt: {
-    secret: process.env.JWT_SECRET,
-    expiresIn: process.env.JWT_EXPIRES_IN, // https://github.com/zeit/ms.js
+    secret: process.env.JWT_SECRET!,
+    expiresIn: process.env.JWT_EXPIRES_IN!, // https://github.com/zeit/ms.js
   },
 };
 
 (function ensureSafeEnvironments() {
-  if (env.app.isTest) {
+  if (environment.app.isTest) {
     // In the test environment all the configuration should come with your test
-    const anyEnv = env as any;
+    const anyEnv = environment as any;
     anyEnv.jwt = {};
     anyEnv.app = {};
     anyEnv.database = {};
@@ -42,7 +42,7 @@ const env = {
   const cors = Joi.string()
     .required()
     .regex(/^[^;]+(;[^;]+)*$/, { name: 'list of origins' });
-  const schema = Joi.object<typeof env>({
+  const schema = Joi.object<typeof environment>({
     database: Joi.object({
       host: Joi.string().required().label('MYSQL_HOST'),
       port: Joi.number().required().label('MYSQL_PORT'),
@@ -71,7 +71,7 @@ const env = {
     }),
   });
 
-  const result = schema.validate(env, { abortEarly: false });
+  const result = schema.validate(environment, { abortEarly: false });
 
   if (result.error) {
     console.error('Invalid environment variables:');
@@ -81,5 +81,8 @@ const env = {
     process.exit(1);
   }
 })();
+
+export type Env = NonNullable<typeof environment>;
+const env = environment as Env;
 
 export { env };
