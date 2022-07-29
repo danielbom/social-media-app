@@ -8,14 +8,16 @@ import { Reflector } from '@nestjs/core';
 import Joi from 'joi';
 
 import {
-  assertSchema,
-  injectPagination,
+  _assertSchema,
+  _getFilters,
+  _optionsSchemaBuilder,
+  _setFilters,
   paginationDisable,
   querySchema,
   transformers,
 } from './_internal';
-import { FilterOptions, FilterParams, Filters } from './types';
 import { decoratorKey } from './queryable.decorator';
+import { FilterOptions, FilterParams, Filters } from './types';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class QueryableGuard implements CanActivate {
@@ -24,7 +26,7 @@ export class QueryableGuard implements CanActivate {
 
   constructor(private readonly reflector: Reflector) {}
 
-  getOptions(context: ExecutionContext): Required<FilterOptions> {
+  getFilterOptions(context: ExecutionContext): Required<FilterOptions> {
     if (this.options) return this.options;
     const filterOptions = this.reflector.getAllAndOverride<FilterOptions>(
       decoratorKey,
@@ -41,7 +43,9 @@ export class QueryableGuard implements CanActivate {
     return this.options;
   }
 
-  getQuerySchema(options: Required<FilterOptions>): Joi.Schema<FilterParams> {
+  getFilterParamsSchema(
+    options: Required<FilterOptions>,
+  ): Joi.Schema<FilterParams> {
     if (options.pagination) {
       return querySchema;
     } else {
@@ -49,55 +53,33 @@ export class QueryableGuard implements CanActivate {
     }
   }
 
-  getOptionsSchema(
+  getFilterOptionsSchema(
     options: Required<FilterOptions>,
   ): Joi.Schema<FilterOptions> {
     if (this.schema) return this.schema;
 
-    const keys: Record<string, Joi.Schema> = {
-      select: Joi.array().items(Joi.string()),
-      query: Joi.object().pattern(Joi.string(), Joi.string()),
-    };
+    // 'query' are non strict
+    const builder = _optionsSchemaBuilder();
+    builder.normal.query();
 
     if (options.strict) {
-      // 'select' are non strict by default. They are strict only when fields are specified in options.
-      if (options.fields.length !== 0) {
-        keys.select = Joi.array().items(Joi.string().valid(...options.fields));
-      }
-
-      if (options.relations.length === 0) {
-        keys.relations = Joi.array().items(Joi.forbidden()).messages({
-          'array.excludes':
-            '"relations" was not configured to receive any value',
-        });
-      } else {
-        keys.relations = Joi.array().items(
-          Joi.string().valid(...options.relations),
-        );
-      }
-
-      if (options.order.length === 0) {
-        keys.order = Joi.object().pattern(Joi.any(), Joi.forbidden()).messages({
-          'any.unknown': '"order" was not configured to receive any value',
-        });
-      } else {
-        keys.order = Joi.object()
-          .pattern(Joi.string().valid(...options.order), Joi.any())
-          .options({ allowUnknown: false });
-      }
+      builder.strict.select(options.fields);
+      builder.strict.relations(options.relations);
+      builder.strict.order(options.order);
     } else {
-      keys.relations = Joi.array().items(Joi.string());
-      keys.order = Joi.object().pattern(Joi.string(), Joi.string());
+      builder.normal.select();
+      builder.normal.relations();
+      builder.normal.order();
     }
 
-    this.schema = Joi.object<FilterOptions>(keys).options({
+    this.schema = Joi.object<FilterOptions>(builder.get()).options({
       abortEarly: false,
       allowUnknown: true,
     });
     return this.schema;
   }
 
-  transform({
+  transformFilterParams({
     page,
     pageSize,
     order,
@@ -117,16 +99,22 @@ export class QueryableGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    if (!request.query) return true;
+    const query = request.query;
+    if (!query) return true;
 
-    const options = this.getOptions(context);
-    const querySchema = this.getQuerySchema(options);
-    const query = assertSchema(querySchema.validate(request.query));
-    const filters = this.transform(query);
-    const optionsSchema = this.getOptionsSchema(options);
-    assertSchema(optionsSchema.validate(filters));
+    const filterOptions = this.getFilterOptions(context);
+    const filterParamsSchema = this.getFilterParamsSchema(filterOptions);
+    const filterParams = _assertSchema(filterParamsSchema.validate(query));
 
-    injectPagination(request, filters);
+    const filters = this.transformFilterParams(filterParams);
+    const filterOptionsSchema = this.getFilterOptionsSchema(filterOptions);
+    _assertSchema(filterOptionsSchema.validate(filters));
+
+    _setFilters(request, filters);
     return true;
+  }
+
+  static getQueryParams(request: any) {
+    return _getFilters(request);
   }
 }

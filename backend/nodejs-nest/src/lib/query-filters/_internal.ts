@@ -4,12 +4,79 @@ import { BadRequestException } from '@nestjs/common';
 
 const requestKey = '@QF';
 
-export function injectPagination(request: any, filters: Filters) {
+export function _setFilters(request: any, filters: Filters) {
   (request as any)[requestKey] = filters;
 }
 
-export function getFiltersFromRequest(request: any) {
+export function _getFilters(request: any) {
   return (request as any)[requestKey];
+}
+
+export function _assertSchema<T>(validation: Joi.ValidationResult<T>): T {
+  if (!validation.error) return validation.value;
+  const reasons = validation.error.details
+    .map((detail) => detail.message)
+    .join(', ');
+  throw new BadRequestException(
+    `Request validation failed because: ${reasons}`,
+  );
+}
+
+export function _optionsSchemaBuilder(map: Record<string, Joi.Schema> = {}) {
+  return {
+    strict: {
+      select(fields: string[]) {
+        if (fields.length === 0) {
+          map.select = Joi.array().items(Joi.forbidden()).messages({
+            'array.excludes':
+              '"fields" was not was not configured to receive any value',
+          });
+        } else {
+          map.select = Joi.array().items(Joi.string().valid(...fields));
+        }
+      },
+      relations(relations: string[]) {
+        if (relations.length === 0) {
+          map.relations = Joi.array().items(Joi.forbidden()).messages({
+            'array.excludes':
+              '"relations" was not configured to receive any value',
+          });
+        } else {
+          map.relations = Joi.array().items(Joi.string().valid(...relations));
+        }
+      },
+      order(order: string[]) {
+        if (order.length === 0) {
+          map.order = Joi.object()
+            .pattern(Joi.any(), Joi.forbidden())
+            .messages({
+              'any.unknown': '"order" was not configured to receive any value',
+            });
+        } else {
+          map.order = Joi.object()
+            .pattern(Joi.string().valid(...order), Joi.any())
+            .options({ allowUnknown: false });
+        }
+      },
+    },
+    normal: {
+      relations() {
+        map.relations = Joi.array().items(Joi.string());
+      },
+      order() {
+        map.order = Joi.object().pattern(Joi.string(), Joi.string());
+      },
+      select() {
+        map.select = Joi.array().items(Joi.string());
+      },
+      query() {
+        map.query = Joi.object().pattern(Joi.string(), Joi.string());
+      },
+    },
+    get() {
+      return map;
+    },
+  };
 }
 
 export const transformers = {
@@ -74,13 +141,3 @@ export const paginationDisable = (() => {
     pageSize: disable('pageSize'),
   };
 })();
-
-export function assertSchema<T>(validation: Joi.ValidationResult<T>): T {
-  if (!validation.error) return validation.value;
-  const reasons = validation.error.details
-    .map((detail) => detail.message)
-    .join(', ');
-  throw new BadRequestException(
-    `Request validation failed because: ${reasons}`,
-  );
-}

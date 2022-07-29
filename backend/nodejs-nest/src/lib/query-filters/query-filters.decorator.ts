@@ -1,7 +1,9 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-import { getFiltersFromRequest } from './_internal';
+import { _getFilters } from './_internal';
 
-export const QueryFilters = createParamDecorator((_data: unknown, context: ExecutionContext) => {
-  return getFiltersFromRequest(context.switchToHttp().getRequest());
-});
+export const QueryFilters = createParamDecorator(
+  (_data: unknown, context: ExecutionContext) => {
+    return _getFilters(context.switchToHttp().getRequest());
+  },
+);

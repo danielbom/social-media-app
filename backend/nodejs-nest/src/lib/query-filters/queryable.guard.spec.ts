@@ -6,7 +6,7 @@ import { decoratorKey } from './queryable.decorator';
 
 import { QueryableGuard } from './queryable.guard';
 import { FilterOptions, FilterParams, Filters } from './types';
-import { getFiltersFromRequest, querySchema } from './_internal';
+import { _getFilters, querySchema } from './_internal';
 
 function createExecutionContext(
   filterOptions: FilterOptions,
@@ -27,7 +27,7 @@ function createExecutionContext(
   return executionContext;
 }
 
-describe('QueryableGuard', () => {
+describe(QueryableGuard, () => {
   describe('querySchema', () => {
     const testSchema = new TestSchema(querySchema);
 
@@ -75,11 +75,11 @@ describe('QueryableGuard', () => {
     });
   });
 
-  describe('QueryableGuard.getOptions', () => {
+  describe(QueryableGuard.prototype.getFilterOptions, () => {
     it('should return default values', () => {
       const guard = new QueryableGuard(new Reflector());
       const context = createExecutionContext({});
-      const options = guard.getOptions(context);
+      const options = guard.getFilterOptions(context);
       expect(options).toEqual({
         fields: [],
         order: [],
@@ -90,12 +90,12 @@ describe('QueryableGuard', () => {
     });
   });
 
-  describe('QueryableGuard.getOptionsSchema', () => {
+  describe(QueryableGuard.prototype.getFilterOptionsSchema, () => {
     function createTestSchema(query: FilterOptions) {
       const guard = new QueryableGuard(new Reflector());
       const context = createExecutionContext(query);
-      const options = guard.getOptions(context);
-      const schema = guard.getOptionsSchema(options);
+      const options = guard.getFilterOptions(context);
+      const schema = guard.getFilterOptionsSchema(options);
       return new TestSchema(schema);
     }
 
@@ -143,7 +143,7 @@ describe('QueryableGuard', () => {
     });
   });
 
-  describe('QueryableExecutor.transform', () => {
+  describe(QueryableGuard.prototype.transformFilterParams, () => {
     it('should works properly', () => {
       const guard = new QueryableGuard(new Reflector());
 
@@ -160,7 +160,7 @@ describe('QueryableGuard', () => {
       ) => {
         const input = { ...inputDefaults, ...filterParams };
         const output = { ...resultDefaults, ...inputDefaults, ...filters };
-        expect(guard.transform(input)).toStrictEqual(output);
+        expect(guard.transformFilterParams(input)).toStrictEqual(output);
       };
 
       mustMatch({}, {});
@@ -172,12 +172,12 @@ describe('QueryableGuard', () => {
     });
   });
 
-  describe('QueryableExecutor.canActivate', () => {
+  describe(QueryableGuard.prototype.canActivate, () => {
     it('should works properly', () => {
       const guard = new QueryableGuard(new Reflector());
       const context = createExecutionContext({}, {});
       expect(guard.canActivate(context)).toBeTruthy();
-      const filters = getFiltersFromRequest((context as any).request);
+      const filters = _getFilters((context as any).request);
       expect(filters).toStrictEqual({
         page: 0,
         pageSize: 20,
