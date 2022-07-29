@@ -4,11 +4,14 @@ import { TestSchema } from 'src/tests/test-schema';
 import { TestUnreachableException } from 'src/tests/test-unreachable.exception';
 import { decoratorKey } from './queryable.decorator';
 
-import { QueryableGuard, querySchema } from './queryable.guard';
+import { QueryableGuard } from './queryable.guard';
 import { FilterOptions, FilterParams, Filters } from './types';
-import { getFiltersFromRequest } from './_internal';
+import { getFiltersFromRequest, querySchema } from './_internal';
 
-function createExecutionContext(filterOptions: FilterOptions, query?: Partial<FilterParams>): ExecutionContext {
+function createExecutionContext(
+  filterOptions: FilterOptions,
+  query?: Partial<FilterParams>,
+): ExecutionContext {
   class Phantom {}
   const request = { query };
   const executionContext = {
@@ -32,7 +35,10 @@ describe('QueryableGuard', () => {
       testSchema.mustMatch({}, { page: 0, pageSize: 20 });
       testSchema.mustMatch({ page: '2' }, { page: 2, pageSize: 20 });
       testSchema.mustMatch({ pageSize: '100' }, { page: 0, pageSize: 100 });
-      testSchema.mustMatch({ page: '3', pageSize: '30' }, { page: 3, pageSize: 30 });
+      testSchema.mustMatch(
+        { page: '3', pageSize: '30' },
+        { page: 3, pageSize: 30 },
+      );
 
       testSchema.mustWorks({ order: 'field_1' });
       testSchema.mustWorks({ order: 'field_1;field_2' });
@@ -74,7 +80,13 @@ describe('QueryableGuard', () => {
       const guard = new QueryableGuard(new Reflector());
       const context = createExecutionContext({});
       const options = guard.getOptions(context);
-      expect(options).toEqual({ fields: [], order: [], relations: [], strict: true, pagination: true });
+      expect(options).toEqual({
+        fields: [],
+        order: [],
+        relations: [],
+        strict: true,
+        pagination: true,
+      });
     });
   });
 
@@ -136,8 +148,16 @@ describe('QueryableGuard', () => {
       const guard = new QueryableGuard(new Reflector());
 
       const inputDefaults = { page: 0, pageSize: 20 };
-      const resultDefaults = { order: {}, relations: [], select: [], queries: {} };
-      const mustMatch = (filterParams: Partial<FilterParams>, filters: Partial<Filters>) => {
+      const resultDefaults = {
+        order: {},
+        relations: [],
+        select: [],
+        queries: {},
+      };
+      const mustMatch = (
+        filterParams: Partial<FilterParams>,
+        filters: Partial<Filters>,
+      ) => {
         const input = { ...inputDefaults, ...filterParams };
         const output = { ...resultDefaults, ...inputDefaults, ...filters };
         expect(guard.transform(input)).toStrictEqual(output);
@@ -158,7 +178,14 @@ describe('QueryableGuard', () => {
       const context = createExecutionContext({}, {});
       expect(guard.canActivate(context)).toBeTruthy();
       const filters = getFiltersFromRequest((context as any).request);
-      expect(filters).toStrictEqual({ page: 0, pageSize: 20, order: {}, relations: [], select: [], queries: {} });
+      expect(filters).toStrictEqual({
+        page: 0,
+        pageSize: 20,
+        order: {},
+        relations: [],
+        select: [],
+        queries: {},
+      });
     });
 
     it('should return true if no options are provided', () => {
@@ -175,7 +202,10 @@ describe('QueryableGuard', () => {
 
     it('should throws if query was invalid', () => {
       const executor = new QueryableGuard(new Reflector());
-      const context = createExecutionContext({ strict: true }, { order: ':asc', relations: 'field;' });
+      const context = createExecutionContext(
+        { strict: true },
+        { order: ':asc', relations: 'field;' },
+      );
       try {
         executor.canActivate(context);
         throw new TestUnreachableException();
@@ -191,7 +221,10 @@ describe('QueryableGuard', () => {
 
     it('should throws if not configured relations receive values', () => {
       const executor = new QueryableGuard(new Reflector());
-      const context = createExecutionContext({ strict: true }, { relations: 'x' });
+      const context = createExecutionContext(
+        { strict: true },
+        { relations: 'x' },
+      );
       try {
         executor.canActivate(context);
         throw new TestUnreachableException();
@@ -228,19 +261,26 @@ describe('QueryableGuard', () => {
         throw new TestUnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
-        expect(error.message).toBe('Request validation failed because: "relations[0]" must be [valid_field]');
+        expect(error.message).toBe(
+          'Request validation failed because: "relations[0]" must be [valid_field]',
+        );
       }
     });
 
     it('should throws if order receive invalid values', () => {
       const executor = new QueryableGuard(new Reflector());
-      const context = createExecutionContext({ strict: true, order: ['field'] }, { order: 'invalid_field' });
+      const context = createExecutionContext(
+        { strict: true, order: ['field'] },
+        { order: 'invalid_field' },
+      );
       try {
         executor.canActivate(context);
         throw new TestUnreachableException();
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
-        expect(error.message).toBe('Request validation failed because: "order.invalid_field" is not allowed');
+        expect(error.message).toBe(
+          'Request validation failed because: "order.invalid_field" is not allowed',
+        );
       }
     });
   });
