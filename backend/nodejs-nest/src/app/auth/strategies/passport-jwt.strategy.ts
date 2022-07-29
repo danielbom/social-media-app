@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UsersService } from 'src/app/users/users.service';
@@ -10,14 +6,13 @@ import { env } from 'src/environment';
 import Joi from 'joi';
 
 import { TokenPayload } from '../types/token-payload';
+import { UnreachableException } from 'src/exceptions/unreachable.exception';
 
 const uuid = Joi.string().uuid();
 const isUuid = (value: string) => !uuid.validate(value).error;
 
 @Injectable()
 export class PasswordJwtStrategy extends PassportStrategy(Strategy) {
-  private logger = new Logger('JWT');
-
   constructor(private usersService: UsersService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -31,8 +26,7 @@ export class PasswordJwtStrategy extends PassportStrategy(Strategy) {
     if (isUuid(userId)) {
       return await this.usersService.findOne(userId);
     } else {
-      this.logger.error('TokenPayload.sub is an invalid uuid');
-      throw new InternalServerErrorException();
+      throw new UnreachableException('TokenPayload.sub is an invalid uuid');
     }
   }
 }

@@ -57,7 +57,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
               '    - you are trying access a new table that was not created yet;',
             ].join('\n'),
           );
-          return new InternalServerErrorException();
         }
 
         return new InternalServerErrorException();

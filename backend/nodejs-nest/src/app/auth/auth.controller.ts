@@ -1,4 +1,13 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
+import { AuthUser } from 'src/decorators/auth-user.decorator';
+import { Auth } from 'src/decorators/auth.decorator';
 import { User } from 'src/entities/user.entity';
 
 import { AuthService } from './auth.service';
@@ -20,5 +29,11 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   register(@Body() authRegisterDto: AuthRegisterDto): Promise<User> {
     return this.authService.register(authRegisterDto);
+  }
+
+  @Auth()
+  @Get('/me')
+  me(@AuthUser() user: User): User {
+    return user;
   }
 }

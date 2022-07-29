@@ -20,11 +20,11 @@ export class AuthService {
     username,
     password,
   }: AuthLoginDto): Promise<AuthLoginResponse> {
-    const user = await this.userService.getAuthenticated({
+    const auth = await this.userService.getAuthenticated({
       username,
       password,
     });
-    const payload: TokenPayload = { sub: user.id };
+    const payload: TokenPayload = { sub: auth.id };
     const token = await this.jwtService.signAsync(payload);
     return { token };
   }
