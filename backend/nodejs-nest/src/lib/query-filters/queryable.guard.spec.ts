@@ -75,21 +75,6 @@ describe(QueryableGuard, () => {
     });
   });
 
-  describe(QueryableGuard.prototype.getFilterOptions, () => {
-    it('should return default values', () => {
-      const guard = new QueryableGuard(new Reflector());
-      const context = createExecutionContext({});
-      const options = guard.getFilterOptions(context);
-      expect(options).toEqual({
-        fields: [],
-        order: [],
-        relations: [],
-        strict: true,
-        pagination: true,
-      });
-    });
-  });
-
   describe(QueryableGuard.prototype.getFilterOptionsSchema, () => {
     function createTestSchema(query: FilterOptions) {
       const guard = new QueryableGuard(new Reflector());

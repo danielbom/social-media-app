@@ -1,4 +1,4 @@
-import { FilterParams, Filters } from './types';
+import { FilterOptions, FilterParams, Filters } from './types';
 import Joi from 'joi';
 import { BadRequestException } from '@nestjs/common';
 
@@ -22,17 +22,19 @@ export function _assertSchema<T>(validation: Joi.ValidationResult<T>): T {
   );
 }
 
-export function _optionsSchemaBuilder(map: Record<string, Joi.Schema> = {}) {
+export function _filterOptionsSchemaBuilder(
+  map: Record<string, Joi.Schema> = {},
+) {
   return {
     strict: {
-      select(fields: string[]) {
-        if (fields.length === 0) {
+      select(select: string[]) {
+        if (select.length === 0) {
           map.select = Joi.array().items(Joi.forbidden()).messages({
             'array.excludes':
-              '"fields" was not was not configured to receive any value',
+              '"select" was not was not configured to receive any value',
           });
         } else {
-          map.select = Joi.array().items(Joi.string().valid(...fields));
+          map.select = Joi.array().items(Joi.string().valid(...select));
         }
       },
       relations(relations: string[]) {
@@ -58,6 +60,19 @@ export function _optionsSchemaBuilder(map: Record<string, Joi.Schema> = {}) {
             .options({ allowUnknown: false });
         }
       },
+      query(query: string[]) {
+        if (query.length === 0) {
+          map.query = Joi.object()
+            .pattern(Joi.any(), Joi.forbidden())
+            .messages({
+              'any.unknown': '"query" was not configured to receive any value',
+            });
+        } else {
+          map.query = Joi.object()
+            .pattern(Joi.string().valid(...query), Joi.any())
+            .options({ allowUnknown: false });
+        }
+      },
     },
     normal: {
       relations() {
@@ -73,8 +88,11 @@ export function _optionsSchemaBuilder(map: Record<string, Joi.Schema> = {}) {
         map.query = Joi.object().pattern(Joi.string(), Joi.string());
       },
     },
-    get() {
-      return map;
+    build() {
+      return Joi.object<FilterOptions>(map).options({
+        abortEarly: false,
+        allowUnknown: true,
+      });
     },
   };
 }

@@ -8,10 +8,15 @@ export type FilterParams = {
 
 export type FilterOptions = {
   /**
+   * Used to validate "queryable" keys fields.
+   * @example ['name']
+   */
+  query?: string[];
+  /**
    * Used to validate "selectable" fields.
    * @example ['id', 'name']
    */
-  fields?: string[];
+  select?: string[];
   /**
    * Used to validate "orderable" fields.
    * @example ['createdAt']
@@ -41,7 +46,7 @@ export type Filters<E = any> = {
   order: Record<keyof E | string, 'ASC' | 'DESC'>;
   relations: Array<keyof E & string>;
   select: string[];
-  queries: Record<string, string | undefined>;
+  queries: Record<keyof E & string, string>;
 };
 
 export type Page<T> = {

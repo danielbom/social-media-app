@@ -9,8 +9,8 @@ import Joi from 'joi';
 
 import {
   _assertSchema,
+  _filterOptionsSchemaBuilder,
   _getFilters,
-  _optionsSchemaBuilder,
   _setFilters,
   paginationDisable,
   querySchema,
@@ -33,7 +33,8 @@ export class QueryableGuard implements CanActivate {
       [context.getHandler(), context.getClass()],
     );
     this.options = {
-      fields: [],
+      query: [],
+      select: [],
       order: [],
       relations: [],
       strict: true,
@@ -58,24 +59,21 @@ export class QueryableGuard implements CanActivate {
   ): Joi.Schema<FilterOptions> {
     if (this.schema) return this.schema;
 
-    // 'query' are non strict
-    const builder = _optionsSchemaBuilder();
-    builder.normal.query();
+    const builder = _filterOptionsSchemaBuilder();
 
     if (options.strict) {
-      builder.strict.select(options.fields);
+      builder.strict.select(options.select);
       builder.strict.relations(options.relations);
       builder.strict.order(options.order);
+      builder.strict.query(options.query);
     } else {
       builder.normal.select();
       builder.normal.relations();
       builder.normal.order();
+      builder.normal.order();
     }
 
-    this.schema = Joi.object<FilterOptions>(builder.get()).options({
-      abortEarly: false,
-      allowUnknown: true,
-    });
+    this.schema = builder.build();
     return this.schema;
   }
 
