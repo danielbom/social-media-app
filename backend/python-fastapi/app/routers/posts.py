@@ -1,8 +1,7 @@
 import uuid
 from datetime import datetime
-from http.client import HTTPException
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from app import dto, models
 from app.database import Session, get_db
@@ -15,6 +14,8 @@ def create_post(post: dto.CreatePost, db: Session = Depends(get_db)):
     post = models.Post(
         id=str(uuid.uuid4()),
         content=post.content,
+        likes=0,
+        authorId="",
         createdAt=datetime.now(),
         updatedAt=datetime.now(),
     )
@@ -41,9 +42,7 @@ def get_post(post_id: str, db: Session = Depends(get_db)):
 def update_post(
     post_id: str, updates: dto.UpdatePost, db: Session = Depends(get_db)
 ):
-    post = db.query(models.Post).filter(models.Post.id == post_id).first()
-    if not post:
-        raise HTTPException(status_code=404, detail='Post not found')
+    post = get_post(post_id, db)
     post.content = updates.content
     post.updatedAt = datetime.now()
     db.commit()
@@ -53,9 +52,7 @@ def update_post(
 
 @router.delete('/{post_id}')
 def delete_post(post_id: str, db: Session = Depends(get_db)):
-    post = db.query(models.Post).filter(models.Post.id == post_id).first()
-    if not post:
-        raise HTTPException(status_code=404, detail='Post not found')
+    post = get_post(post_id, db)
     db.delete(post)
     db.commit()
     return post

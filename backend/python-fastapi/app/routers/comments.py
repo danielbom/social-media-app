@@ -1,8 +1,7 @@
 import uuid
 from datetime import datetime
-from http.client import HTTPException
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 from app import dto, models
 from app.database import Session, get_db
@@ -15,6 +14,10 @@ def create_comment(body: dto.CreateComment, db: Session = Depends(get_db)):
     comment = models.Comment(
         id=str(uuid.uuid4()),
         content=body.content,
+        postParentId=body.postId,
+        commentParentId=None,
+        likes=0,
+        authorId="",
         createdAt=datetime.now(),
         updatedAt=datetime.now(),
     )
@@ -24,14 +27,17 @@ def create_comment(body: dto.CreateComment, db: Session = Depends(get_db)):
     return comment
 
 
-@router.post('/asnwer/')
+@router.post('/answer/')
 def create_comment_answer(
     body: dto.CreateCommentAnswer, db: Session = Depends(get_db)
 ):
     comment_awnser = models.Comment(
         id=str(uuid.uuid4()),
         content=body.content,
+        postParentId=None,
         commentParentId=body.commentId,
+        likes=0,
+        authorId="",
         createdAt=datetime.now(),
         updatedAt=datetime.now(),
     )
@@ -62,13 +68,7 @@ def get_comment(comment_id: str, db: Session = Depends(get_db)):
 def update_comment(
     comment_id: str, updates: dto.UpdateComment, db: Session = Depends(get_db)
 ):
-    comment = (
-        db.query(models.Comment)
-        .filter(models.Comment.id == comment_id)
-        .first()
-    )
-    if not comment:
-        raise HTTPException(status_code=404, detail='Comment not found')
+    comment = get_comment(comment_id, db)
     comment.content = updates.content
     comment.updatedAt = datetime.now()
     db.commit()
@@ -78,13 +78,7 @@ def update_comment(
 
 @router.delete('/{comment_id}')
 def delete_comment(comment_id: str, db: Session = Depends(get_db)):
-    comment = (
-        db.query(models.Comment)
-        .filter(models.Comment.id == comment_id)
-        .first()
-    )
-    if not comment:
-        raise HTTPException(status_code=404, detail='Comment not found')
+    comment = get_comment(comment_id, db)
     db.delete(comment)
     db.commit()
     return comment
