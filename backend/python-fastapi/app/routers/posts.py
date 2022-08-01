@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 
-from app import models
+from app import dto
 
 router = APIRouter(prefix='/posts', tags=['Posts'])
 
 
 @router.post('/')
-def create_post(post: models.CreatePost):
+def create_post(post: dto.CreatePost):
     return {'content': post.content}
 
 
@@ -21,7 +21,7 @@ def get_post(post_id: str):
 
 
 @router.patch('/{post_id}')
-def update_post(post_id: str, updates: models.UpdatePost):
+def update_post(post_id: str, updates: dto.UpdatePost):
     return {'post': post_id, 'body': updates}
 
 

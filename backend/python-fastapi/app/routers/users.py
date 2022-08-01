@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 
-from app import models
+from app import dto
 
 router = APIRouter(prefix='/users', tags=['Users'])
 
 
 @router.post('/')
-def create_user(user: models.CreateUser):
+def create_user(user: dto.CreateUser):
     return {
         'username': user.username,
         'password': user.password,
@@ -25,7 +25,7 @@ def get_user(user_id: str):
 
 
 @router.patch('/{user_id}')
-def update_user(user_id: str, updates: models.UpdateUser):
+def update_user(user_id: str, updates: dto.UpdateUser):
     return {'user': user_id, 'body': updates}
 
 

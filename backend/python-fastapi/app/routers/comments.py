@@ -1,17 +1,17 @@
 from fastapi import APIRouter
 
-from app import models
+from app import dto
 
 router = APIRouter(prefix='/comments', tags=['Comments'])
 
 
 @router.post('/')
-def create_comment(comment: models.CreateComment):
+def create_comment(comment: dto.CreateComment):
     return {'content': comment.content, 'post_id': comment.postId}
 
 
 @router.post('/asnwer/')
-def create_comment_answer(comment: models.CreateCommentAnswer):
+def create_comment_answer(comment: dto.CreateCommentAnswer):
     return {'content': comment.content, 'comment_id': comment.commentId}
 
 
@@ -26,7 +26,7 @@ def get_comment(comment_id: str):
 
 
 @router.patch('/{comment_id}')
-def update_comment(comment_id: str, updates: models.UpdateComment):
+def update_comment(comment_id: str, updates: dto.UpdateComment):
     return {'comment': comment_id, 'body': updates}
 
 
