@@ -1,17 +1,17 @@
 from fastapi import APIRouter
 
-from app import dto
+from app import schemas
 
 router = APIRouter(prefix='/auth', tags=['Auth'])
 
 
 @router.post('/login')
-def login(user: dto.AuthLogin):
+def login(user: schemas.AuthLogin):
     return {'username': user.username, 'password': user.password}
 
 
 @router.post('/register')
-def register(user: dto.AuthRegister):
+def register(user: schemas.AuthRegister):
     return {'username': user.username, 'password': user.password}
 
 

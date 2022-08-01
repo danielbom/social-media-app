@@ -3,14 +3,14 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from app import dto, models
+from app import models, schemas
 from app.database import Session, get_db
 
 router = APIRouter(prefix='/users', tags=['Users'])
 
 
 @router.post('/')
-def create_user(body: dto.CreateUser, db: Session = Depends(get_db)):
+def create_user(body: schemas.CreateUser, db: Session = Depends(get_db)):
     new_user = models.User(
         id=str(uuid.uuid4()),
         username=body.username,
@@ -40,7 +40,7 @@ def get_user(user_id: str, db: Session = Depends(get_db)):
 
 @router.patch('/{user_id}')
 def update_user(
-    user_id: str, updates: dto.UpdateUser, db: Session = Depends(get_db)
+    user_id: str, updates: schemas.UpdateUser, db: Session = Depends(get_db)
 ):
     user = get_user(user_id, db)
     user.username = updates.username

@@ -11,6 +11,9 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+# https://python.plainenglish.io/3-ways-to-handle-errors-in-fastapi-that-you-need-to-know-e1199e833039
+# TODO: Add error handling to all endpoints
+
 
 @app.get('/', tags=['Health'])
 def read_root():

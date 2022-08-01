@@ -3,21 +3,21 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from app import dto, models
+from app import models, schemas
 from app.database import Session, get_db
 
 router = APIRouter(prefix='/comments', tags=['Comments'])
 
 
 @router.post('/')
-def create_comment(body: dto.CreateComment, db: Session = Depends(get_db)):
+def create_comment(body: schemas.CreateComment, db: Session = Depends(get_db)):
     comment = models.Comment(
         id=str(uuid.uuid4()),
         content=body.content,
         postParentId=body.postId,
         commentParentId=None,
         likes=0,
-        authorId="",
+        authorId='',
         createdAt=datetime.now(),
         updatedAt=datetime.now(),
     )
@@ -29,7 +29,7 @@ def create_comment(body: dto.CreateComment, db: Session = Depends(get_db)):
 
 @router.post('/answer/')
 def create_comment_answer(
-    body: dto.CreateCommentAnswer, db: Session = Depends(get_db)
+    body: schemas.CreateCommentAnswer, db: Session = Depends(get_db)
 ):
     comment_awnser = models.Comment(
         id=str(uuid.uuid4()),
@@ -37,7 +37,7 @@ def create_comment_answer(
         postParentId=None,
         commentParentId=body.commentId,
         likes=0,
-        authorId="",
+        authorId='',
         createdAt=datetime.now(),
         updatedAt=datetime.now(),
     )
@@ -66,7 +66,9 @@ def get_comment(comment_id: str, db: Session = Depends(get_db)):
 
 @router.patch('/{comment_id}')
 def update_comment(
-    comment_id: str, updates: dto.UpdateComment, db: Session = Depends(get_db)
+    comment_id: str,
+    updates: schemas.UpdateComment,
+    db: Session = Depends(get_db),
 ):
     comment = get_comment(comment_id, db)
     comment.content = updates.content

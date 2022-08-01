@@ -3,19 +3,19 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from app import dto, models
+from app import models, schemas
 from app.database import Session, get_db
 
 router = APIRouter(prefix='/posts', tags=['Posts'])
 
 
 @router.post('/')
-def create_post(post: dto.CreatePost, db: Session = Depends(get_db)):
+def create_post(post: schemas.CreatePost, db: Session = Depends(get_db)):
     post = models.Post(
         id=str(uuid.uuid4()),
         content=post.content,
         likes=0,
-        authorId="",
+        authorId='',
         createdAt=datetime.now(),
         updatedAt=datetime.now(),
     )
@@ -40,7 +40,7 @@ def get_post(post_id: str, db: Session = Depends(get_db)):
 
 @router.patch('/{post_id}')
 def update_post(
-    post_id: str, updates: dto.UpdatePost, db: Session = Depends(get_db)
+    post_id: str, updates: schemas.UpdatePost, db: Session = Depends(get_db)
 ):
     post = get_post(post_id, db)
     post.content = updates.content
