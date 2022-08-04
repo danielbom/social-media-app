@@ -4,20 +4,26 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
 
 from app import models, schemas
+from app.library.auth import ensure_user_data
 from app.database import Session, get_db
+from app.services import jwt
 
 router = APIRouter(prefix='/comments', tags=['Comments'])
 
 
 @router.post('/')
-def create_comment(body: schemas.CreateComment, db: Session = Depends(get_db)):
+def create_comment(
+    body: schemas.CreateComment,
+    db: Session = Depends(get_db),
+    token_data: schemas.TokenData = Depends(jwt.decode_token),
+):
     comment = models.Comment(
         id=str(uuid.uuid4()),
         content=body.content,
         postParentId=body.postId,
         commentParentId=None,
         likes=0,
-        authorId='',
+        authorId=token_data.user_id,
         createdAt=datetime.now(),
         updatedAt=datetime.now(),
     )
@@ -29,7 +35,9 @@ def create_comment(body: schemas.CreateComment, db: Session = Depends(get_db)):
 
 @router.post('/answer/')
 def create_comment_answer(
-    body: schemas.CreateCommentAnswer, db: Session = Depends(get_db)
+    body: schemas.CreateCommentAnswer,
+    db: Session = Depends(get_db),
+    token_data: schemas.TokenData = Depends(jwt.decode_token),
 ):
     comment_awnser = models.Comment(
         id=str(uuid.uuid4()),
@@ -37,7 +45,7 @@ def create_comment_answer(
         postParentId=None,
         commentParentId=body.commentId,
         likes=0,
-        authorId='',
+        authorId=token_data.user_id,
         createdAt=datetime.now(),
         updatedAt=datetime.now(),
     )
@@ -69,8 +77,10 @@ def update_comment(
     comment_id: str,
     updates: schemas.UpdateComment,
     db: Session = Depends(get_db),
+    token_data: schemas.TokenData = Depends(jwt.decode_token),
 ):
     comment = get_comment(comment_id, db)
+    ensure_user_data(token_data, comment.authorId)
     comment.content = updates.content
     comment.updatedAt = datetime.now()
     db.commit()
@@ -79,8 +89,13 @@ def update_comment(
 
 
 @router.delete('/{comment_id}')
-def delete_comment(comment_id: str, db: Session = Depends(get_db)):
+def delete_comment(
+    comment_id: str,
+    db: Session = Depends(get_db),
+    token_data: schemas.TokenData = Depends(jwt.decode_token),
+):
     comment = get_comment(comment_id, db)
+    ensure_user_data(token_data, comment.authorId)
     db.delete(comment)
     db.commit()
     return comment

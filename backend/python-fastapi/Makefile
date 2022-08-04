@@ -13,7 +13,7 @@ lint:
 	isort --diff -c .
 	blue --check --diff --color .
 	flake8 .
-	mypy .
+	mypy . --ignore-missing-imports
 
 test:
 	bandit -r ai-analysis/
