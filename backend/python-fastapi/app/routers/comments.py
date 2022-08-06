@@ -20,12 +20,12 @@ def create_comment(
     comment = models.Comment(
         id=str(uuid.uuid4()),
         content=body.content,
-        postParentId=body.postId,
-        commentParentId=None,
+        post_parent_id=body.post_id,
+        comment_parent_id=None,
         likes=0,
-        authorId=token_data.user_id,
-        createdAt=datetime.now(),
-        updatedAt=datetime.now(),
+        author_id=token_data.user_id,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
     )
     db.add(comment)
     db.commit()
@@ -42,12 +42,12 @@ def create_comment_answer(
     comment_awnser = models.Comment(
         id=str(uuid.uuid4()),
         content=body.content,
-        postParentId=None,
-        commentParentId=body.commentId,
+        post_parent_id=None,
+        comment_parent_id=body.comment_id,
         likes=0,
-        authorId=token_data.user_id,
-        createdAt=datetime.now(),
-        updatedAt=datetime.now(),
+        author_id=token_data.user_id,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
     )
     db.add(comment_awnser)
     db.commit()
@@ -80,7 +80,7 @@ def update_comment(
     token_data: schemas.TokenData = Depends(jwt.decode_token),
 ):
     comment = get_comment(comment_id, db)
-    ensure_user_data(token_data, comment.authorId)
+    ensure_user_data(token_data, comment.author_id)
     comment.content = updates.content
     comment.updatedAt = datetime.now()
     db.commit()
@@ -95,7 +95,7 @@ def delete_comment(
     token_data: schemas.TokenData = Depends(jwt.decode_token),
 ):
     comment = get_comment(comment_id, db)
-    ensure_user_data(token_data, comment.authorId)
+    ensure_user_data(token_data, comment.author_id)
     db.delete(comment)
     db.commit()
     return comment

@@ -26,12 +26,12 @@ class AuthRegister(BaseModel, extra=Extra.forbid):
 
 class CreateCommentAnswer(BaseModel, extra=Extra.forbid):
     content: str
-    commentId: str
+    comment_id: str
 
 
 class CreateComment(BaseModel, extra=Extra.forbid):
     content: str
-    postId: str
+    post_id: str
 
 
 class UpdateComment(BaseModel, extra=Extra.forbid):
@@ -56,8 +56,8 @@ class User(BaseModel):
     id: str
     username: str
     role: str
-    createdAt: datetime
-    updatedAt: datetime
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True

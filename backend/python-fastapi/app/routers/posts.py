@@ -22,9 +22,9 @@ def create_post(
         id=str(uuid.uuid4()),
         content=post.content,
         likes=0,
-        authorId=token_data.user_id,
-        createdAt=datetime.now(),
-        updatedAt=datetime.now(),
+        author_id=token_data.user_id,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
     )
     db.add(post)
     db.commit()
@@ -60,9 +60,9 @@ def update_post(
     token_data: schemas.TokenData = Depends(jwt.decode_token),
 ):
     post = get_post(post_id, db)
-    ensure_user_data(token_data, post.authorId)
+    ensure_user_data(token_data, post.author_id)
     post.content = updates.content
-    post.updatedAt = datetime.now()
+    post.updated_at = datetime.now()
     db.commit()
     db.refresh(post)
     return post
@@ -75,7 +75,7 @@ def delete_post(
     token_data: schemas.TokenData = Depends(jwt.decode_token),
 ):
     post = get_post(post_id, db)
-    ensure_user_data(token_data, post.authorId)
+    ensure_user_data(token_data, post.author_id)
     db.delete(post)
     db.commit()
     return post

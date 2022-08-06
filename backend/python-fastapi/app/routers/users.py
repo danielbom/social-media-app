@@ -28,8 +28,8 @@ def create_user(
         username=body.username,
         password=body.password,
         role=body.role,
-        createdAt=datetime.now(),
-        updatedAt=datetime.now(),
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
     )
     db.add(new_user)
     db.commit()
@@ -71,7 +71,7 @@ def update_user(
     user.username = updates.username
     user.password = updates.password
     user.role = updates.role
-    user.updatedAt = datetime.now()
+    user.updated_at = datetime.now()
     db.commit()
     db.refresh(user)
     return user
