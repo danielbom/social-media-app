@@ -7,8 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app import models, schemas
 from app.database import Session, get_db
 from app.guards.role import role_guard
-from app.library.auth import ensure_role
-from app.services import crypt, jwt
+from app.services import crypt
 
 router = APIRouter(prefix='/users', tags=['Users'])
 

@@ -3,10 +3,8 @@ import re
 from fastapi import FastAPI
 from starlette.routing import Route
 
-from .database import Base, engine
 from .routers import auth, comments, posts, users
 
-Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
