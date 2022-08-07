@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from app import models, schemas
 from app.database import Session, get_db
@@ -75,11 +75,11 @@ def update_user(
 
 @router.delete(
     '/{user_id}',
-    response_model=schemas.User,
     dependencies=[Depends(role_guard(['admin']))],
+    status_code=status.HTTP_204_NO_CONTENT,
+    response_class=Response,
 )
 def delete_user(user_id: str, db: Session = Depends(get_db)):
     user = get_user(user_id, db)
     db.delete(user)
     db.commit()
-    return user

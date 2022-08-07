@@ -1,17 +1,20 @@
 import uuid
 from datetime import datetime
+from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from app import models, schemas
-from app.library.auth import ensure_user_data
 from app.database import Session, get_db
+from app.library.auth import ensure_user_data
 from app.services import jwt
 
 router = APIRouter(prefix='/comments', tags=['Comments'])
 
 
-@router.post('/')
+@router.post(
+    '/', response_model=schemas.Comment, status_code=status.HTTP_201_CREATED
+)
 def create_comment(
     body: schemas.CreateComment,
     db: Session = Depends(get_db),
@@ -33,12 +36,18 @@ def create_comment(
     return comment
 
 
-@router.post('/answer/')
+@router.post(
+    '/answer/',
+    response_model=schemas.Comment,
+    status_code=status.HTTP_201_CREATED,
+)
 def create_comment_answer(
     body: schemas.CreateCommentAnswer,
     db: Session = Depends(get_db),
     token_data: schemas.TokenData = Depends(jwt.decode_token),
 ):
+    get_comment(body.comment_id, db)
+
     comment_awnser = models.Comment(
         id=str(uuid.uuid4()),
         content=body.content,
@@ -55,12 +64,12 @@ def create_comment_answer(
     return comment_awnser
 
 
-@router.get('/')
+@router.get('/', response_model=List[schemas.Comment])
 def get_comments(db: Session = Depends(get_db)):
     return db.query(models.Comment).all()
 
 
-@router.get('/{comment_id}')
+@router.get('/{comment_id}', response_model=schemas.Comment)
 def get_comment(comment_id: str, db: Session = Depends(get_db)):
     comment = (
         db.query(models.Comment)
@@ -72,7 +81,7 @@ def get_comment(comment_id: str, db: Session = Depends(get_db)):
     return comment
 
 
-@router.patch('/{comment_id}')
+@router.patch('/{comment_id}', response_model=schemas.Comment)
 def update_comment(
     comment_id: str,
     updates: schemas.UpdateComment,
@@ -88,7 +97,11 @@ def update_comment(
     return comment
 
 
-@router.delete('/{comment_id}')
+@router.delete(
+    '/{comment_id}',
+    status_code=status.HTTP_204_NO_CONTENT,
+    response_class=Response,
+)
 def delete_comment(
     comment_id: str,
     db: Session = Depends(get_db),
@@ -96,6 +109,5 @@ def delete_comment(
 ):
     comment = get_comment(comment_id, db)
     ensure_user_data(token_data, comment.author_id)
-    db.delete(comment)
+    db.query(models.Comment).where(models.Comment.id == comment_id).delete()
     db.commit()
-    return comment

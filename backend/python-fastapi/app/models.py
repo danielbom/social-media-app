@@ -1,4 +1,5 @@
 from sqlalchemy import TIMESTAMP, Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
 from .database import Base
 
@@ -18,13 +19,17 @@ class Post(Base):
     updated_at = Column(TIMESTAMP(timezone=True), nullable=False)
     deleted_at = Column(TIMESTAMP(timezone=True), nullable=True)
 
+    author = relationship('User')
+
 
 class Comment(Base):
     __tablename__ = 'comments'
     id = Column(String, primary_key=True)
     content = Column(String, nullable=False)
     likes = Column(Integer, nullable=False)
-    author_id = Column(String, nullable=False)
+    author_id = Column(
+        String, ForeignKey('users.id', ondelete='CASCADE'), nullable=False
+    )
     comment_parent_id = Column(
         String, ForeignKey('comments.id', ondelete='CASCADE'), nullable=True
     )
@@ -34,6 +39,8 @@ class Comment(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False)
     updated_at = Column(TIMESTAMP(timezone=True), nullable=False)
     deleted_at = Column(TIMESTAMP(timezone=True), nullable=True)
+
+    author = relationship('User')
 
 
 class User(Base):

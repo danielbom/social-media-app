@@ -8,6 +8,47 @@ from pydantic import BaseModel, Extra
 # https://pydantic-docs.helpmanual.io/usage/validators/
 # TODO: Add validators
 
+# Entities
+
+
+class User(BaseModel):
+    id: str
+    username: str
+    role: str
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        orm_mode = True
+        extra = Extra.forbid
+
+
+class Comment(BaseModel):
+    id: str
+    content: str
+    likes: int
+    comment_parent_id: str | None
+    post_parent_id: str | None
+    created_at: datetime
+    updated_at: datetime
+    author: User
+
+    class Config:
+        orm_mode = True
+
+
+class Post(BaseModel):
+    id: str
+    content: str
+    likes: int
+    created_at: datetime
+    updated_at: datetime
+    author: User
+
+    class Config:
+        orm_mode = True
+
+
 # Auth
 
 
@@ -50,18 +91,6 @@ class UpdatePost(BaseModel, extra=Extra.forbid):
 
 
 # Users
-
-
-class User(BaseModel):
-    id: str
-    username: str
-    role: str
-    created_at: datetime
-    updated_at: datetime
-
-    class Config:
-        orm_mode = True
-        extra = Extra.forbid
 
 
 class TokenData(BaseModel):

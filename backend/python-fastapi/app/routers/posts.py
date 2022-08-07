@@ -1,8 +1,8 @@
-from re import I
 import uuid
 from datetime import datetime
+from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from app import models, schemas
 from app.database import Session, get_db
@@ -12,7 +12,7 @@ from app.services import jwt
 router = APIRouter(prefix='/posts', tags=['Posts'])
 
 
-@router.post('/')
+@router.post('/', response_model=schemas.Post)
 def create_post(
     post: schemas.CreatePost,
     db: Session = Depends(get_db),
@@ -32,7 +32,7 @@ def create_post(
     return post
 
 
-@router.get('/')
+@router.get('/', response_model=List[schemas.Post])
 def get_posts(
     db: Session = Depends(get_db),
     _: schemas.TokenData = Depends(jwt.decode_token),
@@ -40,7 +40,7 @@ def get_posts(
     return db.query(models.Post).all()
 
 
-@router.get('/{post_id}')
+@router.get('/{post_id}', response_model=schemas.Post)
 def get_post(
     post_id: str,
     db: Session = Depends(get_db),
@@ -52,7 +52,7 @@ def get_post(
     return post
 
 
-@router.patch('/{post_id}')
+@router.patch('/{post_id}', response_model=schemas.Post)
 def update_post(
     post_id: str,
     updates: schemas.UpdatePost,
@@ -68,7 +68,11 @@ def update_post(
     return post
 
 
-@router.delete('/{post_id}')
+@router.delete(
+    '/{post_id}',
+    status_code=status.HTTP_204_NO_CONTENT,
+    response_class=Response,
+)
 def delete_post(
     post_id: str,
     db: Session = Depends(get_db),
@@ -78,4 +82,3 @@ def delete_post(
     ensure_user_data(token_data, post.author_id)
     db.delete(post)
     db.commit()
-    return post
