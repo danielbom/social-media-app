@@ -5,6 +5,7 @@ from app.library.ms import parse_ms
 
 # https://pydantic-docs.helpmanual.io/usage/settings/
 
+
 class Settings(BaseSettings):
     python_env: str = 'development'
 

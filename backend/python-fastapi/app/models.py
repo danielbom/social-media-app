@@ -11,7 +11,6 @@ class Post(Base):
     __tablename__ = 'posts'
     id = Column(String, primary_key=True)
     content = Column(String, nullable=False)
-    likes = Column(Integer, nullable=False)
     author_id = Column(
         String, ForeignKey('users.id', ondelete='CASCADE'), nullable=False
     )
@@ -52,3 +51,16 @@ class User(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False)
     updated_at = Column(TIMESTAMP(timezone=True), nullable=False)
     deleted_at = Column(TIMESTAMP(timezone=True), nullable=True)
+
+
+class PostLike(Base):
+    __tablename__ = 'post_likes'
+    post_id = Column(
+        String, ForeignKey('posts.id', ondelete='CASCADE'), primary_key=True
+    )
+    user_id = Column(
+        String, ForeignKey('users.id', ondelete='CASCADE'), primary_key=True
+    )
+
+    post = relationship('Post')
+    user = relationship('User')

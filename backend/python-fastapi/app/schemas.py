@@ -49,6 +49,15 @@ class Post(BaseModel):
         orm_mode = True
 
 
+class PostLike(BaseModel):
+    post: Post
+    likes: int
+
+    def __init__(self, **kwargs):
+        kwargs['post'] = kwargs['Post']
+        super().__init__(**kwargs)
+
+
 # Auth
 
 
