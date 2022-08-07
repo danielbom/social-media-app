@@ -5,7 +5,6 @@ from starlette.routing import Route
 
 from .routers import auth, comments, posts, users
 
-
 app = FastAPI()
 
 # https://python.plainenglish.io/3-ways-to-handle-errors-in-fastapi-that-you-need-to-know-e1199e833039
