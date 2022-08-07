@@ -39,8 +39,12 @@ def create_user(body: schemas.CreateUser, db: Session = Depends(get_db)):
     response_model=List[schemas.User],
     dependencies=[Depends(role_guard(['admin']))],
 )
-def get_users(db: Session = Depends(get_db)):
-    return db.query(models.User).all()
+def get_users(
+    db: Session = Depends(get_db), page: int = 1, page_size: int = 10
+):
+    offset = (page - 1) * page_size
+    query = db.query(models.User).offset(offset).limit(page_size)
+    return query.all()
 
 
 @router.get(

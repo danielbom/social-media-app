@@ -36,8 +36,12 @@ def create_post(
 def get_posts(
     db: Session = Depends(get_db),
     _: schemas.TokenData = Depends(jwt.decode_token),
+    page: int = 1,
+    page_size: int = 10,
 ):
-    return db.query(models.Post).all()
+    offset = (page - 1) * page_size
+    query = db.query(models.Post).offset(offset).limit(page_size)
+    return query.all()
 
 
 @router.get('/{post_id}', response_model=schemas.Post)

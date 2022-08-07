@@ -65,8 +65,12 @@ def create_comment_answer(
 
 
 @router.get('/', response_model=List[schemas.Comment])
-def get_comments(db: Session = Depends(get_db)):
-    return db.query(models.Comment).all()
+def get_comments(
+    db: Session = Depends(get_db), page: int = 1, page_size: int = 10
+):
+    offset = (page - 1) * page_size
+    query = db.query(models.Comment).offset(offset).limit(page_size)
+    return query.all()
 
 
 @router.get('/{comment_id}', response_model=schemas.Comment)
