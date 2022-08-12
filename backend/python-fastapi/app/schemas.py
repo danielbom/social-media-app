@@ -40,7 +40,6 @@ class Comment(BaseModel):
 class Post(BaseModel):
     id: str
     content: str
-    likes: int
     created_at: datetime
     updated_at: datetime
     author: User

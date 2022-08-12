@@ -28,7 +28,6 @@ def create_post(
     post = models.Post(
         id=str(uuid.uuid4()),
         content=post.content,
-        likes=0,
         author_id=token_data.user_id,
         created_at=datetime.now(),
         updated_at=datetime.now(),
