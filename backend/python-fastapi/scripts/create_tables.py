@@ -1,7 +1,7 @@
 import _prepare_script
 
-import app.models as models
-from app.database import Base, engine
+from app.database import engine
+from app.models import Base
 
 print('[INFO] Creating tables using engine: {}'.format(engine))
 

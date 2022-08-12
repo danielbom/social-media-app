@@ -1,10 +1,10 @@
 import uuid
 from datetime import datetime
 from typing import List
-from sqlalchemy import func
-from sqlalchemy.sql import and_
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
+from sqlalchemy import func
+from sqlalchemy.sql import and_
 
 from app import models, schemas
 from app.database import Session, get_db
@@ -128,8 +128,10 @@ def has_post_like(
     post_like = (
         db.query(models.PostLike)
         .where(
-            and_(models.PostLike.post_id == post_id,
-                 models.PostLike.user_id == user_id)
+            and_(
+                models.PostLike.post_id == post_id,
+                models.PostLike.user_id == user_id,
+            )
         )
         .first()
     )
