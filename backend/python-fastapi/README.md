@@ -8,7 +8,23 @@ See the Makefile for instructions on how to run the API. The basic flow is:
 
 ```bash
 make install
+alembic upgrade head
 make dev
+```
+
+## Using alembic migration
+
+```bash
+alembic upgrade head
+alembic revision --autogenerate -m "new migration"
+
+alembic upgrade +n
+alembic downgrade -n
+
+alembic upgrade [hash]
+alembic downgrade [hash]
+
+alembic --help
 ```
 
 ## References
