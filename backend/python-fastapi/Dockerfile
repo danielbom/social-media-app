@@ -1,15 +1,27 @@
-FROM python:3.9
+FROM python:3.10
 
+WORKDIR /app
+
+# Environment variables
 ENV PYTHONFAULTHANDLER=1 \
   PYTHONHASHSEED=random \
   PYTHONUNBUFFERED=1
 
+# Install dependencies
 RUN pip install "poetry==1.1.11"
 
+# Poetry production install
 COPY poetry.lock pyproject.toml ./
 RUN poetry install --no-dev
 
-COPY . .
-RUN poetry build && pip install dist/*.whl
+# Copy source code
+COPY ./app ./app
+COPY Makefile .
 
-CMD ["python", "-m", "action_python_poetry"]
+# Temporary solution for database setup
+COPY ./alembic ./alembic
+COPY alembic.ini .
+RUN poetry run alembic upgrade head
+
+EXPOSE 8000
+CMD ["make", "start"]
