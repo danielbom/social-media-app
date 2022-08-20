@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     jwt_algorithm: str = 'HS256'
     jwt_expires_in: str = '1d'
 
+    log_level: str = 'INFO'
+    log_json: bool = False
+
     class Config:
         env_file = '.env'
 
@@ -38,3 +41,6 @@ database_debug = settings.database_debug
 
 jwt_secret = settings.jwt_secret
 jwt_expires_in = parse_ms(settings.jwt_expires_in)
+
+log_json = settings.log_json
+log_level = settings.log_level

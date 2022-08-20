@@ -31,3 +31,4 @@ alembic --help
 
 * [Video base](https://www.youtube.com/watch?v=0sOvCWFmrtA&ab_channel=freeCodeCamp.org)
 * [Dockerfile base](https://github.com/k2bd/action-python-poetry)
+* [Unify logging](https://github.com/Delgan/loguru/blob/f40fa311d3/loguru/_colorizer.py)

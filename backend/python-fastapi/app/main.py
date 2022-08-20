@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.routing import Route
 
+from app.logging import setup_logging
+
 from .routers import auth, comments, posts, users
 
 app = FastAPI()
@@ -15,6 +17,8 @@ app.add_middleware(
     allow_methods=['*'],
     allow_headers=['*'],
 )
+
+setup_logging()
 
 # https://python.plainenglish.io/3-ways-to-handle-errors-in-fastapi-that-you-need-to-know-e1199e833039
 # TODO: Add error handling to all endpoints
