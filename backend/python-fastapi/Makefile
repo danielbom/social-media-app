@@ -29,8 +29,15 @@ lint:
 	flake8 .
 	mypy . --ignore-missing-imports
 
+# -v: verbose, -s: show stdout, -x: stop on first failure
 test:
-	bandit -r ai-analysis/
+	pytest -v -s -x
+
+test-cov:
+	pytest -v --cov=app --cov-report=term-missing
+
+test-security:
+	bandit -r app/
 
 format:
 	isort .

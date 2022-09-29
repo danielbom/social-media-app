@@ -26,7 +26,8 @@ class AppLogging(logging.Handler):
             depth += 1
 
         logger.opt(depth=0, exception=record.exc_info).log(
-            level, record.getMessage())
+            level, record.getMessage()
+        )
 
 
 def setup_logging():
@@ -45,9 +46,9 @@ def setup_logging():
     logger.configure(
         handlers=[
             {
-                "sink": sys.stdout,
-                "serialize": LOG_JSON,
-                "format": "<b><g>{time:YYYY-MM-DD HH:mm:ss.SSS}</g></b> | <b>{level: <8}</b> | <lc>{message}</lc>",
+                'sink': sys.stdout,
+                'serialize': LOG_JSON,
+                'format': '<b><g>{time:YYYY-MM-DD HH:mm:ss.SSS}</g></b> | <b>{level: <8}</b> | <lc>{message}</lc>',
             }
         ],
     )

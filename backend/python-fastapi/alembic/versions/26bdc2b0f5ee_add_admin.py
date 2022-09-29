@@ -13,7 +13,7 @@ from app.services import crypt
 
 # revision identifiers, used by Alembic.
 revision = '26bdc2b0f5ee'
-down_revision = '38f9c4c80cf4'
+down_revision = '19fd05c8e081'
 branch_labels = None
 depends_on = None
 

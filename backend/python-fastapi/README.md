@@ -15,7 +15,11 @@ make dev
 ## Using alembic migration
 
 ```bash
+alembic history
+
 alembic upgrade head
+alembic downgrade base
+
 alembic revision --autogenerate -m "new migration"
 
 alembic upgrade +n

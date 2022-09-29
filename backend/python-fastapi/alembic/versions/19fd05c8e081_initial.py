@@ -1,15 +1,15 @@
 """initial
 
-Revision ID: 38f9c4c80cf4
+Revision ID: 19fd05c8e081
 Revises:
-Create Date: 2022-08-11 21:47:39.367627
+Create Date: 2022-09-28 20:47:21.763870
 """
 import sqlalchemy as sa
 
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = '38f9c4c80cf4'
+revision = '19fd05c8e081'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,6 +27,7 @@ def upgrade() -> None:
         sa.Column('updated_at', sa.TIMESTAMP(timezone=True), nullable=False),
         sa.Column('deleted_at', sa.TIMESTAMP(timezone=True), nullable=True),
         sa.PrimaryKeyConstraint('id'),
+        sa.UniqueConstraint('username'),
     )
     op.create_table(
         'posts',

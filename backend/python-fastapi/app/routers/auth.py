@@ -42,7 +42,11 @@ def login2(
     )
 
 
-@router.post('/register')
+@router.post(
+    '/register',
+    status_code=status.HTTP_201_CREATED,
+    response_model=schemas.User,
+)
 def register(user: schemas.AuthRegister, db: Session = Depends(get_db)):
     return users.create_user(
         schemas.CreateUser(
