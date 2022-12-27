@@ -29,6 +29,16 @@ const env = {
     secret: process.env.JWT_SECRET!,
     expiresIn: process.env.JWT_EXPIRES_IN!, // https://github.com/zeit/ms.js
   },
+  adminJs: {
+    enable: process.env.ADMINJS_ENABLE === 'true',
+    session: {
+      secret: process.env.ADMINJS_SESSION_SECRET!
+    },
+    auth: {
+      cookieName: process.env.ADMINJS_AUTH_COOKIE_NAME!,
+      cookiePassword: process.env.ADMINJS_AUTH_COOKIE_PASSWORD!,
+    },
+  }
 };
 
 (function ensureSafeEnvironments() {
@@ -52,6 +62,7 @@ const env = {
       password: Joi.string().required().label('MYSQL_PASSWORD'),
       database: Joi.string().required().label('MYSQL_DATABASE'),
     }),
+
     app: Joi.object({
       nodeEnv: Joi.string()
         .allow('test', 'development', 'production')
@@ -64,14 +75,27 @@ const env = {
       cors: cors.label('APP_CORS'),
       adminPassword: Joi.string().required().label('APP_ADMIN_PASSWORD'),
     }),
+
     ws: Joi.object({
       port: Joi.number().required().label('WS_PORT'),
       cors: cors.label('WS_CORS'),
     }),
+
     jwt: Joi.object({
       secret: Joi.string().required().label('JWT_SECRET'),
       expiresIn: Joi.string().required().label('JWT_EXPIRES_IN'),
     }),
+    
+    adminJs: Joi.object({
+      enable: Joi.boolean().required().label('ADMINJS_ENABLE'),
+      session: Joi.object({
+        secret: Joi.string().required().label('ADMINJS_SESSION_SECRET')
+      }),
+      auth: Joi.object({
+        cookieName: Joi.string().required().label('ADMINJS_AUTH_COOKIE_NAME'),
+        cookiePassword: Joi.string().required().label('ADMINJS_AUTH_COOKIE_PASSWORD'),
+      }),
+    })
   });
 
   const result = schema.validate(env, { abortEarly: false });
