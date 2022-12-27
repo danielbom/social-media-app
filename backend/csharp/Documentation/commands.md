@@ -20,6 +20,7 @@ dotnet add SocialMedia.Api package Microsoft.AspNetCore.Authentication.JwtBearer
 dotnet add SocialMedia.Api package BCrypt.Net-Next
 dotnet add SocialMedia.Api package Microsoft.AspNetCore.OData
 dotnet add SocialMedia.Api package Microsoft.AspNetCore.Mvc.NewtonsoftJson
+dotnet add SocialMedia.Api package Swashbuckle.AspNetCore
 
 dotnet add SocialMedia.Tests package Microsoft.AspNetCore.Mvc.Testing
 
