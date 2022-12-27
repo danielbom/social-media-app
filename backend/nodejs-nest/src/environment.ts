@@ -59,6 +59,7 @@ const env = {
       isTest: Joi.boolean().required(),
       isDevelopment: Joi.boolean().required(),
       isProduction: Joi.boolean().required(),
+      isDebug: Joi.boolean().required(),
       port: Joi.number().min(1000).required().label('APP_PORT'),
       cors: cors.label('APP_CORS'),
       adminPassword: Joi.string().required().label('APP_ADMIN_PASSWORD'),

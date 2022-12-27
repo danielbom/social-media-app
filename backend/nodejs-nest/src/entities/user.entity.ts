@@ -8,11 +8,12 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   OneToMany,
+  BaseEntity,
 } from 'typeorm';
 import { Role } from './role.enum';
 
 @Entity()
-export class User {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: Uuid;
 

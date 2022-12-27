@@ -1,6 +1,7 @@
 import { Comment } from 'src/entities/comment.entity';
 import { User } from 'src/entities/user.entity';
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -12,7 +13,7 @@ import {
 } from 'typeorm';
 
 @Entity()
-export class Post {
+export class Post extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: Uuid;
 

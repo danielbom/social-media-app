@@ -12,6 +12,8 @@ import { CommentsModule } from './comments/comments.module';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
 
+import { AdminModule } from './admin/admin.module';
+
 @Module({
   imports: [
     AuthModule,
@@ -20,6 +22,7 @@ import { UsersModule } from './users/users.module';
     UsersModule,
     JoiPipeModule,
     DatabaseModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [

@@ -31,6 +31,9 @@
     "migration:revert": "yarn migration migration:revert"
   },
   "dependencies": {
+    "@adminjs/express": "^5.0.1",
+    "@adminjs/nestjs": "^5.0.1",
+    "@adminjs/typeorm": "^4.0.0",
     "@devniel/nestjs-typeorm-testing": "^0.1.5-alpha",
     "@nestjs/common": "^8.0.0",
     "@nestjs/core": "^8.0.0",
@@ -41,9 +44,12 @@
     "@nestjs/platform-socket.io": "^8.4.4",
     "@nestjs/typeorm": "^8.0.3",
     "@nestjs/websockets": "^8.4.4",
+    "adminjs": "^6.7.2",
     "bcrypt": "^5.0.1",
     "better-sqlite3": "^7.5.1",
     "dotenv-cli": "^5.1.0",
+    "express-formidable": "^1.2.0",
+    "express-session": "^1.17.3",
     "helmet": "^5.0.2",
     "joi": "^17.6.0",
     "mysql2": "^2.3.3",
