@@ -1,7 +1,19 @@
 ## Get started
 
+### Run application locally
+
+```powershell
+./scripts/docker-run-mysql.ps1
+yarn migration:run
+
+# Initialize in development
+yarn start:dev
 ```
-./scripts/docker-run-database.ps1
+
+### Run application with docker
+
+```powershell
+docker-compose up
 yarn migration:run
 ```
 
