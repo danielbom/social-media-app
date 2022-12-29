@@ -32,13 +32,13 @@ const env = {
   adminJs: {
     enable: process.env.ADMINJS_ENABLE === 'true',
     session: {
-      secret: process.env.ADMINJS_SESSION_SECRET!
+      secret: process.env.ADMINJS_SESSION_SECRET!,
     },
     auth: {
       cookieName: process.env.ADMINJS_AUTH_COOKIE_NAME!,
       cookiePassword: process.env.ADMINJS_AUTH_COOKIE_PASSWORD!,
     },
-  }
+  },
 };
 
 (function ensureSafeEnvironments() {
@@ -85,17 +85,19 @@ const env = {
       secret: Joi.string().required().label('JWT_SECRET'),
       expiresIn: Joi.string().required().label('JWT_EXPIRES_IN'),
     }),
-    
+
     adminJs: Joi.object({
       enable: Joi.boolean().required().label('ADMINJS_ENABLE'),
       session: Joi.object({
-        secret: Joi.string().required().label('ADMINJS_SESSION_SECRET')
+        secret: Joi.string().required().label('ADMINJS_SESSION_SECRET'),
       }),
       auth: Joi.object({
         cookieName: Joi.string().required().label('ADMINJS_AUTH_COOKIE_NAME'),
-        cookiePassword: Joi.string().required().label('ADMINJS_AUTH_COOKIE_PASSWORD'),
+        cookiePassword: Joi.string()
+          .required()
+          .label('ADMINJS_AUTH_COOKIE_PASSWORD'),
       }),
-    })
+    }),
   });
 
   const result = schema.validate(env, { abortEarly: false });
