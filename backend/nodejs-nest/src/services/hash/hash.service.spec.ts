@@ -1,3 +1,4 @@
+import { describe, it, beforeEach, expect } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { HashService } from './hash.service';
 

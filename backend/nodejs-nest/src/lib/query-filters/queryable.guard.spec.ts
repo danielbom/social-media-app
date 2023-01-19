@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { BadRequestException, ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { TestSchema } from 'src/tests/test-schema';
@@ -27,7 +28,7 @@ function createExecutionContext(
   return executionContext;
 }
 
-describe(QueryableGuard, () => {
+describe(QueryableGuard.name, () => {
   describe('querySchema', () => {
     const testSchema = new TestSchema(querySchema);
 
@@ -75,7 +76,7 @@ describe(QueryableGuard, () => {
     });
   });
 
-  describe(QueryableGuard.prototype.getFilterOptionsSchema, () => {
+  describe(QueryableGuard.prototype.getFilterOptionsSchema.name, () => {
     function createTestSchema(query: FilterOptions) {
       const guard = new QueryableGuard(new Reflector());
       const context = createExecutionContext(query);
@@ -128,7 +129,7 @@ describe(QueryableGuard, () => {
     });
   });
 
-  describe(QueryableGuard.prototype.transformFilterParams, () => {
+  describe(QueryableGuard.prototype.transformFilterParams.name, () => {
     it('should works properly', () => {
       const guard = new QueryableGuard(new Reflector());
 
@@ -157,7 +158,7 @@ describe(QueryableGuard, () => {
     });
   });
 
-  describe(QueryableGuard.prototype.canActivate, () => {
+  describe(QueryableGuard.prototype.canActivate.name, () => {
     it('should works properly', () => {
       const guard = new QueryableGuard(new Reflector());
       const context = createExecutionContext({}, {});

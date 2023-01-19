@@ -1,3 +1,4 @@
+import { describe, beforeEach, it } from 'vitest';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { env } from 'src/environment';

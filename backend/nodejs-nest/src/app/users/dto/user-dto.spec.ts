@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { Role } from 'src/entities/role.enum';
 import { TestSchema } from 'src/tests/test-schema';
 

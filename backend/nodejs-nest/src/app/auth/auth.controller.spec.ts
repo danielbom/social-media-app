@@ -1,3 +1,4 @@
+import { describe, test, beforeEach, afterEach, expect, vi } from 'vitest';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { env } from 'src/environment';
@@ -32,7 +33,7 @@ describe('AuthController', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test('should be defined', () => {

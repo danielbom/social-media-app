@@ -1,3 +1,4 @@
+import { describe, it, test, beforeEach, expect, vi } from 'vitest';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -13,7 +14,7 @@ describe('AuthService', () => {
   let service: AuthService;
   const usersService = MockService.create<UsersService>(UsersService);
   const jwtService = {
-    signAsync: jest.fn(),
+    signAsync: vi.fn(),
   };
 
   beforeEach(async () => {

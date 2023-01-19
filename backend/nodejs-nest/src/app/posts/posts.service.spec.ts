@@ -1,3 +1,4 @@
+import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -25,7 +26,7 @@ describe('PostsService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -84,7 +85,7 @@ describe('PostsService', () => {
       const author = { id: 'user-id' } as User;
       const newContent = 'content-2';
       const previousPost = { content: 'content-1', author } as Post;
-      service.findOneByAuthor = jest
+      service.findOneByAuthor = vi
         .fn(service.findOneByAuthor)
         .mockImplementationOnce(async () => previousPost);
       await service.update('', { content: newContent }, author);
@@ -101,7 +102,7 @@ describe('PostsService', () => {
       const author = { id: 'user-id' } as User;
       const user = { id: 'user-id' } as User;
       const post = { id: 'post-id', author } as Post;
-      service.findOneByAuthor = jest
+      service.findOneByAuthor = vi
         .fn(service.findOneByAuthor)
         .mockImplementationOnce(async () => post);
       await service.remove('', user);

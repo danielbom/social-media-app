@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect, afterEach, vi } from 'vitest';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -35,9 +36,9 @@ MockFactory.pollutePrototype(JwtService);
 
 // Middleware: off
 const middlewareSpy = {
-  joi: jest.spyOn(JoiPipe.prototype, 'transform'),
-  role: jest.spyOn(RolesGuard.prototype, 'canActivate'),
-  jwt: jest.spyOn(PasswordJwtStrategy.prototype, 'validate'),
+  joi: vi.spyOn(JoiPipe.prototype, 'transform'),
+  role: vi.spyOn(RolesGuard.prototype, 'canActivate'),
+  jwt: vi.spyOn(PasswordJwtStrategy.prototype, 'validate'),
 };
 
 middlewareSpy.role.mockImplementation(() => true);
@@ -66,6 +67,12 @@ describe('Middleware', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
+  });
+
+  afterEach(() => {
+    middlewareSpy.joi.mockClear();
+    middlewareSpy.jwt.mockClear();
+    middlewareSpy.role.mockClear();
   });
 
   it('/auth/login (POST)', async () => {

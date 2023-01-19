@@ -1,3 +1,4 @@
+import { describe, it } from 'vitest';
 import { AuthLoginDto } from './auth-login.dto';
 import { AuthRegisterDto } from './auth-register.dto';
 import { TestSchema } from 'src/tests/test-schema';

@@ -1,3 +1,4 @@
+import { describe, it, beforeEach, afterEach, expect, vi } from 'vitest';
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -31,7 +32,7 @@ describe('UsersService', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should be defined', () => {

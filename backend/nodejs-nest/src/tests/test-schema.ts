@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import { getClassSchema } from 'nestjs-joi';
+import { expect } from 'vitest';
 
 export interface Constructor<T = any> extends Function {
   new (...args: unknown[]): T;
