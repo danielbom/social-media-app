@@ -63,6 +63,8 @@ describe('Middleware', () => {
     })
       .overrideProvider(Connection)
       .useValue(new MockConnection())
+      .overrideProvider(AdminModule)
+      .useValue({})
       .compile();
 
     app = moduleFixture.createNestApplication();

@@ -19,6 +19,8 @@ describe('AppController (e2e)', () => {
     })
       .overrideProvider(Connection)
       .useValue(new MockConnection())
+      .overrideProvider(AdminModule)
+      .useValue({})
       .compile();
 
     app = moduleFixture.createNestApplication();

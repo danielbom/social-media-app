@@ -22,7 +22,7 @@ import { AdminModule } from './admin/admin.module';
     UsersModule,
     JoiPipeModule,
     DatabaseModule,
-    // AdminModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [
