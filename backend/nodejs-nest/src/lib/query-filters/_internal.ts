@@ -22,79 +22,85 @@ export function _assertSchema<T>(validation: Joi.ValidationResult<T>): T {
   );
 }
 
-export function _filterOptionsSchemaBuilder(
-  map: Record<string, Joi.Schema> = {},
-) {
-  return {
+export function buildOptionsSchema(
+  options: Required<FilterOptions>,
+): Joi.Schema<FilterOptions> {
+  const builder = {
     strict: {
       select(select: string[]) {
-        if (select.length === 0) {
-          map.select = Joi.array().items(Joi.forbidden()).messages({
-            'array.excludes':
-              '"select" was not was not configured to receive any value',
-          });
-        } else {
-          map.select = Joi.array().items(Joi.string().valid(...select));
-        }
+        return select.length === 0
+          ? Joi.array().items(Joi.forbidden()).messages({
+              'array.excludes':
+                '"select" was not was not configured to receive any value',
+            })
+          : Joi.array().items(Joi.string().valid(...select));
       },
       relations(relations: string[]) {
-        if (relations.length === 0) {
-          map.relations = Joi.array().items(Joi.forbidden()).messages({
-            'array.excludes':
-              '"relations" was not configured to receive any value',
-          });
-        } else {
-          map.relations = Joi.array().items(Joi.string().valid(...relations));
-        }
+        return relations.length === 0
+          ? Joi.array().items(Joi.forbidden()).messages({
+              'array.excludes':
+                '"relations" was not configured to receive any value',
+            })
+          : Joi.array().items(Joi.string().valid(...relations));
       },
       order(order: string[]) {
-        if (order.length === 0) {
-          map.order = Joi.object()
-            .pattern(Joi.any(), Joi.forbidden())
-            .messages({
+        return order.length === 0
+          ? Joi.object().pattern(Joi.any(), Joi.forbidden()).messages({
               'any.unknown': '"order" was not configured to receive any value',
-            });
-        } else {
-          map.order = Joi.object()
-            .pattern(Joi.string().valid(...order), Joi.any())
-            .options({ allowUnknown: false });
-        }
+            })
+          : Joi.object()
+              .pattern(Joi.string().valid(...order), Joi.any())
+              .options({ allowUnknown: false });
       },
       query(query: string[]) {
-        if (query.length === 0) {
-          map.query = Joi.object()
-            .pattern(Joi.any(), Joi.forbidden())
-            .messages({
+        return query.length === 0
+          ? Joi.object().pattern(Joi.any(), Joi.forbidden()).messages({
               'any.unknown': '"query" was not configured to receive any value',
-            });
-        } else {
-          map.query = Joi.object()
-            .pattern(Joi.string().valid(...query), Joi.any())
-            .options({ allowUnknown: false });
-        }
+            })
+          : Joi.object()
+              .pattern(Joi.string().valid(...query), Joi.any())
+              .options({ allowUnknown: false });
       },
     },
     normal: {
       relations() {
-        map.relations = Joi.array().items(Joi.string());
+        return Joi.array().items(Joi.string());
       },
       order() {
-        map.order = Joi.object().pattern(Joi.string(), Joi.string());
+        return Joi.object().pattern(Joi.string(), Joi.string());
       },
       select() {
-        map.select = Joi.array().items(Joi.string());
+        return Joi.array().items(Joi.string());
       },
       query() {
-        map.query = Joi.object().pattern(Joi.string(), Joi.string());
+        return Joi.object().pattern(Joi.string(), Joi.string());
       },
     },
-    build() {
-      return Joi.object<FilterOptions>(map).options({
-        abortEarly: false,
-        allowUnknown: true,
-      });
-    },
   };
+
+  return Joi.object<FilterOptions>(
+    options.strict
+      ? {
+          select: builder.strict.select(options.select),
+          relations: builder.strict.relations(options.relations),
+          order: builder.strict.order(options.order),
+          query: builder.strict.query(options.query),
+        }
+      : {
+          select: builder.normal.select(),
+          relations: builder.normal.relations(),
+          order: builder.normal.order(),
+          query: builder.normal.query(),
+        },
+  ).options({ abortEarly: false, allowUnknown: true });
+}
+
+export function buildParamsSchema(
+  options: Required<FilterOptions>,
+): Joi.Schema<FilterParams> {
+  return options.pagination
+    ? paramsSchema
+    : paramsSchema.keys(paginationDisable);
 }
 
 export const transformers = {
@@ -119,7 +125,7 @@ export const transformers = {
   },
 };
 
-export const querySchema = (() => {
+const paramsSchema = (() => {
   const listOfFields = Joi.string()
     .regex(/^\w+(.\w+)*(;\w+(.\w+)*)*$/, '"semicolon separated list of fields"')
     .optional();
@@ -147,7 +153,7 @@ export const querySchema = (() => {
   return schema;
 })();
 
-export const paginationDisable = (() => {
+const paginationDisable = (() => {
   const disable = (field: string) =>
     Joi.forbidden().messages({
       'any.unknown': `"${field}" was not allowed when "pagination" was disabled`,

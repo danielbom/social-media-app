@@ -1,7 +1,7 @@
-import { FindManyOptions, Repository } from 'typeorm';
+import { FindManyOptions, ObjectLiteral, Repository } from 'typeorm';
 import { Page, Filters } from '../types';
 
-export async function applyFilters<T>(
+export async function applyFilters<T extends ObjectLiteral>(
   { page, pageSize, order, relations, select }: Filters,
   repository: Repository<T>,
   userOptions?: FindManyOptions<T>,
