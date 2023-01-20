@@ -1,5 +1,12 @@
 ## Get started
 
+### Pre-commit
+
+```powershell
+# Avoid pre-commit hooks
+git commit --no-verify -m "commit message"
+```
+
 ### Run application locally
 
 ```powershell
