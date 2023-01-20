@@ -1,10 +1,10 @@
-import path from 'path';
-import { Comment } from 'src/entities/comment.entity';
-import { Post } from 'src/entities/post.entity';
-import { User } from 'src/entities/user.entity';
-import { env } from 'src/environment';
-import { DataSource } from 'typeorm';
-import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import path from 'path'
+import { Comment } from 'src/entities/comment.entity'
+import { Post } from 'src/entities/post.entity'
+import { User } from 'src/entities/user.entity'
+import { env } from 'src/environment'
+import { DataSource } from 'typeorm'
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
 const dataSource = new DataSource({
   type: 'mysql',
@@ -17,6 +17,6 @@ const dataSource = new DataSource({
   migrations: [path.resolve(__dirname, 'migrations', '*.ts')],
   namingStrategy: new SnakeNamingStrategy(),
   logging: env.app.isDebug, // show sql
-});
+})
 
-export default dataSource;
+export default dataSource

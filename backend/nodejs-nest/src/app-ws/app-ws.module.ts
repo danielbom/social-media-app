@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { AppWsGateway } from './app-ws.gateway';
+import { Module } from '@nestjs/common'
+import { AppWsGateway } from './app-ws.gateway'
 
 @Module({
   providers: [AppWsGateway],

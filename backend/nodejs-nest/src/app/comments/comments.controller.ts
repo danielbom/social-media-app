@@ -1,24 +1,14 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { AuthUser } from 'src/decorators/auth-user.decorator';
-import { Auth } from 'src/decorators/auth.decorator';
-import { User } from 'src/entities/user.entity';
-import { Comment } from 'src/entities/comment.entity';
-import { Filters, Queryable, QueryFilters } from 'src/lib/query-filters';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common'
+import { AuthUser } from 'src/decorators/auth-user.decorator'
+import { Auth } from 'src/decorators/auth.decorator'
+import { User } from 'src/entities/user.entity'
+import { Comment } from 'src/entities/comment.entity'
+import { Filters, Queryable, QueryFilters } from 'src/lib/query-filters'
 
-import { CommentsService } from './comments.service';
-import { CreateCommentAnswerDto } from './dto/create-comment-answer.dto';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
+import { CommentsService } from './comments.service'
+import { CreateCommentAnswerDto } from './dto/create-comment-answer.dto'
+import { CreateCommentDto } from './dto/create-comment.dto'
+import { UpdateCommentDto } from './dto/update-comment.dto'
 
 @Auth()
 @Controller('comments')
@@ -26,19 +16,13 @@ export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
   @Post()
-  create(
-    @Body() createCommentDto: CreateCommentDto,
-    @AuthUser() user: User,
-  ): Promise<Comment> {
-    return this.commentsService.create(createCommentDto, user);
+  create(@Body() createCommentDto: CreateCommentDto, @AuthUser() user: User): Promise<Comment> {
+    return this.commentsService.create(createCommentDto, user)
   }
 
   @Post('/answers')
-  createAnswer(
-    @Body() createCommentAnswerDto: CreateCommentAnswerDto,
-    @AuthUser() user: User,
-  ): Promise<Comment> {
-    return this.commentsService.createAnswer(createCommentAnswerDto, user);
+  createAnswer(@Body() createCommentAnswerDto: CreateCommentAnswerDto, @AuthUser() user: User): Promise<Comment> {
+    return this.commentsService.createAnswer(createCommentAnswerDto, user)
   }
 
   @Get()
@@ -46,7 +30,7 @@ export class CommentsController {
     relations: ['author', 'answers', 'answers.author'],
   })
   findAll(@AuthUser() user: User, @QueryFilters() filters: Filters) {
-    return this.commentsService.findAll(user, filters);
+    return this.commentsService.findAll(user, filters)
   }
 
   @Get(':id')
@@ -54,26 +38,18 @@ export class CommentsController {
     pagination: false,
     relations: ['author', 'answers', 'answers.author'],
   })
-  findOne(
-    @Param('id') id: Uuid,
-    @AuthUser() user: User,
-    @QueryFilters() filters: Filters,
-  ) {
-    return this.commentsService.findOne(id, user, filters);
+  findOne(@Param('id') id: Uuid, @AuthUser() user: User, @QueryFilters() filters: Filters) {
+    return this.commentsService.findOne(id, user, filters)
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: Uuid,
-    @Body() updateCommentDto: UpdateCommentDto,
-    @AuthUser() user: User,
-  ): Promise<Comment> {
-    return this.commentsService.update(id, updateCommentDto, user);
+  update(@Param('id') id: Uuid, @Body() updateCommentDto: UpdateCommentDto, @AuthUser() user: User): Promise<Comment> {
+    return this.commentsService.update(id, updateCommentDto, user)
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: Uuid, @AuthUser() user: User): Promise<void> {
-    return this.commentsService.remove(id, user);
+    return this.commentsService.remove(id, user)
   }
 }

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import Joi from 'joi';
+import Joi from 'joi'
 
-const nodeEnv = process.env.NODE_ENV ?? 'development';
+const nodeEnv = process.env.NODE_ENV ?? 'development'
 
 const env = {
   database: {
@@ -39,21 +39,21 @@ const env = {
       cookiePassword: process.env.ADMINJS_AUTH_COOKIE_PASSWORD!,
     },
   },
-};
+}
 
-(function ensureSafeEnvironments() {
+;(function ensureSafeEnvironments() {
   if (env.app.isTest) {
     // In the test environment all the configuration should come with your test
-    const anyEnv = env as any;
-    anyEnv.jwt = {};
-    anyEnv.app = {};
-    anyEnv.database = {};
-    return;
+    const anyEnv = env as any
+    anyEnv.jwt = {}
+    anyEnv.app = {}
+    anyEnv.database = {}
+    return
   }
 
   const cors = Joi.string()
     .required()
-    .regex(/^[^;]+(;[^;]+)*$/, { name: 'list of origins' });
+    .regex(/^[^;]+(;[^;]+)*$/, { name: 'list of origins' })
   const schema = Joi.object<Required<typeof env>>({
     database: Joi.object({
       host: Joi.string().required().label('MYSQL_HOST'),
@@ -64,9 +64,7 @@ const env = {
     }),
 
     app: Joi.object({
-      nodeEnv: Joi.string()
-        .allow('test', 'development', 'production')
-        .required(),
+      nodeEnv: Joi.string().allow('test', 'development', 'production').required(),
       isTest: Joi.boolean().required(),
       isDevelopment: Joi.boolean().required(),
       isProduction: Joi.boolean().required(),
@@ -93,22 +91,20 @@ const env = {
       }),
       auth: Joi.object({
         cookieName: Joi.string().required().label('ADMINJS_AUTH_COOKIE_NAME'),
-        cookiePassword: Joi.string()
-          .required()
-          .label('ADMINJS_AUTH_COOKIE_PASSWORD'),
+        cookiePassword: Joi.string().required().label('ADMINJS_AUTH_COOKIE_PASSWORD'),
       }),
     }),
-  });
+  })
 
-  const result = schema.validate(env, { abortEarly: false });
+  const result = schema.validate(env, { abortEarly: false })
 
   if (result.error) {
-    console.error('Invalid environment variables:');
+    console.error('Invalid environment variables:')
     for (const detail of result.error.details) {
-      console.error(' - ' + detail.message);
+      console.error(' - ' + detail.message)
     }
-    process.exit(1);
+    process.exit(1)
   }
-})();
+})()
 
-export { env };
+export { env }

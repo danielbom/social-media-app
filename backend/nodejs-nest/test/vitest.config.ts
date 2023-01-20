@@ -1,9 +1,9 @@
 /// <reference types="vitest" />
-import { defineConfig } from 'vite';
-import swc from 'unplugin-swc';
-import path from 'path';
+import { defineConfig } from 'vite'
+import swc from 'unplugin-swc'
+import path from 'path'
 
-const r = (pathname: string) => path.resolve(__dirname, '..', pathname);
+const r = (pathname: string) => path.resolve(__dirname, '..', pathname)
 
 export default defineConfig({
   test: {
@@ -17,4 +17,4 @@ export default defineConfig({
       test: r('test'),
     },
   },
-});
+})

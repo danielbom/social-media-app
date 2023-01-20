@@ -1,31 +1,26 @@
-import { describe, it, test, beforeEach, expect, vi } from 'vitest';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { Role } from 'src/entities/role.enum';
-import { User } from 'src/entities/user.entity';
-import { MockService } from 'src/tests/mock-service';
+import { describe, it, test, beforeEach, expect, vi } from 'vitest'
+import { JwtModule, JwtService } from '@nestjs/jwt'
+import { Test, TestingModule } from '@nestjs/testing'
+import { getRepositoryToken } from '@nestjs/typeorm'
+import { Role } from 'src/entities/role.enum'
+import { User } from 'src/entities/user.entity'
+import { MockService } from 'src/tests/mock-service'
 
-import { UsersService } from '../users/users.service';
-import { AuthService } from './auth.service';
-import { PasswordJwtStrategy } from './strategies/passport-jwt.strategy';
+import { UsersService } from '../users/users.service'
+import { AuthService } from './auth.service'
+import { PasswordJwtStrategy } from './strategies/passport-jwt.strategy'
 
 describe('AuthService', () => {
-  let service: AuthService;
-  const usersService = MockService.create<UsersService>(UsersService);
+  let service: AuthService
+  const usersService = MockService.create<UsersService>(UsersService)
   const jwtService = {
     signAsync: vi.fn(),
-  };
+  }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [JwtModule.register({})],
-      providers: [
-        AuthService,
-        UsersService,
-        PasswordJwtStrategy,
-        { provide: getRepositoryToken(User), useValue: {} },
-      ],
+      providers: [AuthService, UsersService, PasswordJwtStrategy, { provide: getRepositoryToken(User), useValue: {} }],
     })
       .overrideProvider(PasswordJwtStrategy)
       .useValue({})
@@ -33,36 +28,36 @@ describe('AuthService', () => {
       .useValue(jwtService)
       .overrideProvider(UsersService)
       .useValue(usersService)
-      .compile();
+      .compile()
 
-    service = module.get<AuthService>(AuthService);
-  });
+    service = module.get<AuthService>(AuthService)
+  })
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
+    expect(service).toBeDefined()
+  })
 
   test('AuthService.login should works', async () => {
-    const token = 'some-token';
+    const token = 'some-token'
     const body = {
       username: 'some-user',
       password: 'some-pass',
-    };
-    const user = { id: 'user-id', ...body };
+    }
+    const user = { id: 'user-id', ...body }
 
-    jwtService.signAsync.mockImplementationOnce(() => token);
-    usersService.getAuthenticated.mockImplementationOnce(async () => user);
-    const result = await service.login(body);
+    jwtService.signAsync.mockImplementationOnce(() => token)
+    usersService.getAuthenticated.mockImplementationOnce(async () => user)
+    const result = await service.login(body)
 
-    expect(jwtService.signAsync).toBeCalledTimes(1);
-    expect(jwtService.signAsync).toBeCalledWith({ sub: user.id });
-    expect(result).toStrictEqual({ token });
-  });
+    expect(jwtService.signAsync).toBeCalledTimes(1)
+    expect(jwtService.signAsync).toBeCalledWith({ sub: user.id })
+    expect(result).toStrictEqual({ token })
+  })
 
   test('AuthService.register should only call UsersService.create', async () => {
-    const arg = { password: '', username: '' };
-    await service.register(arg);
-    expect(usersService.create).toBeCalledTimes(1);
-    expect(usersService.create).toBeCalledWith({ ...arg, role: Role.USER });
-  });
-});
+    const arg = { password: '', username: '' }
+    await service.register(arg)
+    expect(usersService.create).toBeCalledTimes(1)
+    expect(usersService.create).toBeCalledWith({ ...arg, role: Role.USER })
+  })
+})

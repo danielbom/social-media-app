@@ -1,4 +1,4 @@
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm'
 
 export function MemoryTypeOrmModule() {
   return TypeOrmModule.forRoot({
@@ -6,5 +6,5 @@ export function MemoryTypeOrmModule() {
     database: ':memory:',
     logging: false,
     synchronize: true,
-  });
+  })
 }

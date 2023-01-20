@@ -1,21 +1,21 @@
-import Joi from 'joi';
-import { JoiSchema, JoiSchemaOptions } from 'nestjs-joi';
-import { Role } from 'src/entities/role.enum';
+import Joi from 'joi'
+import { JoiSchema, JoiSchemaOptions } from 'nestjs-joi'
+import { Role } from 'src/entities/role.enum'
 
 @JoiSchemaOptions({
   allowUnknown: false,
 })
 export class UpdateUserDto {
   @JoiSchema(Joi.string().optional())
-  username?: string;
+  username?: string
 
   @JoiSchema(Joi.string().optional())
-  password?: string;
+  password?: string
 
   @JoiSchema(
     Joi.string()
       .valid(...Object.values(Role))
       .optional(),
   )
-  role?: Role;
+  role?: Role
 }

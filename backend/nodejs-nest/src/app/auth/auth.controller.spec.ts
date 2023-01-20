@@ -1,19 +1,19 @@
-import { describe, test, beforeEach, afterEach, expect, vi } from 'vitest';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { Test, TestingModule } from '@nestjs/testing';
-import { env } from 'src/environment';
-import { MockService } from 'src/tests/mock-service';
+import { describe, test, beforeEach, afterEach, expect, vi } from 'vitest'
+import { JwtModule, JwtService } from '@nestjs/jwt'
+import { Test, TestingModule } from '@nestjs/testing'
+import { env } from 'src/environment'
+import { MockService } from 'src/tests/mock-service'
 
-import { UsersService } from '../users/users.service';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
-import { PasswordJwtStrategy } from './strategies/passport-jwt.strategy';
+import { UsersService } from '../users/users.service'
+import { AuthController } from './auth.controller'
+import { AuthService } from './auth.service'
+import { PasswordJwtStrategy } from './strategies/passport-jwt.strategy'
 
-env.jwt.secret = 'x';
+env.jwt.secret = 'x'
 
 describe('AuthController', () => {
-  let controller: AuthController;
-  const service = MockService.create<AuthService>(AuthService);
+  let controller: AuthController
+  const service = MockService.create<AuthService>(AuthService)
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,30 +27,30 @@ describe('AuthController', () => {
       .useValue({})
       .overrideProvider(AuthService)
       .useValue(service)
-      .compile();
+      .compile()
 
-    controller = module.get<AuthController>(AuthController);
-  });
+    controller = module.get<AuthController>(AuthController)
+  })
 
   afterEach(() => {
-    vi.clearAllMocks();
-  });
+    vi.clearAllMocks()
+  })
 
   test('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
+    expect(controller).toBeDefined()
+  })
 
   test('CommentsController.login should only call CommentsService.login', async () => {
-    const args = [0 as any] as const;
-    await controller.login(...args);
-    expect(service.login).toBeCalledTimes(1);
-    expect(service.login).toBeCalledWith(...args);
-  });
+    const args = [0 as any] as const
+    await controller.login(...args)
+    expect(service.login).toBeCalledTimes(1)
+    expect(service.login).toBeCalledWith(...args)
+  })
 
   test('CommentsController.register should only call CommentsService.register', async () => {
-    const args = [0 as any] as const;
-    await controller.register(...args);
-    expect(service.register).toBeCalledTimes(1);
-    expect(service.register).toBeCalledWith(...args);
-  });
-});
+    const args = [0 as any] as const
+    await controller.register(...args)
+    expect(service.register).toBeCalledTimes(1)
+    expect(service.register).toBeCalledWith(...args)
+  })
+})

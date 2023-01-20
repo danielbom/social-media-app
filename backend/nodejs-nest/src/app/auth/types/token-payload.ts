@@ -1,3 +1,3 @@
 export interface TokenPayload {
-  sub: string;
+  sub: string
 }
