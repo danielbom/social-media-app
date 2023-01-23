@@ -4,7 +4,6 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { getRepositoryToken } from '@nestjs/typeorm'
 import { Role } from 'src/entities/role.enum'
 import { User } from 'src/entities/user.entity'
-import { TestUnreachableException } from 'src/tests/test-unreachable.exception'
 import { HashService } from 'src/services/hash/hash.service'
 import { MockRepository } from 'src/tests/mock-repository'
 import { MockService } from 'src/tests/mock-service'
@@ -49,14 +48,9 @@ describe('UsersService', () => {
     })
 
     it('should not works if user exists', async () => {
-      try {
-        userRepository.findOne.mockResolvedValueOnce({} as any)
-        await service.create(userData)
-        throw new TestUnreachableException()
-      } catch (error) {
-        expect(error).toBeInstanceOf(BadRequestException)
-        expect(userRepository.create).not.toBeCalled()
-      }
+      userRepository.findOne.mockResolvedValueOnce({} as any)
+      await expect(() => service.create(userData)).rejects.toThrowError(BadRequestException)
+      expect(userRepository.create).not.toBeCalled()
     })
   })
 
@@ -75,14 +69,9 @@ describe('UsersService', () => {
     })
 
     it('should fail if user does not exists', async () => {
-      try {
-        userRepository.findOne.mockImplementation(async () => null)
-        await service.update('', {})
-        throw new TestUnreachableException()
-      } catch (error) {
-        expect(error).toBeInstanceOf(BadRequestException)
-        expect(userRepository.save).not.toBeCalled()
-      }
+      userRepository.findOne.mockImplementation(async () => null)
+      await expect(() => service.update('', {})).rejects.toThrowError(BadRequestException)
+      expect(userRepository.save).not.toBeCalled()
     })
   })
 
@@ -96,13 +85,8 @@ describe('UsersService', () => {
     })
 
     it('should fail if user does not exists', async () => {
-      try {
-        userRepository.findOne.mockImplementation(async () => null)
-        await service.remove('')
-        throw new TestUnreachableException()
-      } catch (error) {
-        expect(error).toBeInstanceOf(BadRequestException)
-      }
+      userRepository.findOne.mockImplementation(async () => null)
+      await expect(() => service.remove('')).rejects.toThrowError(BadRequestException)
     })
   })
 
@@ -120,28 +104,18 @@ describe('UsersService', () => {
     })
 
     it('should fail if user does not exists', async () => {
-      try {
-        const userData: UserAuthDto = { username: 'user-1', password: '123' }
-        userRepository.findOne.mockResolvedValueOnce(null)
-        await service.getAuthenticated(userData)
-        throw new TestUnreachableException()
-      } catch (error) {
-        expect(error).toBeInstanceOf(BadRequestException)
-      }
+      const userData: UserAuthDto = { username: 'user-1', password: '123' }
+      userRepository.findOne.mockResolvedValueOnce(null)
+      await expect(() => service.getAuthenticated(userData)).rejects.toThrowError(BadRequestException)
     })
 
     it('should fail if password does not not match', async () => {
-      try {
-        const correctPassword = '321'
-        const userData: UserAuthDto = { username: 'user-1', password: '123' }
-        userRepository.findOne.mockResolvedValueOnce({
-          password: correctPassword,
-        })
-        await service.getAuthenticated(userData)
-        throw new TestUnreachableException()
-      } catch (error) {
-        expect(error).toBeInstanceOf(BadRequestException)
-      }
+      const correctPassword = '321'
+      const userData: UserAuthDto = { username: 'user-1', password: '123' }
+      userRepository.findOne.mockResolvedValueOnce({
+        password: correctPassword,
+      })
+      await expect(() => service.getAuthenticated(userData)).rejects.toThrowError(BadRequestException)
     })
   })
 })

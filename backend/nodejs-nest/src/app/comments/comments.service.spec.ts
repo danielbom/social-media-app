@@ -5,7 +5,6 @@ import { getRepositoryToken } from '@nestjs/typeorm'
 import { Comment } from 'src/entities/comment.entity'
 import { Post } from 'src/entities/post.entity'
 import { User } from 'src/entities/user.entity'
-import { TestUnreachableException } from 'src/tests/test-unreachable.exception'
 import { MockRepository } from 'src/tests/mock-repository'
 import { MockService } from 'src/tests/mock-service'
 
@@ -92,26 +91,16 @@ describe('CommentsService', () => {
     })
 
     it('should fail if post does not exists', async () => {
-      try {
-        const author = { id: 'user-1' } as User
-        commentRepository.findOne.mockImplementation(async () => null)
-        await service.findOne('', author)
-        throw new TestUnreachableException()
-      } catch (error) {
-        expect(error).toBeInstanceOf(BadRequestException)
-      }
+      const author = { id: 'user-1' } as User
+      commentRepository.findOne.mockImplementation(async () => null)
+      await expect(() => service.findOne('', author)).rejects.toThrow(BadRequestException)
     })
 
     it('should fail if user was not the author', async () => {
-      try {
-        const author = { id: 'user-1' } as User
-        const user = { id: 'user-2' } as User
-        commentRepository.findOne.mockImplementation(async () => ({ author }))
-        await service.findOne('', user)
-        throw new TestUnreachableException()
-      } catch (error) {
-        expect(error).toBeInstanceOf(ForbiddenException)
-      }
+      const author = { id: 'user-1' } as User
+      const user = { id: 'user-2' } as User
+      commentRepository.findOne.mockImplementation(async () => ({ author }))
+      await expect(() => service.findOne('', user)).rejects.toThrowError(ForbiddenException)
     })
   })
 
