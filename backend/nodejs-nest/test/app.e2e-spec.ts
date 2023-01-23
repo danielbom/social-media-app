@@ -22,7 +22,7 @@ describe('AppController (e2e)', () => {
       .useValue(new MockConnection())
       .overrideProvider(AdminModule)
       .useValue({})
-      .compile();
+      .compile()
 
     app = moduleFixture.createNestApplication()
     await app.init()

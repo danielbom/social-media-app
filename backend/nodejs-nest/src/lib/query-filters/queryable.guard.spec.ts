@@ -6,7 +6,6 @@ import { decoratorKey } from './queryable.decorator'
 
 import { QueryableGuard } from './queryable.guard'
 import { FilterOptions, FilterParams } from './types'
-import { _getFilters } from './_internal'
 
 function createExecutionContext(filterOptions: FilterOptions, query?: Partial<FilterParams>): ExecutionContext {
   class Phantom {}
@@ -30,7 +29,7 @@ describe(QueryableGuard.name, () => {
       const guard = new QueryableGuard(new Reflector())
       const context = createExecutionContext({}, {})
       expect(guard.canActivate(context)).toBeTruthy()
-      const filters = _getFilters((context as any).request)
+      const filters = QueryableGuard.getQueryParams((context as any).request)
       expect(filters).toStrictEqual({
         page: 0,
         pageSize: 20,

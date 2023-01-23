@@ -2,7 +2,8 @@ import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/com
 import { InjectRepository } from '@nestjs/typeorm'
 import { Comment } from 'src/entities/comment.entity'
 import { User } from 'src/entities/user.entity'
-import { applyFilters, applyFiltersOptionsOne1, Filters, Page } from 'src/lib/query-filters'
+import { Filters, Page } from 'src/lib/query-filters'
+import { applyFilters, applyOptionalFilters1 } from 'src/lib/query-filters/typeorm'
 import { FindOneOptions, Repository } from 'typeorm'
 
 import { PostsService } from '../posts/posts.service'
@@ -55,7 +56,7 @@ export class CommentsService {
   }
 
   async findOne(id: Uuid, user: User, filters?: Filters): Promise<Comment> {
-    const comment = await this.getCommentOrThrow(applyFiltersOptionsOne1({ where: { id } }, filters))
+    const comment = await this.getCommentOrThrow(applyOptionalFilters1({ where: { id } }, filters))
     this.ensureCommentAuthor(comment, user)
     return comment
   }

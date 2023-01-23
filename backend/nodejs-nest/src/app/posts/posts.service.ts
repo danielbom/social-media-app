@@ -2,7 +2,8 @@ import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/com
 import { InjectRepository } from '@nestjs/typeorm'
 import { Post } from 'src/entities/post.entity'
 import { User } from 'src/entities/user.entity'
-import { applyFilters, applyFiltersOptionsOne1, Filters, Page } from 'src/lib/query-filters'
+import { Filters, Page } from 'src/lib/query-filters'
+import { applyFilters, applyOptionalFilters1 } from 'src/lib/query-filters/typeorm'
 import { FindOneOptions, Repository } from 'typeorm'
 
 import { CreatePostDto } from './dto/create-post.dto'
@@ -31,7 +32,7 @@ export class PostsService {
   }
 
   async findOne(id: Uuid, filters?: Filters): Promise<Post | null> {
-    return this.postRepository.findOne(applyFiltersOptionsOne1({ where: { id } }, filters))
+    return this.postRepository.findOne(applyOptionalFilters1({ where: { id } }, filters))
   }
 
   async update(id: Uuid, { content }: UpdatePostDto, user: User): Promise<Post> {
