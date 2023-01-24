@@ -121,7 +121,7 @@ const paramsSchema = (() => {
     pageSize: Joi.number().min(10).max(100).default(20).optional(),
     order: Joi.string()
       .regex(
-        /^\w+(.\w+)*(:(asc|desc))?(;\w+(.\w+)*(:(asc|desc))?)*$/,
+        /^[^:;]+(:asc|:desc)?(;[^:;]+(:asc|:desc)?)*$/,
         '"semicolon separated list of relations w/ optional :asc or :desc order"',
       )
       .optional(),

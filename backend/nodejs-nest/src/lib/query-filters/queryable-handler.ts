@@ -22,11 +22,11 @@ export class QueryableHandler {
     return new QueryableHandler(optionsSchema, paramsSchema)
   }
 
-  handleParams(params: FilterParams) {
+  validateParams(params: FilterParams): Joi.ValidationResult<FilterParams> {
     return this.paramsSchema.validate(params)
   }
 
-  handleFilters(filters: Filters) {
+  validateFilters(filters: Filters): Joi.ValidationResult<Filters> {
     return this.optionsSchema.validate(filters)
   }
 
@@ -39,5 +39,15 @@ export class QueryableHandler {
       select: transformers.select(select),
       queries: transformers.queries(rest as any),
     }
+  }
+
+  execute(params: FilterParams): Joi.ValidationResult<Filters> {
+    const validatedParams = this.validateParams(params)
+    if (validatedParams.error) return validatedParams
+
+    const filters = this.transformParams(validatedParams.value)
+    const validatedFilters = this.validateFilters(filters)
+
+    return validatedFilters
   }
 }

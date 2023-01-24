@@ -25,14 +25,11 @@ export class QueryableGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest()
-    const query = request.query
-    if (!query) return true
 
-    const handle = this.getHandler(context)
-    const filterParams = _assertSchema(handle.handleParams(query))
-    const filters = handle.transformParams(filterParams)
-    _assertSchema(handle.handleFilters(filters))
-    _setFilters(request, filters)
+    if (request.query) {
+      const filters = _assertSchema(this.getHandler(context).execute(request.query))
+      _setFilters(request, filters)
+    }
 
     return true
   }
