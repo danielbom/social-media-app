@@ -1,0 +1,101 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["build", "${workspaceFolder}/SocialMedia.Api/SocialMedia.Api.csproj", "/property:GenerateFullPaths=true", "/consoleloggerparameters:NoSummary"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "publish",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["publish", "${workspaceFolder}/SocialMedia.Api/SocialMedia.Api.csproj", "/property:GenerateFullPaths=true", "/consoleloggerparameters:NoSummary"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "run",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["run", "--project", "${workspaceFolder}/SocialMedia.Api/SocialMedia.Api.csproj"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "watch",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["watch", "--project", "${workspaceFolder}/SocialMedia.Api/SocialMedia.Api.csproj", "run"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "clean",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["clean", "${workspaceFolder}/SocialMedia.Api/SocialMedia.Api.csproj"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "test",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["test"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "test:watch",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["watch", "--project", "${workspaceFolder}/SocialMedia.sln", "test"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "format",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["format", "${workspaceFolder}/SocialMedia.Api/SocialMedia.Api.csproj"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "data:restore-tools",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["tool", "restore"],
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/SocialMedia.Data"
+      }
+    },
+    {
+      "label": "data:generate-migrations",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["ef", "migrations", "add", "${input:migrationName}"],
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/SocialMedia.Data"
+      }
+    },
+    {
+      "label": "data:remove-migrations",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["ef", "migrations", "remove"],
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/SocialMedia.Data"
+      }
+    },
+    {
+      "label": "data:update-database",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["ef", "database", "update"],
+      "problemMatcher": "$msCompile",
+      "options": {
+        "cwd": "${workspaceFolder}/SocialMedia.Data"
+      }
+    }
+  ]
+}

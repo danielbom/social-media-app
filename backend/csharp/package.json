@@ -6,13 +6,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "dotnet run --project SocialMedia.Api",
-    "dev": "dotnet watch run --project SocialMedia.Api",
-    "build": "dotnet build",
-    "format": "dotnet format",
-    "test": "dotnet test",
-    "test:dev": "dotnet watch test --project SocialMedia.sln",
-    "db:update": "dotnet ef database update"
+    "feed": "node Scripts/initial-flow"
   },
   "dependencies": {
     "axios": "^0.26.1"
