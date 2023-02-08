@@ -30,10 +30,6 @@
     "migration:run": "yarn migration migration:run",
     "migration:revert": "yarn migration migration:revert"
   },
-  "pre-commit": [
-    "lint:fix",
-    "test:all"
-  ],
   "dependencies": {
     "@adminjs/express": "^5.0.1",
     "@adminjs/nestjs": "^5.0.1",
@@ -87,7 +83,6 @@
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "pre-commit": "^1.2.2",
     "prettier": "^2.3.2",
     "source-map-support": "^0.5.20",
     "supertest": "^6.1.3",
