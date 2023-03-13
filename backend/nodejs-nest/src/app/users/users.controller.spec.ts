@@ -35,14 +35,14 @@ describe('UsersController', () => {
   })
 
   test('UsersController.findAll should only call UsersService.findAll', async () => {
-    const args = [] as const
+    const args = [0 as any] as const
     await controller.findAll(...args)
     expect(service.findAll).toBeCalledTimes(1)
     expect(service.findAll).toBeCalledWith(...args)
   })
 
   test('UsersController.findOne should only call UsersService.findOne', async () => {
-    const args = [0 as any] as const
+    const args = [0 as any, 1 as any] as const
     await controller.findOne(...args)
     expect(service.findOne).toBeCalledTimes(1)
     expect(service.findOne).toBeCalledWith(...args)

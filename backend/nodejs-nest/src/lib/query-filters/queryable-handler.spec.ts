@@ -105,7 +105,7 @@ describe(QueryableHandler.name, () => {
 
         const chanceOrder = (word: string) => (chance.bool() ? `${word}:${chance.pickone(['asc', 'desc'])}` : word)
 
-        const options: FilterOptions = {
+        const options: Required<FilterOptions> = {
           strict: true,
           pagination: true,
           order: chance.n(chance.word, chance.integer({ min: 1, max: 5 })),
@@ -116,10 +116,10 @@ describe(QueryableHandler.name, () => {
         const params: FilterParams = {
           page: chance.integer({ min: 1, max: 1000 }),
           pageSize: chance.integer({ min: 20, max: 100 }),
-          order: joinIfNotEmpty(sample(options.order!).map(chanceOrder)),
-          relations: joinIfNotEmpty(sample(options.relations!)),
-          select: joinIfNotEmpty(sample(options.select!)),
-          ...Object.fromEntries(sample(options.query!).map((it) => ['q.' + it, chance.word()])),
+          order: joinIfNotEmpty(sample(options.order).map(chanceOrder)),
+          relations: joinIfNotEmpty(sample(options.relations)),
+          select: joinIfNotEmpty(sample(options.select)),
+          ...Object.fromEntries(sample(options.query).map((it) => ['q.' + it, chance.word()])),
         }
         const expected: Filters = {
           page: params.page,

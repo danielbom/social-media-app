@@ -24,7 +24,7 @@ export class PasswordJwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: TokenPayload) {
     const userId = payload.sub
     if (isUuid(userId)) {
-      return await this.usersService.findOne(userId)
+      return await this.usersService.findOne(userId).catch(() => null)
     } else {
       throw new UnreachableException('TokenPayload.sub is an invalid uuid')
     }

@@ -4,6 +4,7 @@ import { Comment } from 'src/entities/comment.entity'
 import { User } from 'src/entities/user.entity'
 import { Filters, Page } from 'src/lib/query-filters'
 import { applyFilters, applyOptionalFilters1 } from 'src/lib/query-filters/typeorm'
+import { descriptions } from 'src/shared/desctiption-messages'
 import { FindOneOptions, Repository } from 'typeorm'
 
 import { PostsService } from '../posts/posts.service'
@@ -77,7 +78,7 @@ export class CommentsService {
     const comment = await this.commentsRepository.findOne(options)
 
     if (comment === null) {
-      throw new BadRequestException('Comment not exists!')
+      throw new BadRequestException(descriptions.COMMENT_NOT_EXISTS)
     }
 
     return comment
@@ -85,7 +86,7 @@ export class CommentsService {
 
   ensureCommentAuthor(comment: Comment, user: User): void {
     if (comment.authorId !== user.id) {
-      throw new ForbiddenException()
+      throw new ForbiddenException(undefined, descriptions.IS_NOT_COMMENT_AUTHOR)
     }
   }
 }

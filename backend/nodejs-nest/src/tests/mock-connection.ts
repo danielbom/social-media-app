@@ -1,4 +1,5 @@
 import { IMockRepository, MockRepository } from 'src/tests/mock-repository'
+import { ObjectLiteral } from 'typeorm'
 
 export class MockConnection {
   public options = {
@@ -6,10 +7,12 @@ export class MockConnection {
   }
   public repositories: Record<string, IMockRepository<any>> = {}
 
-  getRepository<T>(cls: any): IMockRepository<T> {
+  getRepository<T extends ObjectLiteral>(cls: any): IMockRepository<T> {
     const id = this._getRepositoryIdentifier(cls)
-    this.repositories[id] = this.repositories[id] || MockRepository.create()
-    return this.repositories[id]
+    const repository = this.repositories[id] || MockRepository.create()
+    this.repositories[id] = repository
+    if (repository) return repository
+    throw new Error('Repository not found: ' + id)
   }
 
   private _getRepositoryIdentifier(cls: any): string {

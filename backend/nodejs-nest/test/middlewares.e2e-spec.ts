@@ -153,7 +153,7 @@ describe('Middleware', () => {
 
   it('/users (GET)', async () => {
     await request(app.getHttpServer()).get('/users').set('Authorization', authorization).expect(HttpStatus.OK)
-    middlewareMustBeCalled({ role: 1, jwt: 1 })
+    middlewareMustBeCalled({ joi: 1, role: 1, jwt: 1 })
   })
 
   it('/users (POST)', async () => {

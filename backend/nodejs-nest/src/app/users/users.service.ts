@@ -2,7 +2,10 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from 'src/entities/user.entity'
 import { UnreachableException } from 'src/exceptions/unreachable.exception'
+import { Filters, Page } from 'src/lib/query-filters'
+import { applyFilters, applyOptionalFilters1 } from 'src/lib/query-filters/typeorm'
 import { HashService } from 'src/services/hash/hash.service'
+import { descriptions } from 'src/shared/desctiption-messages'
 import { FindOneOptions, Repository } from 'typeorm'
 
 import { CreateUserDto } from './dto/create-user.dto'
@@ -31,12 +34,12 @@ export class UsersService {
     return this.hidePassword(user)
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userRepository.find()
+  async findAll(filters: Filters): Promise<Page<User>> {
+    return applyFilters(filters, this.userRepository)
   }
 
-  async findOne(id: Uuid): Promise<User | null> {
-    return this.userRepository.findOne({ where: { id } })
+  async findOne(id: Uuid, filters?: Filters): Promise<User> {
+    return this.getUserOrThrow(applyOptionalFilters1({ where: { id } }, filters))
   }
 
   async update(id: Uuid, { username, password, role }: UpdateUserDto): Promise<User> {
@@ -70,7 +73,7 @@ export class UsersService {
     })
 
     if (user === null) {
-      throw new BadRequestException('User and/or password was invalid!')
+      throw new BadRequestException(descriptions.INVALID_CREDENTIALS)
     }
 
     if (!user.password) {
@@ -79,7 +82,7 @@ export class UsersService {
 
     const isPasswordValid = await this.hashService.compare(password, user.password)
     if (!isPasswordValid) {
-      throw new BadRequestException('User and/or password was invalid!')
+      throw new BadRequestException(descriptions.INVALID_CREDENTIALS)
     }
 
     return { id: user.id }
@@ -89,7 +92,7 @@ export class UsersService {
     const user = await this.userRepository.findOne(options)
 
     if (user !== null) {
-      throw new BadRequestException('User already exists!')
+      throw new BadRequestException(descriptions.USER_ALREADY_EXISTS)
     }
   }
 
@@ -97,7 +100,7 @@ export class UsersService {
     const user = await this.userRepository.findOne(options)
 
     if (user === null) {
-      throw new BadRequestException('User not exists!')
+      throw new BadRequestException(descriptions.USER_NOT_EXISTS)
     }
 
     return user

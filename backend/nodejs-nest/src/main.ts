@@ -5,6 +5,8 @@ import helmet from 'helmet'
 import path from 'path'
 import { Logger } from '@nestjs/common'
 import { NestExpressApplication } from '@nestjs/platform-express'
+import { DocumentBuilder } from '@nestjs/swagger'
+import { SwaggerModule } from '@nestjs/swagger/dist'
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap')
@@ -19,6 +21,15 @@ async function bootstrap() {
       contentSecurityPolicy: !env.app.isDevelopment,
     }),
   )
+
+  const swagger = new DocumentBuilder()
+    .setTitle('Social Media API')
+    .setDescription('An API created for learning purposes')
+    .setVersion('1.0.0')
+    .addBearerAuth()
+    .build()
+  const swaggerDocument = SwaggerModule.createDocument(app, swagger)
+  SwaggerModule.setup('swagger', app, swaggerDocument)
 
   if (env.app.isDevelopment) {
     app.useStaticAssets(path.join(__dirname, '..', 'static'), {
