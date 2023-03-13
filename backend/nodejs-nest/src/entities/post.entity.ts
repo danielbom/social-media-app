@@ -15,29 +15,29 @@ import {
 @Entity()
 export class Post extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: Uuid
+  id!: Uuid
 
   @Column()
-  content: string
+  content!: string
 
   @Column()
-  likes: number
+  likes!: number
 
   @Column()
-  authorId: Uuid
+  authorId!: Uuid
 
   @ManyToOne(() => User, (x) => x.posts)
-  author: User
+  author!: User
 
   @OneToMany(() => Comment, (x) => x.postParent)
-  comments: Comment[]
+  comments!: Comment[]
 
   @CreateDateColumn()
-  createdAt: Date
+  createdAt!: Date
 
   @UpdateDateColumn()
-  updatedAt: Date
+  updatedAt!: Date
 
   @DeleteDateColumn()
-  deletedAt: Date | null
+  deletedAt!: Date | null
 }

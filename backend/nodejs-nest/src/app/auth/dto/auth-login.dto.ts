@@ -6,8 +6,8 @@ import Joi from 'joi'
 })
 export class AuthLoginDto {
   @JoiSchema(Joi.string().min(3).max(30).required())
-  username: string
+  username!: string
 
   @JoiSchema(Joi.string().min(8).max(30).required())
-  password: string
+  password!: string
 }

@@ -6,5 +6,5 @@ import Joi from 'joi'
 })
 export class CreatePostDto {
   @JoiSchema(Joi.string().required())
-  content: string
+  content!: string
 }

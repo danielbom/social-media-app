@@ -6,8 +6,8 @@ import Joi from 'joi'
 })
 export class CreateCommentAnswerDto {
   @JoiSchema(Joi.string().required())
-  content: string
+  content!: string
 
   @JoiSchema(Joi.string().required())
-  commentId: Uuid
+  commentId!: Uuid
 }

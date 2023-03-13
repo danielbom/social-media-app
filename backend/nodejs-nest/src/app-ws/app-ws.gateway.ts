@@ -16,7 +16,7 @@ export class AppWsGateway implements OnGatewayInit, OnGatewayConnection, OnGatew
   private logger = new Logger('WebSocket')
 
   @WebSocketServer()
-  private server: Server
+  private server!: Server
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   afterInit(server: Server): void {

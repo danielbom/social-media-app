@@ -21,7 +21,7 @@ export class MockFactory {
       }
     }
 
-    vi.spyOn(Cls.prototype, 'constructor').mockImplementation(function self() {
+    vi.spyOn(Cls.prototype, 'constructor').mockImplementation(function self(this: any) {
       return this
     })
   }

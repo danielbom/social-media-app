@@ -15,29 +15,29 @@ import { Role } from './role.enum'
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: Uuid
+  id!: Uuid
 
   @Column({ unique: true })
-  username: string
+  username!: string
 
   @Column({ select: false })
   password?: string
 
   @Column({ type: 'enum', enum: Role })
-  role: Role
+  role!: Role
 
   @OneToMany(() => Post, (x) => x.author)
-  posts: Post[]
+  posts!: Post[]
 
   @OneToMany(() => Comment, (x) => x.author)
-  comments: Comment[]
+  comments!: Comment[]
 
   @CreateDateColumn()
-  createdAt: Date
+  createdAt!: Date
 
   @UpdateDateColumn()
-  updatedAt: Date
+  updatedAt!: Date
 
   @DeleteDateColumn()
-  deletedAt: Date | null
+  deletedAt!: Date | null
 }

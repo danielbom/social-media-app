@@ -7,15 +7,15 @@ import { Role } from 'src/entities/role.enum'
 })
 export class CreateUserDto {
   @JoiSchema(Joi.string().required())
-  username: string
+  username!: string
 
   @JoiSchema(Joi.string().required())
-  password: string
+  password!: string
 
   @JoiSchema(
     Joi.string()
       .valid(...Object.values(Role))
       .required(),
   )
-  role: Role
+  role!: Role
 }
