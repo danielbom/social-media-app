@@ -36,7 +36,9 @@ yarn migration:run
 
 ## TODO
 
-jest-create-mock-instance
-https://github.com/asvetliakov/jest-create-mock-instance
-https://www.npmjs.com/package/jest-create-mock-instance
-
+* [jest-create-mock-instance - Github](https://github.com/asvetliakov/jest-create-mock-instance)
+* [jest-create-mock-instance - NPM](https://www.npmjs.com/package/jest-create-mock-instance)
+* [ [Nestia] 15,000x faster validators and tRPC (SDK) for NestJS](https://dev.to/samchon/nestia-15000x-faster-validators-and-trpc-sdk-for-nestjs-248k)
+* [Nestia - Github](https://github.com/samchon/nestia)
+* [Typia - Github](https://github.com/samchon/typia)
+* [Prisma - Github](https://github.com/prisma/prisma)
