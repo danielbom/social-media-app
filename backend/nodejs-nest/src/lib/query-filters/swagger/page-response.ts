@@ -1,8 +1,17 @@
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger'
 import { Page } from '../types'
 
+export class PageResponseGenerated<T> implements Page<T> {
+  items!: T[]
+  page!: number
+  pageSize!: number
+  totalPages!: number
+  totalItems!: number
+  isLast!: boolean
+}
+
 export function PageResponse<T>(itemProperty: ApiPropertyOptions) {
-  class PageResponse implements Page<T> {
+  class PageResponseSwagger implements Page<T> {
     @ApiProperty({ ...itemProperty, isArray: true })
     items!: T[]
 
@@ -22,5 +31,5 @@ export function PageResponse<T>(itemProperty: ApiPropertyOptions) {
     isLast!: boolean
   }
 
-  return PageResponse
+  return PageResponseSwagger as { new(): PageResponseGenerated<T> }
 }

@@ -8,4 +8,4 @@ export class PostWithAuthorResponse extends PostResponse {
   author?: UserResponse
 }
 
-export class PostsPageResponse extends PageResponse({ type: PostWithAuthorResponse }) {}
+export class PostsPageResponse extends PageResponse<PostWithAuthorResponse>({ type: PostWithAuthorResponse }) {}
