@@ -47,6 +47,12 @@ class Endpoint:
         )
 
 
+@dataclass
+class File:
+    name: str
+    content: str
+
+
 ExternalTypeAction = Union[Literal["import"],
                            Literal["ignore"],
                            Literal["export"]]

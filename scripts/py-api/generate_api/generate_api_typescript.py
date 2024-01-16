@@ -83,30 +83,43 @@ def generate_attributes(endpoints: list[Endpoint]):
     return "\n".join([f"    this.{endpoint.attribute} = new {endpoint.name}(config);" for endpoint in endpoints])
 
 
-def collect_external_types(endpoints: list[Endpoint]):
+def collect_external_types(endpoint: Endpoint):
+    external_types = []
+    for method in endpoint.methods:
+        for arg in method.args:
+            if arg.type and arg.type not in type_primitives:
+                external_types.append(arg.type)
+    return external_types
+
+
+def collect_all_external_types(endpoints: list[Endpoint]):
     external_types = []
     for endpoint in endpoints:
-        for method in endpoint.methods:
-            for arg in method.args:
-                if arg.type and arg.type not in type_primitives:
-                    external_types.append(arg.type)
+        external_types.extend(collect_external_types(endpoint))
     return external_types
+
+
+def generate_imports(types: list[str], *, import_path="./types"):
+    if types:
+        return "\n".join(f'import {{ {it} }} from "{import_path}";' for it in types) + "\n"
+    return ""
 
 
 def generate_import_external_types(endpoints: list[Endpoint], external_types_action: ExternalTypeAction):
     if external_types_action == "import":
-        external_types = collect_external_types(endpoints)
-        if external_types:
-            types = ', '.join(external_types)
-            return f'import {{ {types} }} from "./types";\n'
+        return generate_imports(collect_all_external_types(endpoints))
+    return ""
+
+
+def generate_exports(types: list[str]):
+    if types:
+        return "\n".join(f"export type {it} = any;" for it in types) + "\n"
     return ""
 
 
 def generate_export_external_types(endpoints: list[Endpoint], external_types_action: ExternalTypeAction):
     if external_types_action == "export":
-        external_types = collect_external_types(endpoints)
-        if external_types:
-            return '\n' + '\n'.join(f"export type {it} = any;\n" for it in external_types)
+        return "\n" + generate_exports(collect_all_external_types(endpoints))
     return ""
 
 

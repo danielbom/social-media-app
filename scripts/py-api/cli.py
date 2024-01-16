@@ -1,9 +1,7 @@
 import json
 from pathlib import Path
 from generate_api.commons import Endpoint
-from generate_api.generate_api_python import generate_api_python
-from generate_api.generate_api_javascript import generate_api_javascript
-from generate_api.generate_api_typescript import generate_api_typescript
+from generate_api.generate_api import get_generate_api, get_generate_directory_api
 import argparse
 
 
@@ -18,27 +16,31 @@ def suffix_from_laguage(language: str):
         return ""
 
 
-def get_generate_api_from_language(language: str):
-    if language == "python":
-        return generate_api_python
-    elif language == "javascript":
-        return generate_api_javascript
-    elif language == "typescript":
-        return generate_api_typescript
-    else:
-        raise ValueError(f"Unknown language: {language}")
+def load_endpoints_from_file(path: str):
+    with Path(path).open("r") as f:
+        endpoints = json.load(f)
+    return [Endpoint.from_dict(e) for e in endpoints]
 
 
 def command_generate_api(args):
-    with Path(args.input).open("r") as f:
-        endpoints = json.load(f)
-    endpoints = [Endpoint.from_dict(e) for e in endpoints]
-    generate_api = get_generate_api_from_language(args.language)
-    api = generate_api(endpoints, args.external_types_action)
-    suffix = suffix_from_laguage(args.language)
-    if args.multiple_file:
-        raise NotImplementedError()
+    if args.multiple_files:
+        endpoints = load_endpoints_from_file(args.input)
+        generate_directory_api = get_generate_directory_api(
+            args.language)
+        files = generate_directory_api(endpoints, args.external_types_action)
+        output_dir = Path(args.output)
+        output_dir.mkdir(exist_ok=True)
+        for file in files:
+            output_path = output_dir / file.name
+            if output_path.parent != output_dir:
+                output_path.parent.mkdir(exist_ok=True, parents=True)
+            with output_path.open("w") as f:
+                f.write(file.content)
     else:
+        endpoints = load_endpoints_from_file(args.input)
+        generate_api = get_generate_api(args.language)
+        api = generate_api(endpoints, args.external_types_action)
+        suffix = suffix_from_laguage(args.language)
         output = Path(args.output).with_suffix(suffix)
         with output.open("w") as f:
             f.write(api)
@@ -60,7 +62,7 @@ def get_parser():
     sb.add_argument("--output", "-o", type=str, default="api")
     sb.add_argument("--language", "-l", type=str, required=True,
                     choices=["python", "javascript", "typescript"])
-    sb.add_argument("--multiple-file", action="store_true", default=False)
+    sb.add_argument("--multiple-files", action="store_true", default=False)
     sb.add_argument("--external-types-action", "--et", type=str, default="export",
                     choices=["import", "ignore", "export"])
 
