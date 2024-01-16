@@ -9,13 +9,11 @@ import pytest
 
 
 @pytest.mark.parametrize("language,external_types_action,expected_path", [
-    ("python", "export", FIXTURES / "fixture_single_file_python_export_expected.py"),
-    ("python", "import", FIXTURES / "fixture_single_file_python_import_expected.py"),
-    ("javascript", "ignore", FIXTURES / "fixture_single_file_javascript_expected.js"),
-    ("typescript", "export", FIXTURES /
-     "fixture_single_file_typescript_export_expected.ts"),
-    ("typescript", "import", FIXTURES /
-     "fixture_single_file_typescript_import_expected.ts"),
+    ("python", "export", FIXTURES / "api_export.py"),
+    ("python", "import", FIXTURES / "api_import.py"),
+    ("javascript", "ignore", FIXTURES / "api.js"),
+    ("typescript", "export", FIXTURES / "api_export.ts"),
+    ("typescript", "import", FIXTURES / "api_import.ts"),
 ])
 def test_generate_api(expected_endpoints: List[Endpoint], language: str, external_types_action: ExternalTypeAction, expected_path: Path):
     generate_api = get_generate_api(language)

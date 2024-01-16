@@ -1,18 +1,20 @@
 from generate_api.generate_endpoints_swagger import generate_endpoints_swagger
-import json
-
 from tests.common import FIXTURES
 
+import json
+import pytest
 
-def test_generate_endpoints_swagger():
-    swagger_path = FIXTURES / "endpoints_swagger.json"
+
+@pytest.mark.parametrize("swagger_path,endpoints_path", [
+    (FIXTURES / "endpoints_swagger.json", FIXTURES / "swagger_endpoints.json"),
+])
+def test_generate_endpoints_swagger(swagger_path, endpoints_path):
     with swagger_path.open("r") as f:
         swagger = json.load(f)
 
     actual_dict = generate_endpoints_swagger(swagger)
     actual = json.dumps([it.to_dict() for it in actual_dict], indent=2)
 
-    expected_path = FIXTURES / "fixture_endpoints_swagger.json"
-    expected = expected_path.read_text()
+    expected = endpoints_path.read_text()
 
     assert actual == expected

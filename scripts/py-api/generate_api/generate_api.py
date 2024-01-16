@@ -1,4 +1,3 @@
-from generate_api.commons import Endpoint, ExternalTypeAction
 from .generate_directory_api_typescript import generate_directory_api_typescript
 from .generate_api_javascript import generate_api_javascript
 from .generate_api_python import generate_api_python

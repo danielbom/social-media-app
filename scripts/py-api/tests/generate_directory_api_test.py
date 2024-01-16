@@ -9,10 +9,8 @@ from tests.common import FIXTURES, expected_endpoints
 
 
 @pytest.mark.parametrize("language,external_types_action,expected_directory", [
-    ("typescript", "export", FIXTURES /
-     "fixture_directory_typescript_export_expected"),
-    ("typescript", "import", FIXTURES /
-     "fixture_directory_typescript_import_expected"),
+    ("typescript", "export", FIXTURES / "api_export_ts"),
+    ("typescript", "import", FIXTURES / "api_import_ts"),
 ])
 def test_generate_directory_api(expected_endpoints: List[Endpoint], language: str, external_types_action: ExternalTypeAction, expected_directory: Path):
     generate_directory_api = get_generate_directory_api(language)
