@@ -1,0 +1,72 @@
+[
+  {
+    "name": "PostEndpoint",
+    "attribute": "posts",
+    "methods": [
+      {
+        "name": "get_all",
+        "method": "get",
+        "path": "/posts"
+      },
+      {
+        "name": "get_by_id",
+        "method": "get",
+        "path": "/posts/{id}",
+        "args": [{ "name": "id" }]
+      },
+      {
+        "name": "create",
+        "method": "post",
+        "path": "/posts",
+        "args": [{ "name": "data", "type": "PostCreateBody" }]
+      },
+      {
+        "name": "update",
+        "method": "put",
+        "path": "/posts/{id}",
+        "args": [{ "name": "id" }, { "name": "data" }]
+      },
+      {
+        "name": "delete",
+        "method": "delete",
+        "path": "/posts/{id}",
+        "args": [{ "name": "id" }]
+      }
+    ]
+  },
+  {
+    "name": "CommentsEndpoint",
+    "attribute": "comments",
+    "methods": [
+      {
+        "name": "get_all",
+        "method": "get",
+        "path": "/comments"
+      },
+      {
+        "name": "get_by_id",
+        "method": "get",
+        "path": "/comments/{id}",
+        "args": [{ "name": "id" }]
+      },
+      {
+        "name": "create",
+        "method": "post",
+        "path": "/comments",
+        "args": [{ "name": "data" }]
+      },
+      {
+        "name": "update",
+        "method": "put",
+        "path": "/comments/{id}",
+        "args": [{ "name": "id", "type": "str" }, { "name": "data" }]
+      },
+      {
+        "name": "delete",
+        "method": "delete",
+        "path": "/comments/{id}",
+        "args": [{ "name": "id" }]
+      }
+    ]
+  }
+]
