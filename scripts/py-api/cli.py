@@ -1,7 +1,8 @@
-import json
 from pathlib import Path
 from generate_api.commons import Endpoint
 from generate_api.generate_api import get_generate_api, get_generate_directory_api
+from generate_api.generate_endpoints_swagger import generate_endpoints_swagger
+import json
 import argparse
 
 
@@ -46,6 +47,14 @@ def command_generate_api(args):
             f.write(api)
 
 
+def command_generate_endpoints(args):
+    with Path(args.input).open("r") as f:
+        swagger = json.load(f)
+    endpoints = generate_endpoints_swagger(swagger)
+    with Path(args.output).open("w") as f:
+        json.dump([it.to_dict() for it in endpoints], f, indent=2)
+
+
 def get_parser():
     def command(func):
         name = func.__name__.replace("command_", "").replace("_", "-")
@@ -65,6 +74,10 @@ def get_parser():
     sb.add_argument("--multiple-files", action="store_true", default=False)
     sb.add_argument("--external-types-action", "--et", type=str, default="export",
                     choices=["import", "ignore", "export"])
+
+    sb = command(command_generate_endpoints)
+    sb.add_argument("--input", "-i", type=str, required=True)
+    sb.add_argument("--output", "-o", type=str, default="endpoints.json")
 
     return parser
 

@@ -1,0 +1,239 @@
+[
+  {
+    "name": "AppEndpoint",
+    "attribute": "app",
+    "methods": [
+      {
+        "name": "health_check",
+        "method": "get",
+        "path": "/",
+        "args": []
+      }
+    ]
+  },
+  {
+    "name": "AuthEndpoint",
+    "attribute": "auth",
+    "methods": [
+      {
+        "name": "login",
+        "method": "post",
+        "path": "/auth/login",
+        "args": [
+          {
+            "name": "data",
+            "type": "AuthLoginDto"
+          }
+        ]
+      },
+      {
+        "name": "register",
+        "method": "post",
+        "path": "/auth/register",
+        "args": [
+          {
+            "name": "data",
+            "type": "AuthRegisterDto"
+          }
+        ]
+      },
+      {
+        "name": "me",
+        "method": "get",
+        "path": "/auth/me",
+        "args": []
+      }
+    ]
+  },
+  {
+    "name": "UsersEndpoint",
+    "attribute": "users",
+    "methods": [
+      {
+        "name": "create",
+        "method": "post",
+        "path": "/users",
+        "args": [
+          {
+            "name": "data",
+            "type": "CreateUserDto"
+          }
+        ]
+      },
+      {
+        "name": "find_all",
+        "method": "get",
+        "path": "/users",
+        "args": []
+      },
+      {
+        "name": "find_one",
+        "method": "get",
+        "path": "/users/{id}",
+        "args": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "method": "patch",
+        "path": "/users/{id}",
+        "args": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "data",
+            "type": "UpdateUserDto"
+          }
+        ]
+      },
+      {
+        "name": "remove",
+        "method": "delete",
+        "path": "/users/{id}",
+        "args": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "CommentsEndpoint",
+    "attribute": "comments",
+    "methods": [
+      {
+        "name": "create",
+        "method": "post",
+        "path": "/comments",
+        "args": [
+          {
+            "name": "data",
+            "type": "CreateCommentDto"
+          }
+        ]
+      },
+      {
+        "name": "find_all",
+        "method": "get",
+        "path": "/comments",
+        "args": []
+      },
+      {
+        "name": "create_answer",
+        "method": "post",
+        "path": "/comments/answers",
+        "args": [
+          {
+            "name": "data",
+            "type": "CreateCommentAnswerDto"
+          }
+        ]
+      },
+      {
+        "name": "find_one",
+        "method": "get",
+        "path": "/comments/{id}",
+        "args": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "method": "patch",
+        "path": "/comments/{id}",
+        "args": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "data",
+            "type": "UpdateCommentDto"
+          }
+        ]
+      },
+      {
+        "name": "remove",
+        "method": "delete",
+        "path": "/comments/{id}",
+        "args": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "PostsEndpoint",
+    "attribute": "posts",
+    "methods": [
+      {
+        "name": "create",
+        "method": "post",
+        "path": "/posts",
+        "args": [
+          {
+            "name": "data",
+            "type": "CreatePostDto"
+          }
+        ]
+      },
+      {
+        "name": "find_all",
+        "method": "get",
+        "path": "/posts",
+        "args": []
+      },
+      {
+        "name": "find_one",
+        "method": "get",
+        "path": "/posts/{id}",
+        "args": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      },
+      {
+        "name": "update",
+        "method": "patch",
+        "path": "/posts/{id}",
+        "args": [
+          {
+            "name": "id",
+            "type": "str"
+          },
+          {
+            "name": "data",
+            "type": "UpdatePostDto"
+          }
+        ]
+      },
+      {
+        "name": "remove",
+        "method": "delete",
+        "path": "/posts/{id}",
+        "args": [
+          {
+            "name": "id",
+            "type": "str"
+          }
+        ]
+      }
+    ]
+  }
+]

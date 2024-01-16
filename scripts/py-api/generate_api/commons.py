@@ -14,6 +14,12 @@ class Arg:
             return Arg(*d)
         return Arg(name=d["name"], type=d.get("type"))
 
+    def to_dict(self) -> dict:
+        result = {"name": self.name}
+        if self.type is not None:
+            result["type"] = self.type
+        return result
+
 
 @dataclass
 class Method:
@@ -31,6 +37,14 @@ class Method:
             args=[Arg.from_dict(it) for it in d.get("args", [])],
         )
 
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "method": self.method,
+            "path": self.path,
+            "args": [it.to_dict() for it in self.args],
+        }
+
 
 @dataclass
 class Endpoint:
@@ -45,6 +59,13 @@ class Endpoint:
             attribute=d["attribute"],
             methods=[Method.from_dict(it) for it in d["methods"]],
         )
+
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "attribute": self.attribute,
+            "methods": [it.to_dict() for it in self.methods],
+        }
 
 
 @dataclass

@@ -1,0 +1,1325 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_healthCheck",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Health check",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["App"]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "summary": "Validate the user credentials to provide a authentication access to other resources",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthLoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthLoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User and/or password was invalid!"
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "summary": "Register a new user",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthRegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User already exists!"
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "operationId": "AuthController_me",
+        "summary": "Get the current user",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User not exists!"
+          }
+        },
+        "tags": ["Auth"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users": {
+      "post": {
+        "operationId": "UsersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User already exists"
+          }
+        },
+        "tags": ["Users"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "UsersController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsersPageResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Users"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "operationId": "UsersController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "User not exists!"
+          }
+        },
+        "tags": ["Users"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "UsersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Users"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "UsersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "User not exists!"
+          }
+        },
+        "tags": ["Users"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/comments": {
+      "post": {
+        "operationId": "CommentsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Comments"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "CommentsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommentsPageResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Comments"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/comments/answers": {
+      "post": {
+        "operationId": "CommentsController_createAnswer",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentAnswerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Comments"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/comments/{id}": {
+      "get": {
+        "operationId": "CommentsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentRelatedResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "You are not the author of this comment!"
+          }
+        },
+        "tags": ["Comments"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "CommentsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Comment not exists!"
+          },
+          "403": {
+            "description": "You are not the author of this comment!"
+          }
+        },
+        "tags": ["Comments"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "CommentsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Comment not exists!"
+          },
+          "403": {
+            "description": "You are not the author of this comment!"
+          }
+        },
+        "tags": ["Comments"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/posts": {
+      "post": {
+        "operationId": "PostsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Posts"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "PostsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostsPageResponse"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Posts"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/posts/{id}": {
+      "get": {
+        "operationId": "PostsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SinglePostResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Post not exists!"
+          }
+        },
+        "tags": ["Posts"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "PostsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Post not exists!"
+          }
+        },
+        "tags": ["Posts"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "PostsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Post not exists!"
+          }
+        },
+        "tags": ["Posts"],
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Social Media API",
+    "description": "An API created for learning purposes",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "AuthLoginDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "nickname",
+            "description": "Username/Login of the user"
+          },
+          "password": {
+            "type": "string",
+            "example": "strong-password",
+            "description": "Password of the user"
+          }
+        },
+        "required": ["username", "password"]
+      },
+      "AuthLoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "JWT token"
+          }
+        },
+        "required": ["token"]
+      },
+      "AuthRegisterDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "nickname",
+            "description": "Username/Login of the user"
+          },
+          "password": {
+            "type": "string",
+            "example": "strong-password",
+            "description": "Password of the user"
+          }
+        },
+        "required": ["username", "password"]
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "uuid",
+            "description": "User identifier"
+          },
+          "username": {
+            "type": "string",
+            "example": "nickname",
+            "description": "Username/Login of the user"
+          },
+          "role": {
+            "type": "string",
+            "example": "admin",
+            "description": "Role of the user",
+            "enum": ["admin", "user"]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of creation"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of last update"
+          },
+          "deletedAt": {
+            "type": "object",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of deletion"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "role",
+          "createdAt",
+          "updatedAt",
+          "deletedAt"
+        ]
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "nickname",
+            "description": "Username/Login of the user"
+          },
+          "password": {
+            "type": "string",
+            "example": "strong-password",
+            "description": "Password of the user"
+          },
+          "role": {
+            "type": "string",
+            "example": "admin",
+            "description": "Role of the user",
+            "enum": ["admin", "user"]
+          }
+        },
+        "required": ["username", "password", "role"]
+      },
+      "UsersPageResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserResponse"
+            }
+          },
+          "page": {
+            "type": "number",
+            "description": "The current page number"
+          },
+          "pageSize": {
+            "type": "number",
+            "description": "The number of items per page"
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "The total number of pages"
+          },
+          "totalItems": {
+            "type": "number",
+            "description": "The total number of items"
+          },
+          "isLast": {
+            "type": "boolean",
+            "description": "Hint to the last page"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "totalPages",
+          "totalItems",
+          "isLast"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "example": "nickname",
+            "description": "Username/Login of the user"
+          },
+          "password": {
+            "type": "string",
+            "example": "strong-password",
+            "description": "Password of the user"
+          },
+          "role": {
+            "type": "string",
+            "example": "admin",
+            "description": "Role of the user",
+            "enum": ["admin", "user"]
+          }
+        },
+        "required": ["username", "password", "role"]
+      },
+      "CreateCommentDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "example": "This is a comment",
+            "description": "Content of the comment"
+          },
+          "postId": {
+            "type": "string",
+            "example": "post-uuid",
+            "description": "UUID of the post to comment"
+          }
+        },
+        "required": ["content", "postId"]
+      },
+      "CommentResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "uuid",
+            "description": "Comment identifier"
+          },
+          "content": {
+            "type": "string",
+            "example": "content",
+            "description": "Content of the comment"
+          },
+          "likes": {
+            "type": "number",
+            "example": 99,
+            "description": "Number of likes"
+          },
+          "authorId": {
+            "type": "string",
+            "example": "uuid",
+            "description": "User author identifier"
+          },
+          "postParentId": {
+            "type": "string",
+            "example": "uuid",
+            "description": "Post parent identifier"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of creation"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of last update"
+          },
+          "deletedAt": {
+            "type": "object",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of deletion"
+          }
+        },
+        "required": [
+          "id",
+          "content",
+          "likes",
+          "authorId",
+          "postParentId",
+          "createdAt",
+          "updatedAt",
+          "deletedAt"
+        ]
+      },
+      "CreateCommentAnswerDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "example": "This is a comment answer",
+            "description": "Content of the comment answer"
+          },
+          "commentId": {
+            "type": "string",
+            "example": "comment-uuid",
+            "description": "UUID of the comment to answer"
+          }
+        },
+        "required": ["content", "commentId"]
+      },
+      "CommentWithAuthor": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "uuid",
+            "description": "Comment identifier"
+          },
+          "content": {
+            "type": "string",
+            "example": "content",
+            "description": "Content of the comment"
+          },
+          "likes": {
+            "type": "number",
+            "example": 99,
+            "description": "Number of likes"
+          },
+          "authorId": {
+            "type": "string",
+            "example": "uuid",
+            "description": "User author identifier"
+          },
+          "postParentId": {
+            "type": "string",
+            "example": "uuid",
+            "description": "Post parent identifier"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of creation"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of last update"
+          },
+          "deletedAt": {
+            "type": "object",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of deletion"
+          },
+          "author": {
+            "$ref": "#/components/schemas/UserResponse"
+          }
+        },
+        "required": [
+          "id",
+          "content",
+          "likes",
+          "authorId",
+          "postParentId",
+          "createdAt",
+          "updatedAt",
+          "deletedAt"
+        ]
+      },
+      "CommentRelatedResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "uuid",
+            "description": "Comment identifier"
+          },
+          "content": {
+            "type": "string",
+            "example": "content",
+            "description": "Content of the comment"
+          },
+          "likes": {
+            "type": "number",
+            "example": 99,
+            "description": "Number of likes"
+          },
+          "authorId": {
+            "type": "string",
+            "example": "uuid",
+            "description": "User author identifier"
+          },
+          "postParentId": {
+            "type": "string",
+            "example": "uuid",
+            "description": "Post parent identifier"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of creation"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of last update"
+          },
+          "deletedAt": {
+            "type": "object",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of deletion"
+          },
+          "author": {
+            "$ref": "#/components/schemas/UserResponse"
+          },
+          "commentAnswers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommentWithAuthor"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "content",
+          "likes",
+          "authorId",
+          "postParentId",
+          "createdAt",
+          "updatedAt",
+          "deletedAt"
+        ]
+      },
+      "CommentsPageResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommentRelatedResponse"
+            }
+          },
+          "page": {
+            "type": "number",
+            "description": "The current page number"
+          },
+          "pageSize": {
+            "type": "number",
+            "description": "The number of items per page"
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "The total number of pages"
+          },
+          "totalItems": {
+            "type": "number",
+            "description": "The total number of items"
+          },
+          "isLast": {
+            "type": "boolean",
+            "description": "Hint to the last page"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "totalPages",
+          "totalItems",
+          "isLast"
+        ]
+      },
+      "UpdateCommentDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "example": "This is a comment",
+            "description": "Content of the comment"
+          }
+        },
+        "required": ["content"]
+      },
+      "CreatePostDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "example": "This is a post",
+            "description": "Content of the post"
+          }
+        },
+        "required": ["content"]
+      },
+      "PostResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "uuid",
+            "description": "Post identifier"
+          },
+          "content": {
+            "type": "string",
+            "example": "content",
+            "description": "Content of the comment"
+          },
+          "likes": {
+            "type": "number",
+            "example": 99,
+            "description": "Number of likes"
+          },
+          "authorId": {
+            "type": "string",
+            "example": "uuid",
+            "description": "User author identifier"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of creation"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of last update"
+          },
+          "deletedAt": {
+            "type": "object",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of deletion"
+          }
+        },
+        "required": [
+          "id",
+          "content",
+          "likes",
+          "authorId",
+          "createdAt",
+          "updatedAt",
+          "deletedAt"
+        ]
+      },
+      "PostWithAuthorResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "uuid",
+            "description": "Post identifier"
+          },
+          "content": {
+            "type": "string",
+            "example": "content",
+            "description": "Content of the comment"
+          },
+          "likes": {
+            "type": "number",
+            "example": 99,
+            "description": "Number of likes"
+          },
+          "authorId": {
+            "type": "string",
+            "example": "uuid",
+            "description": "User author identifier"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of creation"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of last update"
+          },
+          "deletedAt": {
+            "type": "object",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of deletion"
+          },
+          "author": {
+            "$ref": "#/components/schemas/UserResponse"
+          }
+        },
+        "required": [
+          "id",
+          "content",
+          "likes",
+          "authorId",
+          "createdAt",
+          "updatedAt",
+          "deletedAt",
+          "author"
+        ]
+      },
+      "PostsPageResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PostWithAuthorResponse"
+            }
+          },
+          "page": {
+            "type": "number",
+            "description": "The current page number"
+          },
+          "pageSize": {
+            "type": "number",
+            "description": "The number of items per page"
+          },
+          "totalPages": {
+            "type": "number",
+            "description": "The total number of pages"
+          },
+          "totalItems": {
+            "type": "number",
+            "description": "The total number of items"
+          },
+          "isLast": {
+            "type": "boolean",
+            "description": "Hint to the last page"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "pageSize",
+          "totalPages",
+          "totalItems",
+          "isLast"
+        ]
+      },
+      "SinglePostResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "uuid",
+            "description": "Post identifier"
+          },
+          "content": {
+            "type": "string",
+            "example": "content",
+            "description": "Content of the comment"
+          },
+          "likes": {
+            "type": "number",
+            "example": 99,
+            "description": "Number of likes"
+          },
+          "authorId": {
+            "type": "string",
+            "example": "uuid",
+            "description": "User author identifier"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of creation"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of last update"
+          },
+          "deletedAt": {
+            "type": "object",
+            "example": "2021-01-01T00:00:00.000Z",
+            "description": "Date of deletion"
+          },
+          "author": {
+            "$ref": "#/components/schemas/UserResponse"
+          },
+          "comments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommentResponse"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "content",
+          "likes",
+          "authorId",
+          "createdAt",
+          "updatedAt",
+          "deletedAt",
+          "author",
+          "comments"
+        ]
+      },
+      "UpdatePostDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "example": "This is a post",
+            "description": "Content of the post"
+          }
+        },
+        "required": ["content"]
+      }
+    }
+  }
+}
