@@ -2,6 +2,8 @@ from pathlib import Path
 from generate_api.commons import Endpoint
 from generate_api.generate_api import get_generate_api, get_generate_directory_api
 from generate_api.generate_endpoints_swagger import generate_endpoints_swagger
+from generate_api.generate_types_swagger import generate_types_swagger
+
 import json
 import argparse
 
@@ -55,6 +57,17 @@ def command_generate_endpoints(args):
         json.dump([it.to_dict() for it in endpoints], f, indent=2)
 
 
+def command_generate_types(args):
+    if args.language == "swagger":
+        with Path(args.input).open("r") as f:
+            swagger = json.load(f)
+        types = generate_types_swagger(swagger)
+        with Path(args.output).open("w") as f:
+            json.dump([it.to_dict() for it in types], f, indent=2)
+    else:
+        raise NotImplementedError(f"language {args.language} not implemented")
+
+
 def get_parser():
     def command(func):
         name = func.__name__.replace("command_", "").replace("_", "-")
@@ -78,6 +91,12 @@ def get_parser():
     sb = command(command_generate_endpoints)
     sb.add_argument("--input", "-i", type=str, required=True)
     sb.add_argument("--output", "-o", type=str, default="endpoints.json")
+
+    sb = command(command_generate_types)
+    sb.add_argument("--language", "-l", type=str,
+                    default="swagger", choices={"swagger"})
+    sb.add_argument("--input", "-i", type=str, required=True)
+    sb.add_argument("--output", "-o", type=str, default="types.json")
 
     return parser
 
