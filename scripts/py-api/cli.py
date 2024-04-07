@@ -1,5 +1,7 @@
 from pathlib import Path
 from generate_api.commons import Endpoint
+from generate_api.json_schema import JsonType
+from generate_api.generate_types import get_generate_types
 from generate_api.generate_api import get_generate_api, get_generate_directory_api
 from generate_api.extract_endpoints_swagger import extract_endpoints_swagger
 from generate_api.extract_types_swagger import extract_types_swagger
@@ -23,6 +25,12 @@ def load_endpoints_from_file(path: str):
     with Path(path).open("r") as f:
         endpoints = json.load(f)
     return [Endpoint.from_dict(e) for e in endpoints]
+
+
+def load_json_types_from_file(path: str):
+    with Path(path).open("r") as f:
+        types = json.load(f)
+    return [JsonType.from_dict(t) for t in types]
 
 
 def command_generate_api(args):
@@ -57,6 +65,16 @@ def command_extract_endpoints(args):
         json.dump([it.to_dict() for it in endpoints], f, indent=2)
 
 
+def command_generate_types(args):
+    types = load_json_types_from_file(args.input)
+    generate_types = get_generate_types(args.language)
+    types_code = generate_types(types)
+    suffix = suffix_from_laguage(args.language)
+    output = Path(args.output).with_suffix(suffix)
+    with output.open("w") as f:
+        f.write(types_code)
+
+
 def command_extract_types(args):
     with Path(args.input).open("r") as f:
         swagger = json.load(f)
@@ -88,6 +106,12 @@ def get_parser():
     sb = command(command_extract_endpoints)
     sb.add_argument("--input", "-i", type=str, required=True)
     sb.add_argument("--output", "-o", type=str, default="endpoints.json")
+
+    sb = command(command_generate_types)
+    sb.add_argument("--input", "-i", type=str, required=True)
+    sb.add_argument("--output", "-o", type=str, default="types")
+    sb.add_argument("--language", "-l", type=str, required=True,
+                    choices=["python", "typescript"])
 
     sb = command(command_extract_types)
     sb.add_argument("--input", "-i", type=str, required=True)

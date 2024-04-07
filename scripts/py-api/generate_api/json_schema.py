@@ -135,6 +135,26 @@ class JsonObject:
 JsonSchema = JsonRef | JsonAny | JsonString | JsonNumber | JsonBoolean | JsonNull | JsonArray | JsonObject
 
 
+def JsonSchema_from_dict(d: dict):
+    tag = d["type"]
+    if tag == "any":
+        return JsonAny()
+    if tag == "null":
+        return JsonNull()
+    if tag == "ref":
+        return JsonRef(d["ref"])
+    if tag == "boolean":
+        return JsonBoolean()
+    if tag == "number":
+        return JsonNumber(d.get("format"), d.get("enum"), d.get("minimum"), d.get("maximum"))
+    if tag == "string":
+        return JsonString(d.get("format"), d.get("enum"), d.get("min_length"), d.get("max_length"))
+    if tag == "array":
+        return JsonArray(JsonSchema_from_dict(d["items"]), d.get("min_length"), d.get("max_length"))
+    if tag == "object":
+        return JsonObject({k: JsonSchema_from_dict(v) for k, v in d["properties"].items()}, set(d.get("optionals", [])))
+
+
 @dataclass
 class JsonType:
     name: str
@@ -142,3 +162,6 @@ class JsonType:
 
     def to_dict(self):
         return {"name": self.name, "schema": self.schema.to_dict()}
+
+    def from_dict(d: dict):
+        return JsonType(d["name"], JsonSchema_from_dict(d["schema"]))
