@@ -66,7 +66,6 @@ def method_as_string(method: Method) -> str:
 def generate_endpoint(endpoint: Endpoint):
     result = class_template.strip()
     result = result.replace("{name}", endpoint.name)
-    methods = []
     methods = [method_as_string(method)
                for method in endpoint.methods]
     result = result.replace("{methods}", "\n" + "\n\n".join(methods))
@@ -108,7 +107,7 @@ def external_types_to_json_types(external_types: list[str], types: list[JsonType
 
 def generate_imports(types: list[str], *, import_path="./types"):
     if types:
-        return "\n".join(f'import {{ {it} }} from "{import_path}"' for it in types) + "\n"
+        return f'import {{ {", ".join(types)} }} from "{import_path}"\n'
     return ""
 
 

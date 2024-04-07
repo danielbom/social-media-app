@@ -1,7 +1,6 @@
 import { AxiosResponse } from "axios"
 import { Config } from "../Config"
-import { PostsCreateBody } from "../types"
-import { PostsUpdateBody } from "../types"
+import { PostsCreateBody, PostsUpdateBody } from "../types"
 
 export class PostsEndpoint {
   constructor(public config: Config) {}

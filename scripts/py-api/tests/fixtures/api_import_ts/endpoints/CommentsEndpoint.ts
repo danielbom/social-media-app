@@ -1,7 +1,6 @@
 import { AxiosResponse } from "axios"
 import { Config } from "../Config"
-import { CommentsCreateBody } from "../types"
-import { CommentsUpdateBody } from "../types"
+import { CommentsCreateBody, CommentsUpdateBody } from "../types"
 
 export class CommentsEndpoint {
   constructor(public config: Config) {}

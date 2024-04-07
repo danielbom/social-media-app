@@ -1,8 +1,5 @@
 import { AxiosInstance, AxiosResponse } from "axios"
-import { PostsCreateBody } from "./types"
-import { PostsUpdateBody } from "./types"
-import { CommentsCreateBody } from "./types"
-import { CommentsUpdateBody } from "./types"
+import { PostsCreateBody, PostsUpdateBody, CommentsCreateBody, CommentsUpdateBody } from "./types"
 
 export class Config {
   constructor(public instance: AxiosInstance) {}
