@@ -37,7 +37,7 @@ def generate_endpoints_swagger(swagger: dict) -> list[Endpoint]:
     endpoints = {}
     for path, methods in paths.items():
         for method, data in methods.items():
-            [endpoint_name, method_name] = data["operationId"].split("_")
+            [endpoint_name, method_name] = data["operationId"].split("_", 1)
             endpoint_name = to_snake_case(endpoint_name)
             endpoint_name = re.sub(r"_controller$", "_endpoint", endpoint_name)
             attribute_name = re.sub(r"_endpoint$", "", endpoint_name)
@@ -55,7 +55,7 @@ def generate_endpoints_swagger(swagger: dict) -> list[Endpoint]:
 
             args = []
             body = None
-            for parameter in data["parameters"]:
+            for parameter in data.get("parameters", []):
                 if parameter["in"] == "path":
                     name = parameter["name"]
                     typ = collect_type(parameter.get("schema", {}))

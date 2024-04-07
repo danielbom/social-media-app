@@ -2,7 +2,7 @@ from .generate_api_typescript import collect_all_external_types, collect_externa
 from .commons import Endpoint, ExternalTypeAction, File
 
 template_api_class = r"""
-import { Config } from "./Config";
+import { Config } from "./Config"
 {import_endpoints}
 export class Api {
 {meta_attributes}
@@ -13,22 +13,24 @@ export class Api {
 """
 
 template_config_class = r"""
+import { AxiosInstance } from "axios"
+
 export class Config {
-  constructor(public baseUrl: string) {}
+  constructor(public instance: AxiosInstance) {}
 }
 """
 
 template_endpoint_class = r"""
-import axios from "axios";
-import { Config } from "../Config";
+import { AxiosResponse } from "axios"
+import { Config } from "../Config"
 {endpoint_imports}
 export {endpoint_class}
 {endpoint_exports}
 """
 
 template_index = r"""
-export { Api } from "./Api";
-export { Config } from "./Config";
+export { Api } from "./Api"
+export { Config } from "./Config"
 {import_types}
 """
 
@@ -39,7 +41,7 @@ def endpoint_path(endpoint: Endpoint, *, extension=False) -> str:
 
 
 def generate_import_endpoint(endpoint: Endpoint):
-    return f'import {{ {endpoint.name} }} from "{endpoint_path(endpoint)}";'
+    return f'import {{ {endpoint.name} }} from "{endpoint_path(endpoint)}"'
 
 
 def generate_import_endpoints(endpoints: list[Endpoint]):
@@ -94,13 +96,13 @@ def generate_export_types_file(endpoints: list[Endpoint]) -> File:
     for endpoint in endpoints:
         types = collect_external_types(endpoint)
         if types:
-            result.append(f'export type * from "{endpoint_path(endpoint)}";')
+            result.append(f'export type * from "{endpoint_path(endpoint)}"')
     return File(name="./types.ts", content="\n".join(result) + "\n")
 
 
 def generate_index_import_types(types: list[str]) -> str:
     if types:
-        return 'export type * from "./types";\n'
+        return 'export type * from "./types"\n'
     return ""
 
 

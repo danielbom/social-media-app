@@ -1,64 +1,64 @@
-import axios from "axios";
-import { PostsCreateBody } from "./types";
+import { AxiosInstance, AxiosResponse } from "axios"
+import { PostsCreateBody } from "./types"
 
 export class Config {
-  constructor(public baseUrl: string) {}
+  constructor(public instance: AxiosInstance) {}
 }
 
 class PostsEndpoint {
   constructor(public config: Config) {}
 
-  getAll() {
-    return axios.get(`${this.config.baseUrl}/posts`);
+  getAll(): Promise<AxiosResponse<any>> {
+    return this.config.instance.get(`/posts`)
   }
 
-  getById(id: any) {
-    return axios.get(`${this.config.baseUrl}/posts/${id}`);
+  getById(id: any): Promise<AxiosResponse<any>> {
+    return this.config.instance.get(`/posts/${id}`)
   }
 
-  create(data: PostsCreateBody) {
-    return axios.post(`${this.config.baseUrl}/posts`, data);
+  create(data: PostsCreateBody): Promise<AxiosResponse<any>> {
+    return this.config.instance.post(`/posts`, data)
   }
 
-  update(id: any, data: any) {
-    return axios.put(`${this.config.baseUrl}/posts/${id}`, data);
+  update(id: any, data: any): Promise<AxiosResponse<any>> {
+    return this.config.instance.put(`/posts/${id}`, data)
   }
 
-  delete(id: any) {
-    return axios.delete(`${this.config.baseUrl}/posts/${id}`);
+  delete(id: any): Promise<AxiosResponse<any>> {
+    return this.config.instance.delete(`/posts/${id}`)
   }
 }
 
 class CommentsEndpoint {
   constructor(public config: Config) {}
 
-  getAll() {
-    return axios.get(`${this.config.baseUrl}/comments`);
+  getAll(): Promise<AxiosResponse<any>> {
+    return this.config.instance.get(`/comments`)
   }
 
-  getById(id: string) {
-    return axios.get(`${this.config.baseUrl}/comments/${id}`);
+  getById(id: string): Promise<AxiosResponse<any>> {
+    return this.config.instance.get(`/comments/${id}`)
   }
 
-  create(data: any) {
-    return axios.post(`${this.config.baseUrl}/comments`, data);
+  create(data: any): Promise<AxiosResponse<any>> {
+    return this.config.instance.post(`/comments`, data)
   }
 
-  update(id: string, data: any) {
-    return axios.put(`${this.config.baseUrl}/comments/${id}`, data);
+  update(id: string, data: any): Promise<AxiosResponse<any>> {
+    return this.config.instance.put(`/comments/${id}`, data)
   }
 
-  delete(id: string) {
-    return axios.delete(`${this.config.baseUrl}/comments/${id}`);
+  delete(id: string): Promise<AxiosResponse<any>> {
+    return this.config.instance.delete(`/comments/${id}`)
   }
 }
 
 export class Api {
-  public posts: PostsEndpoint;
-  public comments: CommentsEndpoint;
+  public posts: PostsEndpoint
+  public comments: CommentsEndpoint
 
   constructor(public config: Config) {
-    this.posts = new PostsEndpoint(config);
-    this.comments = new CommentsEndpoint(config);
+    this.posts = new PostsEndpoint(config)
+    this.comments = new CommentsEndpoint(config)
   }
 }

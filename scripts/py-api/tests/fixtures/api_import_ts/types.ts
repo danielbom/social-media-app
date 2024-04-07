@@ -1,1 +1,1 @@
-export type PostsCreateBody = any;
+export type PostsCreateBody = any

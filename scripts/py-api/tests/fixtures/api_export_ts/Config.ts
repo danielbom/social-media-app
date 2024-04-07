@@ -1,3 +1,5 @@
+import { AxiosInstance } from "axios"
+
 export class Config {
-  constructor(public baseUrl: string) {}
+  constructor(public instance: AxiosInstance) {}
 }

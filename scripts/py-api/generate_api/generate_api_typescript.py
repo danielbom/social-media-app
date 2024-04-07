@@ -3,10 +3,10 @@ from .name_transform import snake_to_camel_case
 
 
 template = """
-import axios from "axios";
+import { AxiosInstance, AxiosResponse } from "axios"
 {import_external_types}
 export class Config {
-  constructor(public baseUrl: string) {}
+  constructor(public instance: AxiosInstance) {}
 }
 
 {endpoints}
@@ -55,8 +55,8 @@ def method_as_string(method: Method) -> str:
     request_args = method_request_args_as_string(method)
     path = method.path.replace("{", "${")
     return '\n'.join([
-        f'  {snake_to_camel_case(method.name)}({method_args}) {{',
-        f'    return axios.{method.method}(`${{this.config.baseUrl}}{path}`{request_args});',
+        f'  {snake_to_camel_case(method.name)}({method_args}): Promise<AxiosResponse<any>> {{',
+        f'    return this.config.instance.{method.method}(`{path}`{request_args})',
         f'  }}',
     ])
 
@@ -76,11 +76,11 @@ def generate_endpoints(endpoints: list[Endpoint]):
 
 
 def generate_meta_attributes(endpoints: list[Endpoint]):
-    return "\n".join([f"  public {endpoint.attribute}: {endpoint.name};" for endpoint in endpoints]) + "\n"
+    return "\n".join([f"  public {endpoint.attribute}: {endpoint.name}" for endpoint in endpoints]) + "\n"
 
 
 def generate_attributes(endpoints: list[Endpoint]):
-    return "\n".join([f"    this.{endpoint.attribute} = new {endpoint.name}(config);" for endpoint in endpoints])
+    return "\n".join([f"    this.{endpoint.attribute} = new {endpoint.name}(config)" for endpoint in endpoints])
 
 
 def collect_external_types(endpoint: Endpoint):
@@ -101,7 +101,7 @@ def collect_all_external_types(endpoints: list[Endpoint]):
 
 def generate_imports(types: list[str], *, import_path="./types"):
     if types:
-        return "\n".join(f'import {{ {it} }} from "{import_path}";' for it in types) + "\n"
+        return "\n".join(f'import {{ {it} }} from "{import_path}"' for it in types) + "\n"
     return ""
 
 
@@ -113,7 +113,7 @@ def generate_import_external_types(endpoints: list[Endpoint], external_types_act
 
 def generate_exports(types: list[str]):
     if types:
-        return "\n".join(f"export type {it} = any;" for it in types) + "\n"
+        return "\n".join(f"export type {it} = any" for it in types) + "\n"
     return ""
 
 
