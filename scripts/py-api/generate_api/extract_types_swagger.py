@@ -34,7 +34,7 @@ def swagger_to_json_schema(swagger_schema: dict) -> JsonSchema:
         raise ValueError(f"Unknown type {s['type']}")
 
 
-def generate_types_swagger(swagger_schema: dict) -> List[JsonType]:
+def extract_types_swagger(swagger_schema: dict) -> List[JsonType]:
     if not isinstance(swagger_schema, dict):
         return []
     if "components" not in swagger_schema:

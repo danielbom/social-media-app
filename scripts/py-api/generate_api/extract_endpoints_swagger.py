@@ -32,7 +32,7 @@ def collect_type(schema: dict) -> str:
     return None
 
 
-def generate_endpoints_swagger(swagger: dict) -> list[Endpoint]:
+def extract_endpoints_swagger(swagger: dict) -> list[Endpoint]:
     paths = swagger["paths"]
     endpoints = {}
     for path, methods in paths.items():

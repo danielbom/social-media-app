@@ -1,5 +1,5 @@
 import pytest
-from generate_api.generate_types_swagger import generate_types_swagger
+from generate_api.extract_types_swagger import extract_types_swagger
 
 
 def using(schemas):
@@ -39,7 +39,7 @@ def using(schemas):
     (using({"Ref": {"$ref": "#/components/schemas/RefName"}}),
      [{"name": "Ref", "schema": {"type": "ref", "ref": "RefName"}}]),
 ])
-def test_generate_types_swagger(swagger_schema, expected):
-    actual_schema = generate_types_swagger(swagger_schema)
+def test_extract_types_swagger(swagger_schema, expected):
+    actual_schema = extract_types_swagger(swagger_schema)
     actual = [it.to_dict() for it in actual_schema]
     assert actual == expected
