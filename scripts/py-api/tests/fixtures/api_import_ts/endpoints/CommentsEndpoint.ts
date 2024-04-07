@@ -1,5 +1,7 @@
 import { AxiosResponse } from "axios"
 import { Config } from "../Config"
+import { CommentsCreateBody } from "../types"
+import { CommentsUpdateBody } from "../types"
 
 export class CommentsEndpoint {
   constructor(public config: Config) {}
@@ -12,11 +14,11 @@ export class CommentsEndpoint {
     return this.config.instance.get(`/comments/${id}`)
   }
 
-  create(data: any): Promise<AxiosResponse<any>> {
+  create(data: CommentsCreateBody): Promise<AxiosResponse<any>> {
     return this.config.instance.post(`/comments`, data)
   }
 
-  update(id: string, data: any): Promise<AxiosResponse<any>> {
+  update(id: string, data: CommentsUpdateBody): Promise<AxiosResponse<any>> {
     return this.config.instance.put(`/comments/${id}`, data)
   }
 

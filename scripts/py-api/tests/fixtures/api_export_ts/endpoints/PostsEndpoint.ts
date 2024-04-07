@@ -16,7 +16,7 @@ export class PostsEndpoint {
     return this.config.instance.post(`/posts`, data)
   }
 
-  update(id: any, data: any): Promise<AxiosResponse<any>> {
+  update(id: any, data: PostsUpdateBody): Promise<AxiosResponse<any>> {
     return this.config.instance.put(`/posts/${id}`, data)
   }
 
@@ -25,4 +25,12 @@ export class PostsEndpoint {
   }
 }
 
-export type PostsCreateBody = any
+export type PostsCreateBody = {
+  title: string,
+  content: string,
+  author: string
+}
+
+export type PostsUpdateBody = {
+  content: string
+}

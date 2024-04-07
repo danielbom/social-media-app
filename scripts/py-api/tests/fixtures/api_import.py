@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import requests
-from .types import PostsCreateBody
+from .types import PostsCreateBody, PostsUpdateBody, CommentsCreateBody, CommentsUpdateBody
 
 
 @dataclass
@@ -21,7 +21,7 @@ class PostsEndpoint:
     def create(self, data: PostsCreateBody):
         return requests.post(f"{self.config.base_url}/posts", json=data)
 
-    def update(self, id, data):
+    def update(self, id, data: PostsUpdateBody):
         return requests.put(f"{self.config.base_url}/posts/{id}", json=data)
 
     def delete(self, id):
@@ -38,10 +38,10 @@ class CommentsEndpoint:
     def get_by_id(self, id: str):
         return requests.get(f"{self.config.base_url}/comments/{id}")
 
-    def create(self, data):
+    def create(self, data: CommentsCreateBody):
         return requests.post(f"{self.config.base_url}/comments", json=data)
 
-    def update(self, id: str, data):
+    def update(self, id: str, data: CommentsUpdateBody):
         return requests.put(f"{self.config.base_url}/comments/{id}", json=data)
 
     def delete(self, id: str):

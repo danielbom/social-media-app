@@ -19,7 +19,7 @@ class PostsEndpoint {
     return this.config.instance.post(`/posts`, data)
   }
 
-  update(id: any, data: any): Promise<AxiosResponse<any>> {
+  update(id: any, data: PostsUpdateBody): Promise<AxiosResponse<any>> {
     return this.config.instance.put(`/posts/${id}`, data)
   }
 
@@ -39,11 +39,11 @@ class CommentsEndpoint {
     return this.config.instance.get(`/comments/${id}`)
   }
 
-  create(data: any): Promise<AxiosResponse<any>> {
+  create(data: CommentsCreateBody): Promise<AxiosResponse<any>> {
     return this.config.instance.post(`/comments`, data)
   }
 
-  update(id: string, data: any): Promise<AxiosResponse<any>> {
+  update(id: string, data: CommentsUpdateBody): Promise<AxiosResponse<any>> {
     return this.config.instance.put(`/comments/${id}`, data)
   }
 
@@ -62,4 +62,21 @@ export class Api {
   }
 }
 
-export type PostsCreateBody = any
+export type PostsCreateBody = {
+  title: string,
+  content: string,
+  author: string
+}
+
+export type PostsUpdateBody = {
+  content: string
+}
+
+export type CommentsCreateBody = {
+  content: string,
+  author: string
+}
+
+export type CommentsUpdateBody = {
+  content: string
+}

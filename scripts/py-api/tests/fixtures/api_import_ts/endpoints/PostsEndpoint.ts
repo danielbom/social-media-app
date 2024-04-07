@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios"
 import { Config } from "../Config"
 import { PostsCreateBody } from "../types"
+import { PostsUpdateBody } from "../types"
 
 export class PostsEndpoint {
   constructor(public config: Config) {}
@@ -17,7 +18,7 @@ export class PostsEndpoint {
     return this.config.instance.post(`/posts`, data)
   }
 
-  update(id: any, data: any): Promise<AxiosResponse<any>> {
+  update(id: any, data: PostsUpdateBody): Promise<AxiosResponse<any>> {
     return this.config.instance.put(`/posts/${id}`, data)
   }
 

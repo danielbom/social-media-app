@@ -1,5 +1,5 @@
 from .commons import Endpoint, ExternalTypeAction, File
-from .generate_api_typescript import collect_all_external_types, collect_external_types, generate_attributes, generate_endpoint, generate_exports, generate_imports, generate_meta_attributes
+from .generate_api_typescript import collect_all_external_types, collect_external_types, generate_attributes, generate_endpoint, generate_exports, generate_imports, generate_meta_attributes, external_types_to_json_types
 from .json_schema import JsonType
 
 template_api_class = r"""
@@ -64,7 +64,7 @@ def generate_config_file() -> File:
     return File(name="Config.ts", content=template_config_class.strip() + "\n")
 
 
-def generate_directory_endpoint(endpoint: Endpoint, external_types_action: ExternalTypeAction) -> str:
+def generate_directory_endpoint(endpoint: Endpoint, types: list[JsonType], external_types_action: ExternalTypeAction) -> str:
     result = template_endpoint_class
     result = result.replace("{endpoint_class}", generate_endpoint(endpoint))
     endpoint_imports = ""
@@ -74,21 +74,21 @@ def generate_directory_endpoint(endpoint: Endpoint, external_types_action: Exter
             collect_external_types(endpoint), import_path="../types")
     elif external_types_action == "export":
         endpoint_exports = "\n" + \
-            generate_exports(collect_external_types(endpoint))
+            generate_exports(external_types_to_json_types(collect_external_types(endpoint), types))
     result = result.replace("{endpoint_imports}", endpoint_imports)
     result = result.replace("{endpoint_exports}", endpoint_exports)
     return result.strip() + "\n"
 
 
-def generate_endpoint_file(endpoint: Endpoint, external_types_action: ExternalTypeAction) -> File:
-    return File(name=endpoint_path(endpoint, extension=True), content=generate_directory_endpoint(endpoint, external_types_action))
+def generate_endpoint_file(endpoint: Endpoint, types: list[JsonType], external_types_action: ExternalTypeAction) -> File:
+    return File(name=endpoint_path(endpoint, extension=True), content=generate_directory_endpoint(endpoint, types, external_types_action))
 
 
-def generate_endpoints_files(endpoints: list[Endpoint], external_types_action: ExternalTypeAction) -> list[File]:
-    return [generate_endpoint_file(endpoint, external_types_action) for endpoint in endpoints]
+def generate_endpoints_files(endpoints: list[Endpoint], types: list[JsonType], external_types_action: ExternalTypeAction) -> list[File]:
+    return [generate_endpoint_file(endpoint, types, external_types_action) for endpoint in endpoints]
 
 
-def generate_import_types_file(types: list[str]) -> File:
+def generate_import_types_file(types: list[JsonType]) -> File:
     return File(name="./types.ts", content=generate_exports(types))
 
 
@@ -115,16 +115,16 @@ def generate_index_file(types: list[str]) -> File:
 
 
 def generate_directory_api_typescript(endpoints: list[Endpoint], types: list[JsonType], external_types_action: ExternalTypeAction = "export") -> list[File]:
-    types = collect_all_external_types(endpoints)
+    external_types = collect_all_external_types(endpoints)
     files = []
-    if types:
+    if external_types:
         if external_types_action == 'import':
-            files.append(generate_import_types_file(types))
+            files.append(generate_import_types_file(external_types_to_json_types(external_types, types)))
         elif external_types_action == 'export':
             files.append(generate_export_types_file(endpoints))
 
     files.append(generate_api_file(endpoints))
     files.append(generate_config_file())
-    files.extend(generate_endpoints_files(endpoints, external_types_action))
-    files.append(generate_index_file(types))
+    files.extend(generate_endpoints_files(endpoints, types, external_types_action))
+    files.append(generate_index_file(external_types))
     return files

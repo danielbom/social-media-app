@@ -1,5 +1,6 @@
 from .commons import Arg, Endpoint, ExternalTypeAction, Method
-from .json_schema import JsonType
+from .generate_types_typescript import generate_type_typescript
+from .json_schema import JsonAny, JsonType
 from .name_transform import snake_to_camel_case
 
 
@@ -93,11 +94,16 @@ def collect_external_types(endpoint: Endpoint):
     return external_types
 
 
-def collect_all_external_types(endpoints: list[Endpoint]):
+def collect_all_external_types(endpoints: list[Endpoint]) -> list[str]:
     external_types = []
     for endpoint in endpoints:
         external_types.extend(collect_external_types(endpoint))
     return external_types
+
+
+def external_types_to_json_types(external_types: list[str], types: list[JsonType]) -> list[JsonType]:
+    return [next((jt for jt in types if jt.name == name), None) or JsonType(name, JsonAny())
+            for name in external_types]
 
 
 def generate_imports(types: list[str], *, import_path="./types"):
@@ -112,15 +118,15 @@ def generate_import_external_types(endpoints: list[Endpoint], external_types_act
     return ""
 
 
-def generate_exports(types: list[str]):
+def generate_exports(types: list[JsonType]):
     if types:
-        return "\n".join(f"export type {it} = any" for it in types) + "\n"
+        return "\n\n".join(map(generate_type_typescript, types)) + "\n"
     return ""
 
 
-def generate_export_external_types(endpoints: list[Endpoint], external_types_action: ExternalTypeAction):
+def generate_export_external_types(endpoints: list[Endpoint], types: list[JsonType], external_types_action: ExternalTypeAction):
     if external_types_action == "export":
-        return "\n" + generate_exports(collect_all_external_types(endpoints))
+        return "\n" + generate_exports(external_types_to_json_types(collect_all_external_types(endpoints), types))
     return ""
 
 
@@ -133,5 +139,5 @@ def generate_api_typescript(endpoints: list[Endpoint], types: list[JsonType], ex
     result = result.replace("{meta_attributes}",
                             generate_meta_attributes(endpoints))
     result = result.replace("{export_external_types}", generate_export_external_types(
-        endpoints, external_types_action))
+        endpoints, types, external_types_action))
     return result
