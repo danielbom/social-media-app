@@ -35,10 +35,11 @@ def load_json_types_from_file(path: str):
 
 def command_generate_api(args):
     if args.multiple_files:
+        types = load_json_types_from_file(args.types) if args.types else []
         endpoints = load_endpoints_from_file(args.input)
         generate_directory_api = get_generate_directory_api(
             args.language)
-        files = generate_directory_api(endpoints, args.external_types_action)
+        files = generate_directory_api(endpoints, types, args.external_types_action)
         output_dir = Path(args.output)
         output_dir.mkdir(exist_ok=True)
         for file in files:
@@ -48,9 +49,10 @@ def command_generate_api(args):
             with output_path.open("w") as f:
                 f.write(file.content)
     else:
+        types = load_json_types_from_file(args.types) if args.types else []
         endpoints = load_endpoints_from_file(args.input)
         generate_api = get_generate_api(args.language)
-        api = generate_api(endpoints, args.external_types_action)
+        api = generate_api(endpoints, types, args.external_types_action)
         suffix = suffix_from_laguage(args.language)
         output = Path(args.output).with_suffix(suffix)
         with output.open("w") as f:
@@ -97,6 +99,7 @@ def get_parser():
     sb = command(command_generate_api)
     sb.add_argument("--input", "-i", type=str, required=True)
     sb.add_argument("--output", "-o", type=str, default="api")
+    sb.add_argument("--types", "-t", type=str, default=None)
     sb.add_argument("--language", "-l", type=str, required=True,
                     choices=["python", "javascript", "typescript"])
     sb.add_argument("--multiple-files", action="store_true", default=False)

@@ -17,6 +17,6 @@ import pytest
 ])
 def test_generate_api(expected_endpoints: List[Endpoint], language: str, external_types_action: ExternalTypeAction, expected_path: Path):
     generate_api = get_generate_api(language)
-    actual = generate_api(expected_endpoints, external_types_action)
+    actual = generate_api(expected_endpoints, [], external_types_action)
     expected = expected_path.read_text()
     assert actual == expected

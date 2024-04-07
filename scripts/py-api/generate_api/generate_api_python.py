@@ -1,6 +1,7 @@
 
 
 from .commons import Arg, Endpoint, ExternalTypeAction, Method
+from .json_schema import JsonType
 
 
 template = """
@@ -109,7 +110,7 @@ def generate_export_external_types(endpoints: list[Endpoint], external_types_act
     return ""
 
 
-def generate_api_python(endpoints: list[Endpoint], external_types_action: ExternalTypeAction = "export"):
+def generate_api_python(endpoints: list[Endpoint], types: list[JsonType], external_types_action: ExternalTypeAction = "export"):
     result = template.strip()
     result = result.format(
         import_external_types=generate_import_external_types(

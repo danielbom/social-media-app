@@ -1,5 +1,6 @@
 
 from .commons import Arg, Endpoint, ExternalTypeAction, Method
+from .json_schema import JsonType
 from .name_transform import snake_to_camel_case
 
 template = """
@@ -73,7 +74,7 @@ def generate_attributes(endpoints: list[Endpoint]):
     return "\n".join([f"    this.{endpoint.attribute} = new {endpoint.name}(config);" for endpoint in endpoints])
 
 
-def generate_api_javascript(endpoints: list[Endpoint], external_types_action: ExternalTypeAction = "ignore"):
+def generate_api_javascript(endpoints: list[Endpoint], types: list[JsonType], external_types_action: ExternalTypeAction = "ignore"):
     result = template.strip()
     result = result.replace("{endpoints}", generate_endpoints(endpoints))
     result = result.replace("{attributes}", generate_attributes(endpoints))

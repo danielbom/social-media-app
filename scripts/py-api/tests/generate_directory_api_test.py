@@ -15,7 +15,7 @@ from tests.common import FIXTURES, expected_endpoints
 def test_generate_directory_api(expected_endpoints: List[Endpoint], language: str, external_types_action: ExternalTypeAction, expected_directory: Path):
     generate_directory_api = get_generate_directory_api(language)
     actual_files = generate_directory_api(
-        expected_endpoints, external_types_action)
+        expected_endpoints, [], external_types_action)
 
     for actual_file in actual_files:
         expected_file = expected_directory / actual_file.name

@@ -1,4 +1,5 @@
 from .commons import Arg, Endpoint, ExternalTypeAction, Method
+from .json_schema import JsonType
 from .name_transform import snake_to_camel_case
 
 
@@ -123,7 +124,7 @@ def generate_export_external_types(endpoints: list[Endpoint], external_types_act
     return ""
 
 
-def generate_api_typescript(endpoints: list[Endpoint], external_types_action: ExternalTypeAction = "export"):
+def generate_api_typescript(endpoints: list[Endpoint], types: list[JsonType], external_types_action: ExternalTypeAction = "export"):
     result = template.strip()
     result = result.replace("{import_external_types}", generate_import_external_types(
         endpoints, external_types_action))

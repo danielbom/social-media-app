@@ -1,5 +1,6 @@
-from .generate_api_typescript import collect_all_external_types, collect_external_types, generate_attributes, generate_endpoint, generate_exports, generate_imports, generate_meta_attributes
 from .commons import Endpoint, ExternalTypeAction, File
+from .generate_api_typescript import collect_all_external_types, collect_external_types, generate_attributes, generate_endpoint, generate_exports, generate_imports, generate_meta_attributes
+from .json_schema import JsonType
 
 template_api_class = r"""
 import { Config } from "./Config"
@@ -113,7 +114,7 @@ def generate_index_file(types: list[str]) -> File:
     return File(name="./index.ts", content=result)
 
 
-def generate_directory_api_typescript(endpoints: list[Endpoint], external_types_action: ExternalTypeAction = "export") -> list[File]:
+def generate_directory_api_typescript(endpoints: list[Endpoint], types: list[JsonType], external_types_action: ExternalTypeAction = "export") -> list[File]:
     types = collect_all_external_types(endpoints)
     files = []
     if types:
