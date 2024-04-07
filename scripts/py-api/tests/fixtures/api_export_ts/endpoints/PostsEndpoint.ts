@@ -28,7 +28,7 @@ export class PostsEndpoint {
 export type PostsCreateBody = {
   title: string,
   content: string,
-  author: string
+  author?: string
 }
 
 export type PostsUpdateBody = {

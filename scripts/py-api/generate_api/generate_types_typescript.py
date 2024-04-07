@@ -1,5 +1,12 @@
 from .json_schema import JsonType, JsonSchema
 
+
+def opt(schema: JsonSchema, key: str):
+    if schema.optionals and key in schema.optionals:
+        return '?'
+    return ''
+
+
 def generate_schema_typescript(schema: JsonSchema, indent: int = 0):
     if schema.tag == 'any':
         return 'any'
@@ -18,7 +25,7 @@ def generate_schema_typescript(schema: JsonSchema, indent: int = 0):
             return '{}'
         return ''.join([
             '{\n',
-            ',\n'.join(f'{"  "*(indent+1)}{k}: {generate_schema_typescript(v, indent+1)}'
+            ',\n'.join(f'{"  "*(indent+1)}{k}{opt(schema, k)}: {generate_schema_typescript(v, indent+1)}'
                        for k, v in schema.properties.items()),
             '\n}',
         ])

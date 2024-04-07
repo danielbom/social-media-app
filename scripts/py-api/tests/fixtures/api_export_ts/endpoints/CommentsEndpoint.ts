@@ -27,7 +27,7 @@ export class CommentsEndpoint {
 
 export type CommentsCreateBody = {
   content: string,
-  author: string
+  author?: string
 }
 
 export type CommentsUpdateBody = {

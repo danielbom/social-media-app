@@ -1,7 +1,7 @@
 export type PostsCreateBody = {
   title: string,
   content: string,
-  author: string
+  author?: string
 }
 
 export type PostsUpdateBody = {
@@ -10,7 +10,7 @@ export type PostsUpdateBody = {
 
 export type CommentsCreateBody = {
   content: string,
-  author: string
+  author?: string
 }
 
 export type CommentsUpdateBody = {
