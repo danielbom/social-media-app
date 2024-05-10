@@ -25,7 +25,7 @@ setup_logging()
 
 
 @app.get('/', tags=['Health'])
-def read_root():
+def read_root() -> str:
     return 'Healthy!'
 
 

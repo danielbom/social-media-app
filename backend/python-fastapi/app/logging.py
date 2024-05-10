@@ -1,5 +1,6 @@
 import logging
 import sys
+from types import FrameType
 
 from loguru import logger
 
@@ -12,16 +13,19 @@ LOG_JSON = env.log_json
 
 
 class AppLogging(logging.Handler):
-    def emit(self, record):
+    def emit(self, record: logging.LogRecord) -> None:
         # Get corresponding Loguru level if it exists
         try:
-            level = logger.level(record.levelname).name
+            level: str | int = logger.level(record.levelname).name
         except ValueError:
             level = record.levelno
 
         # Find caller from where originated the logged message
-        frame, depth = logging.currentframe(), 2
+        frame: FrameType = logging.currentframe()
+        depth = 2
         while frame.f_code.co_filename == logging.__file__:
+            if frame.f_back is None:
+                break
             frame = frame.f_back
             depth += 1
 
@@ -30,7 +34,7 @@ class AppLogging(logging.Handler):
         )
 
 
-def setup_logging():
+def setup_logging() -> None:
     # intercept everything at the root logger
     logging.root.handlers = [AppLogging()]
     # logging.root.setLevel(LOG_LEVEL)

@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from typing import List
+from typing import List, cast
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 
@@ -53,7 +53,7 @@ def get_users(
 ) -> List[schemas.User]:
     offset = (page - 1) * page_size
     query = db.query(models.User).offset(offset).limit(page_size)
-    return query.all()
+    return cast(List[schemas.User], query.all())
 
 
 @router.get(
@@ -63,9 +63,9 @@ def get_users(
 )
 def get_user(user_id: str, db: Session = Depends(get_db)) -> models.User:
     user = db.query(models.User).filter(models.User.id == user_id).first()
-    if not user:
+    if user is None:
         raise HTTPException(status_code=404, detail='User not found')
-    return user
+    return cast(models.User, user)
 
 
 @router.patch(

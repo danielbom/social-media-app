@@ -70,7 +70,7 @@ def format_long_ms(x: float | int) -> str:
     return plural(x, abs_x, 1, 'millisecond')
 
 
-def ms(x: int | float | str, *, long=False):
+def ms(x: int | float | str, *, long: bool = False) -> str | int:
     if isinstance(x, str):
         return parse_ms(x)
     else:

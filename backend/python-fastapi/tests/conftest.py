@@ -1,7 +1,7 @@
-from .database import TestSession, engine
-
 from app import routers, schemas
 from app.database import Base
+
+from .database import TestSession, engine
 
 # https://stackoverflow.com/questions/17801300/how-to-run-a-method-before-all-tests-in-all-classes
 

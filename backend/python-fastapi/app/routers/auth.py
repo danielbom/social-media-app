@@ -11,7 +11,7 @@ router = APIRouter(prefix='/auth', tags=['Auth'])
 
 
 @router.post('/login')
-def login(body: schemas.AuthLogin, db: Session = Depends(get_db)):
+def login(body: schemas.AuthLogin, db: Session = Depends(get_db)) -> dict[str, str]:
     user = (
         db.query(models.User)
         .filter(models.User.username == body.username)
@@ -34,12 +34,8 @@ def login(body: schemas.AuthLogin, db: Session = Depends(get_db)):
 
 
 @router.post('/login2')
-def login2(
-    body: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
-):
-    return login(
-        schemas.AuthLogin(username=body.username, password=body.password), db
-    )
+def login2(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)) -> dict[str, str]:
+    return login(schemas.AuthLogin(username=body.username, password=body.password), db)
 
 
 @router.post(
@@ -47,7 +43,7 @@ def login2(
     status_code=status.HTTP_201_CREATED,
     response_model=schemas.User,
 )
-def register(user: schemas.AuthRegister, db: Session = Depends(get_db)):
+def register(user: schemas.AuthRegister, db: Session = Depends(get_db)) -> schemas.User:
     return users.create_user(
         schemas.CreateUser(
             username=user.username,
@@ -59,5 +55,5 @@ def register(user: schemas.AuthRegister, db: Session = Depends(get_db)):
 
 
 @router.get('/me', response_model=schemas.User)
-def me(db: Session = Depends(get_db), token_data=Depends(jwt.decode_token)):
+def me(db: Session = Depends(get_db), token_data: schemas.TokenData = Depends(jwt.decode_token)) -> models.User:
     return users.get_user(token_data.user_id, db)
