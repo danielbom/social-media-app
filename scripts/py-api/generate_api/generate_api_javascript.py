@@ -7,14 +7,15 @@ template = """
 import axios from "axios";
 
 export class Config {
-  constructor(baseUrl) {
+  constructor(baseUrl, headers = {}) {
     this.baseUrl = baseUrl;
+    this.headers = headers;
   }
 }
 {endpoints}
 export class Api {
   constructor(config) {
-    this.config = config;
+    this._config = config;
 {attributes}
   }
 }
@@ -23,7 +24,7 @@ export class Api {
 class_template = """
 class {name} {
   constructor(config) {
-    this.config = config;
+    this._config = config;
   }
 {methods}
 }
@@ -50,7 +51,7 @@ def method_as_string(method: Method) -> str:
     path = method.path.replace("{", "${")
     return '\n'.join([
         f'  {snake_to_camel_case(method.name)}({method_args}) {{',
-        f'    return axios.{method.method}(`${{this.config.baseUrl}}{path}`{request_args});',
+        f'    return axios.{method.method}(`${{this._config.baseUrl}}{path}`{request_args}, {{ headers: this._config.headers }});',
         f'  }}',
     ])
 

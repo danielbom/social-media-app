@@ -5,26 +5,29 @@ from .json_schema import JsonType
 
 
 template = """
-from dataclasses import dataclass
 import requests
 {import_external_types}{export_external_types}
 
-@dataclass
 class Config:
     base_url: str
+    headers: dict[str, str]
+
+    def __init__(self, base_url: str = '', headers: dict[str, str] = None):
+        self.base_url = base_url
+        self.headers = headers or {{}}
 
 {endpoints}
 
 class Api:
     def __init__(self, base_url: str):
-        self.config = Config(base_url)
+        self._config = Config(base_url)
 {attributes}
 """
 
 class_template = """
 class {name}:
     def __init__(self, config: Config) -> None:
-        self.config = config
+        self._config = config
 
 """
 
@@ -60,7 +63,7 @@ def method_as_string(method: Method) -> str:
     request_args = method_request_args_as_string(method)
     return '\n'.join([
         f'    def {method.name}({method_args}):',
-        f'        return requests.{method.method}(f"{{self.config.base_url}}{method.path}"{request_args})',
+        f'        return requests.{method.method}(f"{{self._config.base_url}}{method.path}"{request_args}, headers=self._config.headers)',
         ''
     ])
 
@@ -78,7 +81,7 @@ def generate_endpoints(endpoints: list[Endpoint]):
 
 
 def generate_attributes(endpoints: list[Endpoint]):
-    return "\n".join([f"        self.{endpoint.attribute} = {endpoint.name}(self.config)" for endpoint in endpoints])
+    return "\n".join([f"        self.{endpoint.attribute} = {endpoint.name}(self._config)" for endpoint in endpoints])
 
 
 def collect_external_types(endpoints: list[Endpoint]):

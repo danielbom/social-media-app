@@ -1,66 +1,67 @@
 import axios from "axios";
 
 export class Config {
-  constructor(baseUrl) {
+  constructor(baseUrl, headers = {}) {
     this.baseUrl = baseUrl;
+    this.headers = headers;
   }
 }
 
 class PostsEndpoint {
   constructor(config) {
-    this.config = config;
+    this._config = config;
   }
 
   getAll() {
-    return axios.get(`${this.config.baseUrl}/posts`);
+    return axios.get(`${this._config.baseUrl}/posts`, { headers: this._config.headers });
   }
 
   getById(id) {
-    return axios.get(`${this.config.baseUrl}/posts/${id}`);
+    return axios.get(`${this._config.baseUrl}/posts/${id}`, { headers: this._config.headers });
   }
 
   create(data) {
-    return axios.post(`${this.config.baseUrl}/posts`, data);
+    return axios.post(`${this._config.baseUrl}/posts`, data, { headers: this._config.headers });
   }
 
   update(id, data) {
-    return axios.put(`${this.config.baseUrl}/posts/${id}`, data);
+    return axios.put(`${this._config.baseUrl}/posts/${id}`, data, { headers: this._config.headers });
   }
 
   delete(id) {
-    return axios.delete(`${this.config.baseUrl}/posts/${id}`);
+    return axios.delete(`${this._config.baseUrl}/posts/${id}`, { headers: this._config.headers });
   }
 }
 
 class CommentsEndpoint {
   constructor(config) {
-    this.config = config;
+    this._config = config;
   }
 
   getAll() {
-    return axios.get(`${this.config.baseUrl}/comments`);
+    return axios.get(`${this._config.baseUrl}/comments`, { headers: this._config.headers });
   }
 
   getById(id) {
-    return axios.get(`${this.config.baseUrl}/comments/${id}`);
+    return axios.get(`${this._config.baseUrl}/comments/${id}`, { headers: this._config.headers });
   }
 
   create(data) {
-    return axios.post(`${this.config.baseUrl}/comments`, data);
+    return axios.post(`${this._config.baseUrl}/comments`, data, { headers: this._config.headers });
   }
 
   update(id, data) {
-    return axios.put(`${this.config.baseUrl}/comments/${id}`, data);
+    return axios.put(`${this._config.baseUrl}/comments/${id}`, data, { headers: this._config.headers });
   }
 
   delete(id) {
-    return axios.delete(`${this.config.baseUrl}/comments/${id}`);
+    return axios.delete(`${this._config.baseUrl}/comments/${id}`, { headers: this._config.headers });
   }
 }
 
 export class Api {
   constructor(config) {
-    this.config = config;
+    this._config = config;
     this.posts = new PostsEndpoint(config);
     this.comments = new CommentsEndpoint(config);
   }
