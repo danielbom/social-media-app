@@ -34,6 +34,26 @@ def step_impl(context):
     assert hasattr(context, 'post')
 
 
+@when(u'updating the post')
+def step_impl(context):
+    assert hasattr(context, 'post')
+    id = context.post['id']
+    response = api.posts.update(id, {
+        'content': 'Updated post body',
+    })
+    assert response.status_code == 200
+    context.post = response.json()
+    assert isinstance(context.post, dict)
+    assert 'id' in context.post
+    assert context.post['id'] == id
+
+
+@then(u'he should see the updated post')
+def step_impl(context):
+    assert hasattr(context, 'post')
+    assert context.post['content'] == 'Updated post body'
+
+
 @when(u'deleting the post')
 def step_impl(context):
     assert hasattr(context, 'post')

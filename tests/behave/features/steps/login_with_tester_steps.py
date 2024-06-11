@@ -10,6 +10,6 @@ def step_impl(context, username, password):
     response = api.auth.login({"username": username, "password": password})
     assert response.status_code == 200
     context.login = response.json()
-    assert 'token' in context.login
-    api._config.headers['Authorization'] = f"Bearer {context.login['token']}"
+    assert 'access_token' in context.login
+    api._config.headers['Authorization'] = f"Bearer {context.login['access_token']}"
 

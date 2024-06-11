@@ -9,5 +9,7 @@ Feature: Posts
     Given a user logged in as "tester" with password "test1234"
     When creating a post
     Then he should see the post
+    When updating the post
+    Then he should see the updated post
     When deleting the post
     Then he should not see the post
