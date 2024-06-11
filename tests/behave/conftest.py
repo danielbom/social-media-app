@@ -1,15 +1,15 @@
 # https://stackoverflow.com/questions/41146633/how-to-integrate-behave-into-pytest
 import pytest
 from pathlib import Path
-from shlex import split
 import subprocess
 import json
+import behave.parser
 
 
-def pytest_collect_file(parent, path):
+def pytest_collect_file(parent, file_path: Path):
     """Allow .feature files to be parsed for bdd."""
-    if path.ext == ".feature":
-        return BehaveFile.from_parent(parent, fspath=path)
+    if file_path.suffix == ".feature":
+        return BehaveFile.from_parent(parent, path=file_path)
 
 
 class BehaveException(Exception):
@@ -18,8 +18,11 @@ class BehaveException(Exception):
 
 class BehaveFile(pytest.File):
     def collect(self):
-        from behave.parser import parse_file
-        feature = parse_file(self.fspath)
+        feature_path = Path(self.path)
+        feature = behave.parser.parse_feature(feature_path.read_text())
+        if not feature:
+            return
+
         for scenario in feature.walk_scenarios(with_outlines=True):
             yield BehaveFeature.from_parent(
                 self,
@@ -36,21 +39,22 @@ class BehaveFeature(pytest.Item):
         super().__init__(name, parent)
         self._feature = feature
         self._scenario = scenario
-        self._working_folder_path = Path(self.fspath).parent.parent
-
+        self._cwd = self.path.parent.parent
+        
         # the following characters cause trouble in shell, so we need to escape them
-        name_escaped = str(self._scenario.name).replace('"', '\\"').replace(
-            '(', '\\(').replace(')', '\\)').replace('*', '\\*')
-        self._cmd = split(f"""behave
-            --format json
-            --no-summary
-            --include {self._feature.filename}
-            --name "{name_escaped}"
-        """)
+        # name_escaped = str(self._scenario.name).replace('"', '\\"').replace(
+        # '(', '\\(').replace(')', '\\)').replace('*', '\\*')
+        self._cmd = ["behave", 
+               "--format", "json",
+               "--no-summary",
+               "--include", str(self.path.name),
+               "--name", self._scenario.name]
 
     def runtest(self):
-        proc = subprocess.run(self._cmd, stdout=subprocess.PIPE,
-                              cwd=self._working_folder_path, check=False)
+        proc = subprocess.run(self._cmd, 
+                              stdout=subprocess.PIPE,
+                              cwd=self._cwd,
+                              check=False)
         stdout = proc.stdout.decode("utf8")
         if proc.returncode != 0:
             raise BehaveException(self, stdout)
