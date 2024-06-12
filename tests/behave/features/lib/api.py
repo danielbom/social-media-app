@@ -141,6 +141,17 @@ class PostsEndpoint:
         return requests.delete(f"{self._config.base_url}/posts/{id}", headers=self._config.headers)
 
 
+class TestsEndpoint:
+    def __init__(self, config: Config) -> None:
+        self._config = config
+    
+    def tear_up(self):
+        return requests.post(f"{self._config.base_url}/tests/tear-up", headers=self._config.headers)
+    
+    def tear_down(self):
+        return requests.post(f"{self._config.base_url}/tests/tear-down", headers=self._config.headers)
+
+
 class Api:
     def __init__(self, base_url: str):
         self._config = Config(base_url)
@@ -149,3 +160,4 @@ class Api:
         self.users = UsersEndpoint(self._config)
         self.comments = CommentsEndpoint(self._config)
         self.posts = PostsEndpoint(self._config)
+        self.tests = TestsEndpoint(self._config)
