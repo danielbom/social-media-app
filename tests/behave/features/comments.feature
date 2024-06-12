@@ -12,6 +12,8 @@ Feature: Comments
     Then he should see the comment
     When updating the comment
     Then he should see the updated comment
+    when answering the comment
+    Then he should see the answer
     When deleting the comment
     Then he should not see the comment
     Then he should delete the sample post

@@ -70,6 +70,25 @@ def step_impl(context):
     assert context.comment['content'] == 'Updated comment body'
 
 
+@when(u'answering the comment')
+def step_impl(context):
+    assert hasattr(context, 'comment')
+    response = api.comments.create_answer({
+        'content': 'Test answer body',
+        'commentId': context.comment['id'],
+    })
+    assert response.status_code == 201
+    context.answer = response.json()
+    assert isinstance(context.answer, dict)
+    assert 'id' in context.answer
+
+
+@then(u'he should see the answer')
+def step_impl(context):
+    assert hasattr(context, 'answer')
+    assert context.answer['content'] == 'Test answer body'
+
+
 @when(u'deleting the comment')
 def step_impl(context):
     assert hasattr(context, 'comment')

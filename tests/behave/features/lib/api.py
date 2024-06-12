@@ -1,17 +1,50 @@
 # fmt: off
-from typing import Any
+from typing import TypedDict
 
 import requests
 
-AuthLoginDto = Any
-AuthRegisterDto = Any
-CreateUserDto = Any
-UpdateUserDto = Any
-CreateCommentDto = Any
-CreateCommentAnswerDto = Any
-UpdateCommentDto = Any
-CreatePostDto = Any
-UpdatePostDto = Any
+
+class AuthLoginDto(TypedDict):
+    username: str
+    password: str
+
+
+class AuthRegisterDto(TypedDict):
+    username: str
+    password: str
+
+
+class CreateUserDto(TypedDict):
+    username: str
+    password: str
+    role: str
+
+
+class UpdateUserDto(TypedDict):
+    username: str
+    password: str
+
+
+class CreateCommentDto(TypedDict):
+    content: str
+    postId: str
+
+
+class CreateCommentAnswerDto(TypedDict):
+    content: str
+    commentId: str
+
+
+class UpdateCommentDto(TypedDict):
+    content: str
+
+
+class CreatePostDto(TypedDict):
+    content: str
+
+
+class UpdatePostDto(TypedDict):
+    content: str
 
 
 class Config:
