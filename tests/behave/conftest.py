@@ -1,8 +1,10 @@
 # https://stackoverflow.com/questions/41146633/how-to-integrate-behave-into-pytest
-import pytest
-from pathlib import Path
-import subprocess
 import json
+import subprocess
+from pathlib import Path
+
+import pytest
+
 import behave.parser
 
 
@@ -40,18 +42,18 @@ class BehaveFeature(pytest.Item):
         self._feature = feature
         self._scenario = scenario
         self._cwd = self.path.parent.parent
-        
+
         # the following characters cause trouble in shell, so we need to escape them
         # name_escaped = str(self._scenario.name).replace('"', '\\"').replace(
         # '(', '\\(').replace(')', '\\)').replace('*', '\\*')
-        self._cmd = ["behave", 
-               "--format", "json",
-               "--no-summary",
-               "--include", str(self.path.name),
-               "--name", self._scenario.name]
+        self._cmd = ["behave",
+                     "--format", "json",
+                     "--no-summary",
+                     "--include", str(self.path.name),
+                     "--name", self._scenario.name]
 
     def runtest(self):
-        proc = subprocess.run(self._cmd, 
+        proc = subprocess.run(self._cmd,
                               stdout=subprocess.PIPE,
                               cwd=self._cwd,
                               check=False)

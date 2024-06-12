@@ -1,6 +1,7 @@
-import requests
+# fmt: off
 from typing import Any
 
+import requests
 
 AuthLoginDto = Any
 AuthRegisterDto = Any

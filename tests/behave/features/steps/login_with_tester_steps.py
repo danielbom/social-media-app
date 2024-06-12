@@ -1,5 +1,4 @@
 from behave import *
-
 from features.lib.common import api
 
 
@@ -12,4 +11,3 @@ def step_impl(context, username, password):
     context.login = response.json()
     assert 'access_token' in context.login
     api._config.headers['Authorization'] = f"Bearer {context.login['access_token']}"
-

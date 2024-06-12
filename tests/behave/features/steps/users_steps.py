@@ -1,8 +1,8 @@
 from behave import *
-
 from features.lib.common import api
 
 # Scenario: I can see and update the users
+
 
 @when(u'listing the users')
 def step_impl(context):
@@ -35,6 +35,7 @@ def step_impl(context):
     assert context.user['username'] == context.username
     assert context.user['id'] == context.me['id']
 
+
 @when(u'updating the user')
 def step_impl(context):
     assert hasattr(context, 'user')
@@ -52,6 +53,7 @@ def step_impl(context):
     assert context.user['username'] == 'tester'
 
 # Scenario: I can not create and delete the users
+
 
 @when(u'trying to create the user')
 def step_impl(context):
