@@ -34,7 +34,7 @@ export type FilterOptions = {
   strict?: boolean
   /**
    * Useful to disable pagination when it does not are needed.
-   * This includes the 'page' and 'pageSize' parameters.
+   * This includes the 'order', 'page' and 'pageSize' parameters.
    * @default: true
    */
   pagination?: boolean

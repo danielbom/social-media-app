@@ -25,6 +25,11 @@ yarn start:dev
 # Build and initialize in profuction
 yarn build
 yarn start:prod
+
+# Test
+yarn test
+yarn test [-t, --testNamePattern <pattern>] [--dir <path>]
+yarn test <path.test.ts>
 ```
 
 ### Run application with docker

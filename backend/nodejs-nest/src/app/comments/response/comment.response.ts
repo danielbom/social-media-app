@@ -20,6 +20,9 @@ export class CommentResponse implements CommentBase {
   @ApiProperty({ example: 'uuid', description: 'Post parent identifier' })
   postParentId!: Uuid
 
+  @ApiProperty({ example: 'uuid', description: 'Comment parent identifier' })
+  commentParentId!: Uuid | null
+
   @ApiProperty({ example: '2021-01-01T00:00:00.000Z', description: 'Date of creation' })
   createdAt!: Date
 

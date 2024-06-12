@@ -19,8 +19,8 @@ export class AuthService {
       password,
     })
     const payload: TokenPayload = { sub: auth.id }
-    const token = await this.jwtService.signAsync(payload)
-    return { token }
+    const access_token = await this.jwtService.signAsync(payload)
+    return { access_token }
   }
 
   async register({ username, password }: AuthRegisterDto): Promise<User> {

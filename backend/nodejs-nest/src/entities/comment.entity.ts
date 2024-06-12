@@ -41,6 +41,9 @@ export class Comment extends BaseEntity {
   @ManyToOne(() => Comment, (x) => x.commentAnswers)
   commentParent?: Comment
 
+  @Column()
+  commentParentId!: Uuid | null
+
   @CreateDateColumn()
   createdAt!: Date
 

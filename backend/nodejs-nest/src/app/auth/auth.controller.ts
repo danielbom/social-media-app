@@ -10,7 +10,7 @@ import {
 import { AuthUser } from 'src/decorators/auth-user.decorator'
 import { Auth } from 'src/decorators/auth.decorator'
 import { User } from 'src/entities/user.entity'
-import { descriptions } from 'src/shared/desctiption-messages'
+import { descriptions } from 'src/shared/descriptions-messages'
 
 import { UserResponse } from '../users/response/user.response'
 import { AuthService } from './auth.service'

@@ -4,7 +4,7 @@ import { Comment } from 'src/entities/comment.entity'
 import { User } from 'src/entities/user.entity'
 import { Filters, Page } from 'src/lib/query-filters'
 import { applyFilters, applyOptionalFilters1 } from 'src/lib/query-filters/typeorm'
-import { descriptions } from 'src/shared/desctiption-messages'
+import { descriptions } from 'src/shared/descriptions-messages'
 import { FindOneOptions, Repository } from 'typeorm'
 
 import { PostsService } from '../posts/posts.service'
@@ -44,6 +44,7 @@ export class CommentsService {
       author,
       commentParent,
       postParent: commentParent.postParent,
+      postParentId: commentParent.postParentId,
       likes: 0,
     })
     await this.commentsRepository.save(comment)

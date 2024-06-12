@@ -11,11 +11,21 @@ import { AuthModule } from './auth/auth.module'
 import { CommentsModule } from './comments/comments.module'
 import { PostsModule } from './posts/posts.module'
 import { UsersModule } from './users/users.module'
+import { TestsModule } from './tests/tests.module'
 
 import { AdminModule } from './admin/admin.module'
 
 @Module({
-  imports: [AuthModule, CommentsModule, PostsModule, UsersModule, JoiPipeModule, DatabaseModule, AdminModule],
+  imports: [
+    AuthModule,
+    CommentsModule,
+    PostsModule,
+    UsersModule,
+    TestsModule,
+    JoiPipeModule,
+    DatabaseModule,
+    AdminModule,
+  ],
   controllers: [AppController],
   providers: [
     AppService,

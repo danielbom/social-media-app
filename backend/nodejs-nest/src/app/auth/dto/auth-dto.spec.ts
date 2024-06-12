@@ -36,6 +36,7 @@ describe('Auth DTO', () => {
       testSchema.mustFail({ username: '' })
       testSchema.mustFail({ username: '', password: '' })
       testSchema.mustFail({ username: '12', password: '12345678' })
+      testSchema.mustFail({ username: 'tester', password: '12345678' })
     })
   })
 })

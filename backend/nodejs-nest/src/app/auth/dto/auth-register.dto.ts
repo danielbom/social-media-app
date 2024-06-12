@@ -5,7 +5,7 @@ import { JoiSchema, JoiSchemaOptions } from 'nestjs-joi'
 @JoiSchemaOptions({ allowUnknown: false })
 export class AuthRegisterDto {
   @ApiProperty({ example: 'nickname', description: 'Username/Login of the user' })
-  @JoiSchema(Joi.string().min(3).max(30).required())
+  @JoiSchema(Joi.string().min(3).max(30).required().invalid('tester'))
   username!: string
 
   @ApiProperty({ example: 'strong-password', description: 'Password of the user' })

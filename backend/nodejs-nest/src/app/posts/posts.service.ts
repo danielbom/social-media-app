@@ -4,7 +4,7 @@ import { Post } from 'src/entities/post.entity'
 import { User } from 'src/entities/user.entity'
 import { Filters, Page } from 'src/lib/query-filters'
 import { applyFilters, applyOptionalFilters1 } from 'src/lib/query-filters/typeorm'
-import { descriptions } from 'src/shared/desctiption-messages'
+import { descriptions } from 'src/shared/descriptions-messages'
 import { FindOneOptions, Repository } from 'typeorm'
 
 import { CreatePostDto } from './dto/create-post.dto'

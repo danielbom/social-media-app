@@ -38,20 +38,20 @@ describe('AuthService', () => {
   })
 
   test('AuthService.login should works', async () => {
-    const token = 'some-token'
+    const access_token = 'some-token'
     const body = {
       username: 'some-user',
       password: 'some-pass',
     }
     const user = { id: 'user-id', ...body }
 
-    jwtService.signAsync.mockImplementationOnce(() => token)
+    jwtService.signAsync.mockImplementationOnce(() => access_token)
     usersService.getAuthenticated.mockImplementationOnce(async () => user)
     const result = await service.login(body)
 
     expect(jwtService.signAsync).toBeCalledTimes(1)
     expect(jwtService.signAsync).toBeCalledWith({ sub: user.id })
-    expect(result).toStrictEqual({ token })
+    expect(result).toStrictEqual({ access_token })
   })
 
   test('AuthService.register should only call UsersService.create', async () => {
