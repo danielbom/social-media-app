@@ -1,4 +1,5 @@
 # fmt: off
+import timeit
 from typing import TypedDict
 
 import requests
@@ -53,7 +54,11 @@ class Config:
 
     def __init__(self, base_url: str = '', headers: dict[str, str] = None):
         self.base_url = base_url
-        self.headers = headers or {}
+        self.headers = headers or {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": "behave-api-client/0.1.0",
+        }
 
 
 class AppEndpoint:
@@ -161,3 +166,27 @@ class Api:
         self.comments = CommentsEndpoint(self._config)
         self.posts = PostsEndpoint(self._config)
         self.tests = TestsEndpoint(self._config)
+
+
+def timer(endpoint, func):
+    return func
+    cls_name = endpoint.__name__
+    func_name = func.__name__
+    def wrapper(self, *args, **kwargs):
+        start = timeit.default_timer()
+        result = func(self, *args, **kwargs)
+        end = timeit.default_timer()
+        print(f"{cls_name}.{func_name}() -> {result} ({end - start}s)")
+        return result
+    return wrapper
+
+
+for endpoint in list(locals().values()):
+    if getattr(endpoint, '__name__', '').endswith('Endpoint'):
+        for method in dir(endpoint):
+            if method.startswith('_'):
+                continue
+            attr = getattr(endpoint, method)
+            if callable(attr):
+                setattr(endpoint, method, timer(endpoint, attr))
+
