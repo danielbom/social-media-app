@@ -37,7 +37,7 @@ export class AuthController {
   @ApiBadRequestResponse({ description: descriptions.USER_ALREADY_EXISTS })
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  register(@Body() authRegisterDto: AuthRegisterDto): Promise<User> {
+  register(@Body() authRegisterDto: AuthRegisterDto): Promise<AuthLoginResponse> {
     return this.authService.register(authRegisterDto)
   }
 

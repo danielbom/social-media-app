@@ -66,26 +66,22 @@ export class UsersService {
     await this.userRepository.softDelete({ id: user.id })
   }
 
-  async getAuthenticated({ username, password }: UserAuthDto): Promise<{ id: Uuid }> {
+  async getAuthenticated({ username, password }: UserAuthDto): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { username },
-      select: ['id', 'password'],
+      select: ['id', 'password', 'version'],
     })
 
     if (user === null) {
       throw new BadRequestException(descriptions.INVALID_CREDENTIALS)
     }
 
-    if (!user.password) {
-      throw new UnreachableException('user.password must exists in UsersService.getAuthenticated')
-    }
-
-    const isPasswordValid = await this.hashService.compare(password, user.password)
+    const isPasswordValid = await this.hashService.compare(password, user.password!)
     if (!isPasswordValid) {
       throw new BadRequestException(descriptions.INVALID_CREDENTIALS)
     }
 
-    return { id: user.id }
+    return user
   }
 
   async ensureUserNotExists(options: FindOneOptions<User>) {

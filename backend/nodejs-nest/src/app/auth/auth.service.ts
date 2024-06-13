@@ -18,12 +18,35 @@ export class AuthService {
       username,
       password,
     })
-    const payload: TokenPayload = { sub: auth.id }
-    const access_token = await this.jwtService.signAsync(payload)
-    return { access_token }
+    return await this._createAuthResponse(auth)
   }
 
-  async register({ username, password }: AuthRegisterDto): Promise<User> {
-    return this.userService.create({ username, password, role: Role.USER })
+  // TODO: Add a route
+  async authRefresh(tokenData: any): Promise<AuthLoginResponse> {
+    const user = tokenData.user
+    const payload: TokenPayload = { sub: user.id, version: user.version }
+    const access_token = await this.jwtService.signAsync(payload)
+    return {
+      access_token,
+      refresh_token: tokenData.value,
+      token_type: 'Bearer',
+    }
+  }
+
+  async register({ username, password }: AuthRegisterDto): Promise<AuthLoginResponse> {
+    const user = await this.userService.create({ username, password, role: Role.USER })
+    user.version = user.version ?? 0
+    return await this._createAuthResponse(user)
+  }
+
+  private async _createAuthResponse(auth: User): Promise<AuthLoginResponse> {
+    const payload: TokenPayload = { sub: auth.id, version: auth.version! }
+    const access_token = await this.jwtService.signAsync(payload)
+    const refresh_token = await this.jwtService.signAsync(payload, { expiresIn: '7d' })
+    return {
+      access_token,
+      refresh_token,
+      token_type: 'Bearer',
+    }
   }
 }
