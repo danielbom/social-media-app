@@ -7,21 +7,13 @@ ENV PYTHONFAULTHANDLER=1 \
   PYTHONHASHSEED=random \
   PYTHONUNBUFFERED=1
 
-# Install dependencies
-RUN pip install "poetry==1.1.11"
-
-# Poetry production install
-COPY poetry.lock pyproject.toml ./
-RUN poetry install --no-dev
+COPY ./requirements-prod.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source code
-COPY ./app ./app
-COPY Makefile .
+COPY ./server ./server
+COPY ./scripts.py .
 
-# Temporary solution for database setup
-COPY ./alembic ./alembic
-COPY alembic.ini .
-RUN poetry run alembic upgrade head
+EXPOSE $APP_PORT
 
-EXPOSE 8000
-CMD ["make", "start"]
+CMD ["python3", "./scripts.py", "run"]

@@ -1,1 +1,0 @@
-docker logs --follow api

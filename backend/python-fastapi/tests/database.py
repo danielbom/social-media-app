@@ -1,36 +1,31 @@
+from typing import AsyncIterator
+
 import pytest
+from databases.core import Connection, Database
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.database import get_db
-from app.main import app
+from server.database import get_database
+from server.main import app
 
 DATABASE_URL = 'sqlite:///./tmp/test.db'
 
+database = Database(DATABASE_URL)
 engine = create_engine(DATABASE_URL)
-TestSession = sessionmaker(bind=engine, autocommit=False, autoflush=False)
+Session = sessionmaker(bind=engine)
 
 
-@pytest.fixture
-def session():
-    db = TestSession()
-    try:
-        yield db
-    finally:
-        db.close()
+async def test_get_database() -> AsyncIterator[Connection]:
+    if not database.is_connected:
+        await database.connect()
+    async with database.connection() as connection:
+        yield connection
 
 
 @pytest.fixture
 def client():
-    def test_get_db():
-        session = TestSession()
-        try:
-            yield session
-        finally:
-            session.close()
+    app.dependency_overrides[get_database] = test_get_database
 
-    app.dependency_overrides[get_db] = test_get_db
-
-    with TestClient(app) as client:
-        yield client
+    with TestClient(app) as test_client:
+        yield test_client
